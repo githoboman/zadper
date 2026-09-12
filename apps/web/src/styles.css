@@ -1,0 +1,1145 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ================================================================== */
+/*  Zardper — The Arcane Ledger                                        */
+/*                                                                    */
+/*  Motion design fantasy: a living constellation of agents,           */
+/*  governed by a crystalline eye that sees every charge before       */
+/*  the wallet signs.                                                 */
+/*                                                                    */
+/*  Palette: deep void violet, nebula purple, arcane gold,           */
+/*  ethereal cyan. Motion is everywhere: particles, pulses,          */
+/*  floating orbs, scroll reveals, magnetic fields.                   */
+/* ================================================================== */
+
+:root {
+  --background: hsl(260 50% 5.5%);
+  --foreground: hsl(270 20% 92%);
+  --card: hsl(270 30% 10%);
+  --card-foreground: hsl(270 20% 92%);
+  --popover: hsl(270 30% 10%);
+  --popover-foreground: hsl(270 20% 92%);
+  --primary: hsl(38 92% 62%);
+  --primary-foreground: hsl(260 50% 6%);
+  --secondary: hsl(270 40% 18%);
+  --secondary-foreground: hsl(270 20% 85%);
+  --muted: hsl(270 30% 16%);
+  --muted-foreground: hsl(270 10% 55%);
+  --accent: hsl(190 80% 55%);
+  --accent-foreground: hsl(260 50% 6%);
+  --destructive: hsl(0 70% 50%);
+  --border: hsl(270 20% 22%);
+  --input: hsl(270 20% 22%);
+  --ring: hsl(38 92% 62%);
+  --radius: 0.5rem;
+
+  --bg: var(--background);
+  --surface: var(--card);
+  --surface-2: var(--secondary);
+  --ink: var(--foreground);
+  --ink-2: var(--muted-foreground);
+  --ink-3: hsl(270 10% 42%);
+  --line: var(--border);
+  --line-strong: hsl(270 15% 32%);
+
+  --brand: hsl(38 92% 62%);
+  --brand-hot: hsl(38 95% 58%);
+  --brand-ink: hsl(38 80% 55%);
+  --brand-soft: hsl(38 60% 18% / 0.35);
+  --brand-glow: hsl(38 92% 62% / 0.35);
+  --on-brand: hsl(260 50% 8%);
+  --focus-ring: var(--brand);
+
+  --danger: hsl(0 70% 50%);
+  --danger-soft: hsl(0 40% 16%);
+  --caution: hsl(38 92% 62%);
+  --caution-soft: hsl(38 40% 16%);
+  --clear: hsl(154 70% 45%);
+  --clear-soft: hsl(154 40% 16%);
+  --aspect-clear-ink: hsl(154 64% 60%);
+  --aspect-caution-ink: hsl(38 80% 62%);
+  --aspect-danger-ink: hsl(0 70% 60%);
+
+  --brass: hsl(38 80% 70%);
+  --brass-soft: hsl(38 40% 16%);
+
+  --box: hsl(270 30% 8%);
+  --box-2: hsl(270 25% 12%);
+  --box-line: hsla(270, 40%, 90%, 0.10);
+  --box-ink: hsl(270 20% 92%);
+  --box-ink-2: hsla(270, 20%, 88%, 0.55);
+  --box-brass: hsl(38 80% 72%);
+
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 10px;
+  --radius-xl: 14px;
+  --radius-pill: 999px;
+
+  --shadow-s: 0 1px 2px hsla(260, 50%, 4%, 0.4);
+  --shadow-m: 0 4px 12px -4px hsla(260, 50%, 4%, 0.5), 0 0 0 1px hsla(270, 30%, 50%, 0.08);
+  --shadow-l: 0 12px 40px -16px hsla(260, 50%, 4%, 0.7), 0 0 0 1px hsla(270, 30%, 50%, 0.12);
+
+  --glass-bg: hsla(270, 30%, 8%, 0.72);
+  --glass-bg-strong: hsla(270, 30%, 8%, 0.88);
+  --glass-border: hsla(270, 30%, 60%, 0.15);
+  --glass-hi: hsla(270, 30%, 92%, 0.06);
+  --glass-blur: 24px;
+  --glass-shadow: 0 24px 80px -24px hsla(260, 50%, 3%, 0.8), 0 0 0 1px hsla(270, 30%, 50%, 0.1);
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --font-body: "Archivo", "Helvetica Neue", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-data: "Spline Sans Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-mono: var(--font-data);
+  --font-display: "Archivo", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+
+  --container: 1240px;
+
+  color: var(--ink);
+  background: var(--bg);
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 3px);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-data);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--bg);
+}
+
+::selection {
+  background: var(--brand-soft);
+  color: var(--ink);
+}
+
+button,
+a,
+input,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+code {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  margin: 8px 0 0;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ================================================================== */
+/*  Global animation system                                           */
+/* ================================================================== */
+
+@keyframes zardper-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes zardper-pulse-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+    filter: blur(20px) brightness(1);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(28px) brightness(1.4);
+  }
+}
+
+@keyframes zardper-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes zardper-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(12px, -8px);
+  }
+  50% {
+    transform: translate(-4px, -16px);
+  }
+  75% {
+    transform: translate(-10px, -4px);
+  }
+}
+
+@keyframes zardper-twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes zardper-constellation-pulse {
+  0%,
+  100% {
+    stroke-opacity: 0.15;
+  }
+  50% {
+    stroke-opacity: 0.4;
+  }
+}
+
+@keyframes zardper-morph {
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+}
+
+@keyframes zardper-rune-flicker {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  20% {
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 0.7;
+  }
+  40% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes zardper-scan-line {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes zardper-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes zardper-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zardper-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-float {
+  animation: zardper-float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: zardper-pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: zardper-spin-slow 20s linear infinite;
+}
+
+.animate-drift {
+  animation: zardper-drift 12s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: zardper-twinkle 3s ease-in-out infinite;
+}
+
+.animate-morph {
+  animation: zardper-morph 8s ease-in-out infinite;
+}
+
+.animate-rune {
+  animation: zardper-rune-flicker 5s ease-in-out infinite;
+}
+
+.animate-fade-up {
+  animation: zardper-fade-up 0.8s var(--ease-out) both;
+}
+
+.animate-scale-in {
+  animation: zardper-scale-in 0.6s var(--ease-out) both;
+}
+
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: zardper-shimmer 3s linear infinite;
+}
+
+/* Stagger delays */
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+.stagger-6 {
+  animation-delay: 0.6s;
+}
+
+/* ================================================================== */
+/*  App shell                                                          */
+/* ================================================================== */
+
+.agent-pay-app {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  color: var(--ink);
+  background: transparent;
+  transition:
+    background-color 260ms var(--ease),
+    color 260ms var(--ease);
+}
+
+.agent-pay-landing {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, color-mix(in oklch, var(--surface) 70%, var(--bg)) 0%, var(--bg) 46%, color-mix(in oklch, var(--surface-2) 60%, var(--bg)) 100%);
+}
+
+.agent-pay-landing::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, hsla(270, 60%, 40%, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 30%, hsla(38, 60%, 40%, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 80%, hsla(190, 50%, 30%, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, color-mix(in oklch, var(--surface) 38%, var(--bg)) 0%, var(--bg) 52%);
+  pointer-events: none;
+}
+
+.agent-pay-app[data-theme="dark"] {
+  --background: hsl(270 30% 6%);
+  --foreground: hsl(270 20% 92%);
+  --card: hsl(270 25% 9%);
+  --card-foreground: hsl(270 20% 92%);
+  --popover: hsl(270 25% 9%);
+  --popover-foreground: hsl(270 20% 92%);
+  --primary: hsl(38 92% 62%);
+  --primary-foreground: hsl(260 50% 8%);
+  --secondary: hsl(270 30% 15%);
+  --secondary-foreground: hsl(270 20% 85%);
+  --muted: hsl(270 25% 14%);
+  --muted-foreground: hsl(270 10% 55%);
+  --accent: hsl(190 70% 50%);
+  --accent-foreground: hsl(270 20% 92%);
+  --destructive: hsl(0 70% 55%);
+  --border: hsl(270 15% 20%);
+  --input: hsl(270 15% 20%);
+  --ring: hsl(38 92% 62%);
+  --chart-1: hsl(38 92% 62%);
+  --chart-2: hsl(270 60% 65%);
+  --chart-3: hsl(190 70% 55%);
+  --chart-4: hsl(154 70% 45%);
+  --chart-5: hsl(0 70% 55%);
+  --bg: hsl(270 30% 6%);
+  --surface: hsl(270 25% 9%);
+  --surface-2: hsl(270 30% 13%);
+  --ink: hsl(270 20% 92%);
+  --ink-2: hsl(270 10% 58%);
+  --ink-3: hsl(270 8% 42%);
+  --line: hsl(270 15% 20%);
+  --line-strong: hsl(270 15% 30%);
+  --brand: hsl(38 92% 62%);
+  --brand-hot: hsl(38 95% 58%);
+  --brand-ink: hsl(38 80% 58%);
+  --brand-soft: hsl(38 60% 18% / 0.4);
+  --brand-glow: hsl(38 92% 62% / 0.4);
+  --on-brand: hsl(260 50% 8%);
+  --focus-ring: var(--brand);
+  --danger: hsl(0 70% 55%);
+  --danger-soft: hsl(0 40% 14%);
+  --caution: hsl(38 92% 62%);
+  --caution-soft: hsl(38 40% 14%);
+  --clear: hsl(154 70% 45%);
+  --clear-soft: hsl(154 40% 14%);
+  --aspect-clear-ink: hsl(154 64% 60%);
+  --aspect-caution-ink: hsl(38 80% 62%);
+  --aspect-danger-ink: hsl(0 70% 60%);
+  --brass: hsl(38 80% 70%);
+  --brass-soft: hsl(38 40% 14%);
+  --box: hsl(270 25% 8%);
+  --box-2: hsl(270 20% 11%);
+  --box-line: hsla(270, 30%, 88%, 0.08);
+  --box-ink: hsl(270 20% 92%);
+  --box-ink-2: hsla(270, 20%, 88%, 0.50);
+  --box-brass: hsl(38 80% 72%);
+  --shadow-s: 0 1px 2px hsla(0, 0%, 0%, 0.5);
+  --shadow-m: 0 4px 12px -4px hsla(0, 0%, 0%, 0.6), 0 0 0 1px hsla(270, 30%, 50%, 0.12);
+  --shadow-l: 0 12px 40px -16px hsla(0, 0%, 0%, 0.8), 0 0 0 1px hsla(270, 30%, 50%, 0.16);
+  --glass-bg: hsla(270, 25%, 7%, 0.72);
+  --glass-bg-strong: hsla(270, 25%, 7%, 0.88);
+  --glass-border: hsla(270, 30%, 60%, 0.12);
+  --glass-hi: hsla(270, 30%, 92%, 0.05);
+  --glass-blur: 28px;
+  --glass-shadow: 0 24px 80px -24px hsla(260, 50%, 3%, 0.9), 0 0 0 1px hsla(270, 30%, 50%, 0.12);
+}
+
+.agent-pay-app[data-theme="dark"].agent-pay-landing {
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--surface) 60%, var(--bg)) 0%, var(--bg) 50%, hsl(270 30% 5%) 100%);
+}
+
+.agent-pay-app[data-theme="dark"].agent-pay-landing::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, hsla(270, 60%, 35%, 0.2) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 30%, hsla(38, 60%, 35%, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 80%, hsla(190, 50%, 25%, 0.1) 0%, transparent 60%),
+    linear-gradient(180deg, color-mix(in oklch, var(--surface) 38%, var(--bg)) 0%, var(--bg) 52%);
+}
+
+/* ================================================================== */
+/*  Particle field (applied to hero via JS or static)                  */
+/* ================================================================== */
+
+.zardper-particle-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.zardper-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 6px var(--brand-glow);
+  animation: zardper-twinkle var(--duration, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  opacity: 0.4;
+}
+
+.zardper-particle--large {
+  width: 3px;
+  height: 3px;
+  box-shadow: 0 0 12px var(--brand-glow), 0 0 24px var(--brand-glow);
+}
+
+.zardper-constellation-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsla(270, 30%, 60%, 0.15), transparent);
+  transform-origin: left center;
+  animation: zardper-constellation-pulse 4s ease-in-out infinite;
+}
+
+/* ================================================================== */
+/*  Glass morphism — arcane frost                                      */
+/* ================================================================== */
+
+.zardper-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.zardper-glass:hover {
+  border-color: hsla(270, 30%, 60%, 0.25);
+  box-shadow: 0 32px 100px -28px hsla(260, 50%, 3%, 0.9), 0 0 0 1px hsla(270, 30%, 50%, 0.18), 0 0 60px -20px var(--brand-glow);
+}
+
+.zardper-glass--strong {
+  background: var(--glass-bg-strong);
+}
+
+/* ================================================================== */
+/*  Rune borders — animated corner accents                            */
+/* ================================================================== */
+
+.zardper-rune-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.zardper-rune-border::before,
+.zardper-rune-border::after {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 1px solid hsla(38, 80%, 60%, 0.3);
+  pointer-events: none;
+  transition: all 0.6s var(--ease);
+}
+
+.zardper-rune-border::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+  border-radius: var(--radius-l) 0 0 0;
+}
+
+.zardper-rune-border::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+  border-radius: 0 0 var(--radius-l) 0;
+}
+
+.zardper-rune-border:hover::before,
+.zardper-rune-border:hover::after {
+  width: 60px;
+  height: 60px;
+  border-color: hsla(38, 80%, 60%, 0.55);
+  box-shadow: 0 0 20px -4px var(--brand-glow);
+}
+
+/* ================================================================== */
+/*  Orb / Avatar — the Zardper entity                                 */
+/* ================================================================== */
+
+.zardper-orb {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, hsl(270 50% 25%), hsl(260 50% 12%) 60%, hsl(260 50% 6%) 100%);
+  box-shadow:
+    0 0 80px -20px var(--brand-glow),
+    0 0 0 1px hsla(270, 30%, 60%, 0.2),
+    inset 0 0 60px -20px hsla(270, 50%, 30%, 0.4);
+  animation: zardper-float 8s ease-in-out infinite, zardper-morph 12s ease-in-out infinite;
+}
+
+.zardper-orb::before {
+  content: "";
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, hsla(38, 90%, 65%, 0.25), hsla(270, 60%, 40%, 0.1) 50%, transparent 70%);
+  animation: zardper-pulse-glow 5s ease-in-out infinite;
+}
+
+.zardper-orb::after {
+  content: "";
+  position: absolute;
+  inset: 30%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 45%, hsl(270 80% 80%), hsl(270 70% 50%) 40%, hsl(260 50% 25%) 80%);
+  box-shadow: 0 0 40px -8px var(--brand-glow);
+}
+
+.zardper-orb-ring {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  border: 1px solid hsla(270, 30%, 60%, 0.12);
+  animation: zardper-spin-slow 30s linear infinite;
+}
+
+.zardper-orb-ring--inner {
+  inset: -8px;
+  animation-duration: 20s;
+  animation-direction: reverse;
+  border-color: hsla(38, 60%, 50%, 0.15);
+}
+
+/* ================================================================== */
+/*  Buttons                                                           */
+/* ================================================================== */
+
+.zardper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.zardper-btn--primary {
+  background: linear-gradient(135deg, hsl(38 92% 62%), hsl(270 70% 55%));
+  color: hsl(260 50% 6%);
+  box-shadow: 0 4px 20px -4px var(--brand-glow), 0 0 0 1px hsla(270, 30%, 60%, 0.2);
+}
+
+.zardper-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px -4px var(--brand-glow), 0 0 0 1px hsla(270, 30%, 60%, 0.3), 0 0 60px -12px var(--brand-glow);
+}
+
+.zardper-btn--glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  color: var(--ink);
+  box-shadow: var(--glass-shadow);
+}
+
+.zardper-btn--glass:hover {
+  transform: translateY(-2px);
+  border-color: hsla(270, 30%, 60%, 0.3);
+  box-shadow: 0 24px 80px -24px hsla(260, 50%, 3%, 0.8), 0 0 0 1px hsla(270, 30%, 50%, 0.2), 0 0 60px -20px var(--brand-glow);
+}
+
+.zardper-btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid transparent;
+}
+
+.zardper-btn--ghost:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+  text-shadow: 0 0 20px var(--brand-glow);
+}
+
+/* ================================================================== */
+/*  Cards                                                             */
+/* ================================================================== */
+
+.zardper-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.4s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.zardper-card:hover {
+  transform: translateY(-4px);
+  border-color: hsla(270, 30%, 60%, 0.25);
+  box-shadow: 0 32px 100px -28px hsla(260, 50%, 3%, 0.9), 0 0 0 1px hsla(270, 30%, 50%, 0.18), 0 0 80px -24px var(--brand-glow);
+}
+
+.zardper-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, hsla(270, 30%, 60%, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ================================================================== */
+/*  Navigation                                                        */
+/* ================================================================== */
+
+.zardper-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: hsla(270, 30%, 6%, 0.6);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid hsla(270, 30%, 60%, 0.08);
+  transition: all 0.4s var(--ease);
+}
+
+.zardper-nav--scrolled {
+  background: hsla(270, 30%, 6%, 0.85);
+  border-bottom-color: hsla(270, 30%, 60%, 0.15);
+  box-shadow: 0 4px 30px -12px hsla(260, 50%, 3%, 0.6);
+}
+
+/* ================================================================== */
+/*  Typography                                                        */
+/* ================================================================== */
+
+.zardper-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--box-ink) 0%, hsl(270 30% 80%) 40%, hsl(38 80% 70%) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+
+.zardper-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--box-ink);
+}
+
+.zardper-lede {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--box-ink-2);
+  max-width: 640px;
+}
+
+/* ================================================================== */
+/*  Hero — 3D perspective stage                                       */
+/* ================================================================== */
+
+.zardper-hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 1200px;
+}
+
+.zardper-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, hsla(270, 40%, 15%, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 20% 80%, hsla(190, 40%, 15%, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 80% 20%, hsla(38, 40%, 15%, 0.15) 0%, transparent 55%),
+    hsl(260 50% 5.5%);
+}
+
+/* Nebula cloud layers */
+.zardper-nebula {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.zardper-nebula-layer {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 40% 30% at 30% 20%, hsla(270, 50%, 40%, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 40% at 70% 60%, hsla(38, 50%, 40%, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 35% at 50% 80%, hsla(190, 40%, 30%, 0.06) 0%, transparent 50%);
+  animation: zardper-drift 20s ease-in-out infinite;
+}
+
+.zardper-nebula-layer:nth-child(2) {
+  animation-duration: 28s;
+  animation-direction: reverse;
+  opacity: 0.7;
+}
+
+/* ================================================================== */
+/*  Star field                                                        */
+/* ================================================================== */
+
+.zardper-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: zardper-twinkle var(--duration, 4s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.zardper-star--large {
+  width: 3px;
+  height: 3px;
+  box-shadow: 0 0 8px white, 0 0 16px hsla(270, 30%, 80%, 0.5);
+}
+
+/* ================================================================== */
+/*  Rune / glyph decorations                                          */
+/* ================================================================== */
+
+.zardper-rune {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: hsla(38, 60%, 60%, 0.15);
+  pointer-events: none;
+  animation: zardper-rune-flicker 6s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  user-select: none;
+}
+
+/* ================================================================== */
+/*  Scan line effect                                                  */
+/* ================================================================== */
+
+.zardper-scan-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsla(38, 60%, 60%, 0.3), hsla(270, 60%, 60%, 0.3), transparent);
+  z-index: 9999;
+  pointer-events: none;
+  animation: zardper-scan-line 8s linear infinite;
+}
+
+/* ================================================================== */
+/*  Magnetic hover effect                                             */
+/* ================================================================== */
+
+.zardper-magnetic {
+  transition: transform 0.3s var(--ease);
+}
+
+/* ================================================================== */
+/*  Section transitions                                               */
+/* ================================================================== */
+
+.zardper-section {
+  position: relative;
+  z-index: 1;
+  padding: 100px 24px;
+}
+
+.zardper-section--dark {
+  background: linear-gradient(180deg, transparent 0%, hsla(270, 30%, 4%, 0.5) 50%, transparent 100%);
+}
+
+/* ================================================================== */
+/*  Feature grid                                                      */
+/* ================================================================== */
+
+.zardper-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+/* ================================================================== */
+/*  Timeline                                                          */
+/* ================================================================== */
+
+.zardper-timeline {
+  position: relative;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-left: 40px;
+}
+
+.zardper-timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, hsl(38 60% 50%), hsl(270 60% 50%), transparent);
+  opacity: 0.3;
+}
+
+.zardper-timeline-node {
+  position: relative;
+  padding: 24px 0 24px 32px;
+}
+
+.zardper-timeline-node::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: 32px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 20px var(--brand-glow), 0 0 0 4px hsla(38, 60%, 50%, 0.15);
+  animation: zardper-pulse-glow 3s ease-in-out infinite;
+}
+
+.zardper-timeline-node--alt::before {
+  background: hsl(190 70% 55%);
+  box-shadow: 0 0 20px hsla(190, 70%, 55%, 0.4), 0 0 0 4px hsla(190, 70%, 55%, 0.15);
+}
+
+/* ================================================================== */
+/*  Footer                                                            */
+/* ================================================================== */
+
+.zardper-footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--line);
+  padding: 48px 24px 24px;
+  background: linear-gradient(180deg, transparent, hsla(270, 30%, 4%, 0.5));
+}
+
+/* ================================================================== */
+/*  Utility                                                            */
+/* ================================================================== */
+
+.zardper-text-gradient {
+  background: linear-gradient(135deg, hsl(270 30% 80%) 0%, hsl(38 80% 70%) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.zardper-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+  border: none;
+  margin: 48px 0;
+}
+
+/* ================================================================== */
+/*  Site chrome (nav/footer) overrides for fantasy theme              */
+/* ================================================================== */
+
+.site-nav {
+  background: hsla(270, 30%, 6%, 0.6);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid hsla(270, 30%, 60%, 0.08);
+}
+
+.site-nav:hover {
+  border-bottom-color: hsla(270, 30%, 60%, 0.15);
+}
+
+.site-brand-logo {
+  filter: drop-shadow(0 0 12px var(--brand-glow));
+}
+
+.site-brand-name {
+  background: linear-gradient(135deg, hsl(270 30% 90%) 0%, hsl(38 80% 70%) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.site-footer {
+  background: linear-gradient(180deg, transparent, hsla(270, 30%, 4%, 0.5));
+}
+
+/* ================================================================== */
+/*  Console / app overrides for fantasy                               */
+/* ================================================================== */
+
+.agent-pay-console {
+  position: relative;
+  z-index: 1;
+}
+
+.console-shell {
+  position: relative;
+  z-index: 1;
+}
+
+.agent-pay-workspace-view {
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, hsla(270, 40%, 15%, 0.3) 0%, transparent 60%),
+    var(--bg);
+}
+
+/* ================================================================== */
+/*  Responsive                                                         */
+/* ================================================================== */
+
+@media (max-width: 768px) {
+  .zardper-orb {
+    width: 200px;
+    height: 200px;
+  }
+
+  .zardper-h1 {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .zardper-section {
+    padding: 60px 16px;
+  }
+
+  .zardper-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

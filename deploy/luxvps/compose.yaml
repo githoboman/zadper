@@ -1,0 +1,227 @@
+name: ${AGENTPAY_COMPOSE_PROJECT:-agentpay}
+
+x-runtime-build: &runtime-build
+  context: ../..
+  dockerfile: deploy/luxvps/Dockerfile
+  target: runtime
+  args:
+    NODE_VERSION: ${AGENTPAY_NODE_VERSION:-22.23.1}
+    PNPM_VERSION: ${AGENTPAY_PNPM_VERSION:-11.3.0}
+    BUILD_REVISION: ${AGENTPAY_REVISION:-unknown}
+
+x-runtime-hardening: &runtime-hardening
+  init: true
+  read_only: true
+  tmpfs:
+    - /tmp:size=16m,mode=1777
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  user: "${AGENTPAY_RUNTIME_UID:-10001}:${AGENTPAY_RUNTIME_GID:-10001}"
+  restart: unless-stopped
+  stop_grace_period: 30s
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+x-key-mount: &key-mount
+  type: bind
+  source: ${AGENTPAY_KEY_DIR:-./keys}
+  target: /run/agentpay/keys
+  read_only: true
+
+x-casper-client-mount: &casper-client-mount
+  type: bind
+  source: ${CASPER_CLIENT_BINARY:-./bin/casper-client}
+  target: /usr/local/bin/casper-client
+  read_only: true
+
+services:
+  # The three application processes deliberately share the facilitator's
+  # network namespace.  AgentPay's source guard only permits an HTTP
+  # facilitator URL on loopback; 127.0.0.1:4022 therefore remains private
+  # without weakening that invariant.  The facilitator container has no host
+  # port. A private project network connects it to the Nginx gateway; only the
+  # gateway joins public_proxy.
+  facilitator:
+    image: ${AGENTPAY_IMAGE:-agentpay:d1f9997}
+    build: *runtime-build
+    entrypoint:
+      - /usr/local/bin/facilitator-entrypoint.sh
+    env_file:
+      - ${AGENTPAY_SERVICE_ENV_FILE:-./agentpay.env}
+    environment:
+      CASPER_SECRET_KEY_PATH: /run/agentpay/keys/facilitator-secret.pem
+      CASPER_PUBLIC_KEY_PATH: /run/agentpay/keys/funded_public_key
+      CASPER_RPC_URL: ${CASPER_RPC_URL:-https://node.testnet.casper.network/rpc}
+      X402_FACILITATOR_BINARY_PATH: /usr/local/bin/x402-facilitator
+      X402_FACILITATOR_SHA256: ${X402_FACILITATOR_SHA256:-446af929ec3f32b85cf3f33205c1eeaaf445e956689687bd7cec94b5059aa52b}
+      PORT: "4022"
+    volumes:
+      - *key-mount
+      - type: bind
+        source: ${X402_FACILITATOR_BINARY:-./bin/x402-facilitator}
+        target: /usr/local/bin/x402-facilitator
+        read_only: true
+    expose:
+      - "4022"
+    networks:
+      agentpay_internal:
+        aliases:
+          - agentpay-facilitator
+          - agentpay-report-api
+          - agentpay-mcp
+      agentpay_egress: {}
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          node -e "fetch('http://127.0.0.1:4022/health').then(r => {
+          if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    <<: *runtime-hardening
+
+  report-api:
+    image: ${AGENTPAY_IMAGE:-agentpay:d1f9997}
+    build: *runtime-build
+    command:
+      - --conditions=production
+      - apps/report-api/dist/server.js
+    env_file:
+      - ${AGENTPAY_SERVICE_ENV_FILE:-./agentpay.env}
+    environment:
+      REPORT_API_HOST: 0.0.0.0
+      REPORT_API_PORT: "4021"
+      REPORT_API_URL: http://127.0.0.1:4021
+      X402_FACILITATOR_URL: http://127.0.0.1:4022
+      AGENTPAY_DATABASE_PATH: /var/lib/agentpay/agentpay.sqlite
+      AGENT_PAY_REPO_ROOT: /app
+      CASPER_SECRET_KEY_PATH: /run/agentpay/keys/buyer-secret.pem
+      AGENT_PAY_REGISTRY_RECORDER_KEY_PATH: /run/agentpay/keys/registry-recorder-secret.pem
+      CASPER_CLIENT_COMMAND: /usr/local/bin/casper-client
+    volumes:
+      - type: bind
+        source: ${AGENTPAY_STATE_DIR:-./state}
+        target: /var/lib/agentpay
+      - *key-mount
+      - *casper-client-mount
+    depends_on:
+      facilitator:
+        condition: service_healthy
+    network_mode: service:facilitator
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          node -e "fetch('http://127.0.0.1:4021/health').then(r => {
+          if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    <<: *runtime-hardening
+
+  mcp:
+    image: ${AGENTPAY_IMAGE:-agentpay:d1f9997}
+    build: *runtime-build
+    command:
+      - --conditions=production
+      - apps/mcp-server/dist/server.js
+    env_file:
+      - ${AGENTPAY_SERVICE_ENV_FILE:-./agentpay.env}
+    environment:
+      MCP_SERVER_HOST: 0.0.0.0
+      MCP_SERVER_PORT: "3001"
+      REPORT_API_URL: http://127.0.0.1:4021
+      X402_FACILITATOR_URL: http://127.0.0.1:4022
+      AGENT_PAY_REPO_ROOT: /app
+      CASPER_SECRET_KEY_PATH: /run/agentpay/keys/buyer-secret.pem
+      AGENT_PAY_REGISTRY_RECORDER_KEY_PATH: /run/agentpay/keys/registry-recorder-secret.pem
+      CASPER_CLIENT_COMMAND: /usr/local/bin/casper-client
+    volumes:
+      - type: bind
+        source: ${AGENTPAY_STATE_DIR:-./state}
+        target: /var/lib/agentpay
+        read_only: true
+      - *key-mount
+      - *casper-client-mount
+    depends_on:
+      facilitator:
+        condition: service_healthy
+      report-api:
+        condition: service_healthy
+    network_mode: service:facilitator
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          node -e "fetch('http://127.0.0.1:3001/health').then(r => {
+          if (!r.ok) process.exit(1) }).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    <<: *runtime-hardening
+
+  web:
+    image: ${AGENTPAY_WEB_IMAGE:-agentpay-web:d1f9997}
+    build:
+      context: ../..
+      dockerfile: deploy/luxvps/Dockerfile
+      target: web
+      args:
+        NODE_VERSION: ${AGENTPAY_NODE_VERSION:-22.23.1}
+        PNPM_VERSION: ${AGENTPAY_PNPM_VERSION:-11.3.0}
+        BUILD_REVISION: ${AGENTPAY_REVISION:-unknown}
+    networks:
+      agentpay_internal: {}
+      caddy:
+        aliases:
+          - agentpay-web
+    depends_on:
+      facilitator:
+        condition: service_started
+    expose:
+      - "8080"
+    user: "101:101"
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+      - /var/cache/nginx:size=8m,mode=0755,uid=101,gid=101
+      - /var/run:size=1m,mode=0755,uid=101,gid=101
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -q -O /dev/null http://127.0.0.1:8080/
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+networks:
+  agentpay_internal:
+    name: ${AGENTPAY_INTERNAL_NETWORK:-agentpay_internal}
+    internal: true
+  agentpay_egress:
+    name: ${AGENTPAY_EGRESS_NETWORK:-agentpay_egress}
+  caddy:
+    name: ${CADDY_NETWORK:-public_proxy}
+    external: true

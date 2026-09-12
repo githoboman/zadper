@@ -1,0 +1,46 @@
+.env
+.env.local
+.env.*.local
+.agentpay-testnet-key/
+.agentpay-registry-recorder-key/
+node_modules/
+dist/
+coverage/
+data/
+.turbo/
+.vite/
+target/
+*.log
+
+# large local media kept out of the repo
+prototypes/
+videos/
+hackathon-skills-v1.0.tar.gz
+
+# CLI npm publish staging (main.js is copied in at publish time)
+apps/cli/.publish/main.js
+
+# MCP npm publish staging (generated from reviewed source at package time)
+apps/mcp-server/.publish/main.js
+apps/mcp-server/.publish/SKILL.md
+apps/mcp-server/.publish/LICENSE
+apps/mcp-server/.publish/contracts/
+
+# local audit and planning notes
+/docs/backend-security-review-2026-07-17.md
+/docs/e2e-walkthrough-2026-07-17.md
+/docs/finals-upgrade-board.md
+/docs/ui/2026-07-16-aave-style-brief.md
+/docs/ui/2026-07-16-final-ui-plan.md
+/docs/live-demo-transcript.md
+/docs/live-demo.md
+
+
+# hackathon process docs (working notes, not product documentation)
+/docs/HACKATHON.md
+/docs/dorahacks-submission.md
+/docs/superpowers/
+/docs/handoffs/
+/docs/research/
+/.superpowers/
+/docs/security/

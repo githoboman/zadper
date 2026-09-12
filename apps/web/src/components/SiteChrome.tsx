@@ -1,0 +1,130 @@
+import type { MouseEvent, ReactNode } from "react";
+import { ArrowSquareOut, Moon, Sun } from "@phosphor-icons/react";
+import { ZardperLogo } from "./ZardperLogo";
+import { EXPLORER } from "../landing2/data";
+
+// Shared page chrome for every routed page except the landing (the landing is
+// the brand surface and keeps its own nav and footer). One nav, one footer,
+// the same links everywhere, so no page is a dead end.
+
+export type SiteKey = "overview" | "audit" | "check" | "counterparty" | "feed" | "agents" | "app";
+
+type Navigate = (path: string) => void;
+
+const PRIMARY_LINKS: ReadonlyArray<{ key: SiteKey; label: string; path: string }> = [
+  { key: "audit", label: "Payment checker", path: "/audit" },
+  { key: "check", label: "Token check", path: "/check" },
+  { key: "counterparty", label: "Wallet check", path: "/counterparty" },
+  { key: "feed", label: "Shared results", path: "/feed" },
+  { key: "agents", label: "Agents", path: "/agents" }
+];
+
+const CONSOLE_LINK = { key: "app", label: "Console", path: "/app" } as const;
+
+// Plain anchors so pages still render outside a router (tests, embeds); with a
+// navigate callback the click stays an SPA transition.
+function linkClick(path: string, navigate?: Navigate) {
+  return (event: MouseEvent<HTMLAnchorElement>) => {
+    if (!navigate) return;
+    event.preventDefault();
+    navigate(path);
+  };
+}
+
+export function SiteNavLinks({ current, navigate }: { current: SiteKey; navigate?: Navigate }) {
+  return (
+    <nav className="site-links" aria-label="Zardper pages">
+      {PRIMARY_LINKS.map((link) => (
+        <a
+          key={link.key}
+          href={link.path}
+          aria-current={link.key === current ? "page" : undefined}
+          onClick={linkClick(link.path, navigate)}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+export function SiteNav({
+  current,
+  sub,
+  navigate,
+  theme,
+  onToggleTheme,
+  actions,
+}: {
+  current: SiteKey;
+  sub: string;
+  navigate?: Navigate;
+  theme?: "light" | "dark";
+  onToggleTheme?: () => void;
+  actions?: ReactNode;
+}) {
+  return (
+    <header className="site-nav">
+      <a className="site-brand" href="/" onClick={linkClick("/", navigate)} aria-label="Zardper overview">
+        <ZardperLogo className="site-brand-logo" decorative />
+        <span className="site-brand-copy">
+          <span className="site-brand-name">Zardper</span>
+          <span className="site-brand-sub">{sub}</span>
+        </span>
+      </a>
+      <SiteNavLinks current={current} navigate={navigate} />
+      {onToggleTheme || actions ? (
+        <div className="site-nav-actions">
+          {onToggleTheme ? (
+            <button
+              type="button"
+              className="site-theme"
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              onClick={onToggleTheme}
+            >
+              {theme === "dark" ? (
+                <Sun size={16} weight="bold" aria-hidden="true" />
+              ) : (
+                <Moon size={16} weight="bold" aria-hidden="true" />
+              )}
+            </button>
+          ) : null}
+          {actions}
+        </div>
+      ) : null}
+    </header>
+  );
+}
+
+export function SiteFooter({ current, navigate }: { current: SiteKey; navigate?: Navigate }) {
+  return (
+    <footer className="site-footer">
+      <div className="site-footer-inner">
+        <div className="site-footer-brand">
+          <span className="site-footer-name">Zardper</span>
+          <span className="site-footer-line">The Arcane Eye of Agentic Payments. Sees every charge before your agent signs it.</span>
+        </div>
+        <nav className="site-footer-links" aria-label="Zardper pages, footer">
+          {[...PRIMARY_LINKS, CONSOLE_LINK].map((link) => (
+            <a
+              key={link.key}
+              href={link.path}
+              aria-current={link.key === current ? "page" : undefined}
+              onClick={linkClick(link.path, navigate)}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a href={EXPLORER} target="_blank" rel="noreferrer">
+            Bot Chain Testnet explorer
+            <ArrowSquareOut size={12} weight="bold" aria-hidden="true" />
+          </a>
+        </nav>
+      </div>
+      <div className="site-footer-base">
+        <span>Bot Chain Testnet · non-custodial</span>
+        <span>Approval is not payment. Signing stays in the wallet.</span>
+      </div>
+    </footer>
+  );
+}

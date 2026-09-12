@@ -1,0 +1,8 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  esbuild: true
+overrides:
+  esbuild: 0.28.1
+  hono: 4.12.25

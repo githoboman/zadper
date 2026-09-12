@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\OWNER\\Desktop\\zadper\\contracts\\agent-pay-registry\\contracts\\AgentPayRegistry.sol": {
+      "lastModificationDate": 1789127157404,
+      "contentHash": "55dee321d4f83ba3a208ac6781c4960a",
+      "sourceName": "contracts/AgentPayRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "AgentPayRegistry"
+      ]
+    }
+  }
+}

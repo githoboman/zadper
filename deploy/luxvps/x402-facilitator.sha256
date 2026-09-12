@@ -1,0 +1,5 @@
+# Provenance: casper-x402 facilitator, commit
+# 3ee705ecfff44795bd502b101991964ce4dc037d, linux/amd64, Go 1.26.5.
+# The binary is supplied out-of-band and must be copied to the path named by
+# X402_FACILITATOR_BINARY before deployment.
+446af929ec3f32b85cf3f33205c1eeaaf445e956689687bd7cec94b5059aa52b  x402-facilitator
