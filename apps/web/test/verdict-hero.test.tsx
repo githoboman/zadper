@@ -1,13 +1,13 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AgentPayVerdictHero } from "../src/components/AgentPayVerdictHero";
+import { ZadperVerdictHero } from "../src/components/ZadperVerdictHero";
 
 afterEach(cleanup);
 
 describe("console verdict summary", () => {
   it("never says that a caution verdict has no recorded flags", () => {
     render(
-      <AgentPayVerdictHero
+      <ZadperVerdictHero
         evidenceNetwork="botchain:mainnet"
         mode="verdict"
         networkLabel="Bot Chain Mainnet"

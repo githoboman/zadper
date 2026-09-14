@@ -4,7 +4,7 @@ import {
   AuditApiError,
   paymentRequiredFromTerms,
   type CheckPaymentResult,
-  type AgentPayServiceQuote,
+  type ZadperServiceQuote,
   type ObservationResult,
   type OperatorPolicy,
   type PaymentCheck,
@@ -80,7 +80,7 @@ export type AuditFlow = {
   providerAction: AuditStepState<ProviderDecision>;
   policy: AuditStepState<OperatorPolicy>;
   policyAction: AuditStepState<OperatorPolicy>;
-  liveService: AuditStepState<AgentPayServiceQuote>;
+  liveService: AuditStepState<ZadperServiceQuote>;
   walletPayment: AuditStepState<CheckedWalletPaymentResult>;
 
   // REVIEW re-checks preserve prior checks; the old result is never mutated.
@@ -94,7 +94,7 @@ export type AuditFlow = {
 
   // Actions.
   runProbe: () => Promise<void>;
-  loadAgentPayService: () => Promise<void>;
+  loadZadperService: () => Promise<void>;
   runCheck: () => Promise<void>;
   recheck: () => Promise<void>;
   cancelCheck: () => Promise<void>;
@@ -147,7 +147,7 @@ export function createIdempotencyKey(webCrypto: Crypto | null | undefined = glob
 function missingTokenError(): AuditApiError {
   return new AuditApiError({
     code: "credentials_required",
-    message: "Connect Bot Chain Wallet or use an AgentPay token before continuing.",
+    message: "Connect Bot Chain Wallet or use an Zadper token before continuing.",
     status: 401
   });
 }
@@ -188,7 +188,7 @@ export function useAuditFlow(options: UseAuditFlowOptions = {}): AuditFlow {
   const [providerAction, setProviderAction] = useState<AuditStepState<ProviderDecision>>(idleStep);
   const [policy, setPolicy] = useState<AuditStepState<OperatorPolicy>>(idleStep);
   const [policyAction, setPolicyAction] = useState<AuditStepState<OperatorPolicy>>(idleStep);
-  const [liveService, setLiveService] = useState<AuditStepState<AgentPayServiceQuote>>(idleStep);
+  const [liveService, setLiveService] = useState<AuditStepState<ZadperServiceQuote>>(idleStep);
   const [walletPayment, setWalletPayment] = useState<AuditStepState<CheckedWalletPaymentResult>>(idleStep);
   const [previousChecks, setPreviousChecks] = useState<PaymentCheck[]>([]);
   const [idempotencyKey, setIdempotencyKey] = useState<string | null>(null);
@@ -256,15 +256,15 @@ export function useAuditFlow(options: UseAuditFlowOptions = {}): AuditFlow {
     setWalletPayment(idleStep());
   }, []);
 
-  const loadAgentPayService = useCallback(async () => {
+  const loadZadperService = useCallback(async () => {
     setLiveService({ status: "running", data: null, error: null });
     try {
-      const quote = await apiRef.current.getAgentPayServiceQuote();
+      const quote = await apiRef.current.getZadperServiceQuote();
       const url = new URL(quote.paymentResource.url);
       if (url.protocol !== "https:" && url.protocol !== "http:") {
         throw new AuditApiError({
           code: "invalid_service_url",
-          message: "AgentPay returned a payment URL that the checker cannot open.",
+          message: "Zadper returned a payment URL that the checker cannot open.",
           status: 502,
           field: "paymentResource.url"
         });
@@ -355,7 +355,7 @@ export function useAuditFlow(options: UseAuditFlowOptions = {}): AuditFlow {
     const trimmed = authorizationText.trim();
     if (!trimmed) return null;
     // This is an unsigned authorization intent, not key material. Bot Chain Wallet
-    // signs its digest only after AgentPay returns PAY. The backend validates the
+    // signs its digest only after Zadper returns PAY. The backend validates the
     // intent strictly and returns structured reasons.
     const parsed: unknown = JSON.parse(trimmed);
     if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
@@ -859,7 +859,7 @@ export function useAuditFlow(options: UseAuditFlowOptions = {}): AuditFlow {
       settlementVerdict,
       anchorState,
       runProbe,
-      loadAgentPayService,
+      loadZadperService,
       runCheck,
       recheck,
       cancelCheck,
@@ -902,7 +902,7 @@ export function useAuditFlow(options: UseAuditFlowOptions = {}): AuditFlow {
       settlementVerdict,
       anchorState,
       runProbe,
-      loadAgentPayService,
+      loadZadperService,
       runCheck,
       recheck,
       cancelCheck,

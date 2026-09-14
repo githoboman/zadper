@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ *
- *  AgentPay payment-check workflow. Everything is scoped under         *
+ *  Zadper payment-check workflow. Everything is scoped under         *
  *  .av-modern so nothing leaks into sibling views.                     *
  *                                                                     *
  *  Semantic reserve: green = PAY / match / anchored, amber = REVIEW /  *

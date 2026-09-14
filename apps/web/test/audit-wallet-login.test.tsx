@@ -24,7 +24,7 @@ afterEach(() => {
   window.history.pushState({}, "", "/");
 });
 
-it("creates an in-memory AgentPay session with Bot Chain Wallet", async () => {
+it("creates an in-memory Zadper session with Bot Chain Wallet", async () => {
   const provider = {
     requestConnection: vi.fn(async () => true),
     getActivePublicKey: vi.fn(async () => PUBLIC_KEY),
@@ -48,7 +48,7 @@ it("creates an in-memory AgentPay session with Bot Chain Wallet", async () => {
             operatorPublicKey: PUBLIC_KEY,
             purpose: "session",
             nonce: "c".repeat(64),
-            message: "AgentPay login challenge",
+            message: "Zadper login challenge",
             issuedAt: "2026-07-17T12:00:00.000Z",
             expiresAt: "2026-07-17T12:05:00.000Z"
           },
@@ -84,7 +84,7 @@ it("creates an in-memory AgentPay session with Bot Chain Wallet", async () => {
   });
   expect(provider.requestConnection).toHaveBeenCalledOnce();
   expect(provider.getActivePublicKey).toHaveBeenCalledOnce();
-  expect(provider.signMessage).toHaveBeenCalledWith("AgentPay login challenge", PUBLIC_KEY);
+  expect(provider.signMessage).toHaveBeenCalledWith("Zadper login challenge", PUBLIC_KEY);
   expect(document.body.textContent).not.toContain(SESSION_TOKEN);
 });
 

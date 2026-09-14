@@ -10,7 +10,7 @@ const APP_SOURCE_ROOT = fileURLToPath(new URL("./src/", import.meta.url));
 
 function rejectLoopbackEndpoints(): Plugin {
   return {
-    name: "reject-agentpay-loopback-endpoints",
+    name: "reject-zadper-loopback-endpoints",
     apply: "build",
     generateBundle(_options, bundle) {
       for (const output of Object.values(bundle)) {
@@ -18,7 +18,7 @@ function rejectLoopbackEndpoints(): Plugin {
           output.type === "chunk" && output.moduleIds.some((moduleId) => moduleId.startsWith(APP_SOURCE_ROOT));
         const source = output.type === "chunk" ? output.code : typeof output.source === "string" ? output.source : "";
         if ((containsAppSource || output.type === "asset") && AGENTPAY_LOOPBACK_ENDPOINT.test(source)) {
-          this.error(`Production chunk ${output.fileName} contains a loopback AgentPay endpoint`);
+          this.error(`Production chunk ${output.fileName} contains a loopback Zadper endpoint`);
         }
       }
     }

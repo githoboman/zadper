@@ -40,7 +40,7 @@ export async function signWalletMessage(
 ): Promise<string> {
   try {
     if (!EVM_ADDRESS_REGEX.test(expectedAddress)) {
-      throw walletError("wallet_public_key_invalid", "The connected AgentPay session has an invalid account key.");
+      throw walletError("wallet_public_key_invalid", "The connected Zadper session has an invalid account key.");
     }
     const { provider, address } = await connectWallet();
     if (address.toLowerCase() !== expectedAddress.toLowerCase()) {
@@ -71,7 +71,7 @@ export async function signWalletAuthorization(
     if (address.toLowerCase() !== intent.payerPublicKey.toLowerCase()) {
       throw walletError(
         "wallet_account_changed",
-        "Bot Chain Wallet switched accounts. Reconnect the wallet AgentPay approved for this payment."
+        "Bot Chain Wallet switched accounts. Reconnect the wallet Zadper approved for this payment."
       );
     }
 

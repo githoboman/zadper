@@ -73,7 +73,7 @@ describe("checked browser wallet payment", () => {
     expect(fetchImpl).toHaveBeenCalledOnce();
     expect(result.transactionHash).toBe(TRANSACTION_HASH);
     expect(result.observation).toEqual({
-      observerVersion: "agentpay-web/0.1.0",
+      observerVersion: "zadper-web/0.1.0",
       status: 200,
       contentType: "application/json",
       bodyBytes: responseBody.byteLength,
@@ -132,7 +132,7 @@ function paymentFixture(): {
     bodyHash: sha256(BODY_BYTES),
     bodyBytes: BODY_BYTES.byteLength,
     capturedAt: "2026-07-17T14:59:00.000Z",
-    adapterVersion: "agentpay-probe/1.0"
+    adapterVersion: "zadper-probe/1.0"
   });
   const challenge = paymentRequired();
   const normalized = normalizePaymentRequired(challenge, request);

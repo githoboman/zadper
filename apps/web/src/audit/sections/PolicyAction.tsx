@@ -111,7 +111,7 @@ export function PolicyAction({ flow }: { flow: AuditFlow }) {
         </>
       ) : (
         <p className="audit-note" data-state="not_checked">
-          Connect Bot Chain Wallet to sign payment limits. An AgentPay token can run checks, but it cannot change account rules.
+          Connect Bot Chain Wallet to sign payment limits. An Zadper token can run checks, but it cannot change account rules.
         </p>
       )}
 

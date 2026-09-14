@@ -13,7 +13,7 @@ describe("site chrome navigation", () => {
       </>
     );
 
-    const primary = screen.getByRole("navigation", { name: "AgentPay pages" });
+    const primary = screen.getByRole("navigation", { name: "Zadper pages" });
     expect(within(primary).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("href")])).toEqual([
       ["Payment checker", "/audit"],
       ["Token check", "/check"],
@@ -23,7 +23,7 @@ describe("site chrome navigation", () => {
     ]);
     expect(within(primary).queryByRole("link", { name: "Console" })).toBeNull();
 
-    const footer = screen.getByRole("navigation", { name: "AgentPay pages, footer" });
+    const footer = screen.getByRole("navigation", { name: "Zadper pages, footer" });
     expect(within(footer).getByRole("link", { name: "Console" }).getAttribute("href")).toBe("/app");
   });
 });

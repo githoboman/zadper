@@ -47,7 +47,7 @@ export function ResponseObservation({ flow }: { flow: AuditFlow }) {
       {recorded ? (
         <>
           <p className="audit-note" data-state="success">
-            AgentPay recorded the response returned after payment.
+            Zadper recorded the response returned after payment.
           </p>
           <dl className="audit-field-grid">
             <dt>HTTP status</dt>
@@ -74,7 +74,7 @@ export function ResponseObservation({ flow }: { flow: AuditFlow }) {
         </>
       ) : !ready ? (
         <p className="audit-note">
-          AgentPay records the service response after the Bot Chain transfer matches the approved payment.
+          Zadper records the service response after the Bot Chain transfer matches the approved payment.
         </p>
       ) : (
         <>
@@ -89,7 +89,7 @@ export function ResponseObservation({ flow }: { flow: AuditFlow }) {
                 event.preventDefault();
                 if (!valid) return;
                 const input: ResponseObservationInput = {
-                  observerVersion: "agentpay-web/0.1.0",
+                  observerVersion: "Zadper-web/0.1.0",
                   status: statusNumber,
                   contentType: contentType.trim() ? contentType.trim() : null,
                   bodyBytes: bytesNumber,

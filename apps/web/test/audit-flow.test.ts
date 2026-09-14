@@ -26,7 +26,7 @@ const probeResult = {
     bodyHash: "0".repeat(64),
     bodyBytes: 0,
     capturedAt: "2026-07-16T00:00:00.000Z",
-    adapterVersion: "agentpay-probe/1.0",
+    adapterVersion: "Zadper-probe/1.0",
     requestHash: "a".repeat(64)
   },
   response: { status: 402, contentType: "application/json", bodyBytes: 12, bodyHash: "b".repeat(64), observedAt: "2026-07-16T00:00:00.000Z" },
@@ -117,7 +117,7 @@ describe("useAuditFlow honest states", () => {
         }
         return jsonResponse({
           quoteId: "quote-live-1",
-          paymentResource: { url: "https://service.agentpay.example/api/reports/buy/quote-live-1" },
+          paymentResource: { url: "https://service.Zadper.example/api/reports/buy/quote-live-1" },
           paymentRequirements: [{ scheme: "exact" }],
           paymentReadiness: { status: "ready", reason: null }
         });
@@ -125,18 +125,18 @@ describe("useAuditFlow honest states", () => {
     );
 
     const client = new AuditApiClient(
-      "https://auditor.agentpay.example/api",
-      "https://service.agentpay.example/api"
+      "https://auditor.Zadper.example/api",
+      "https://service.Zadper.example/api"
     );
-    await client.getAgentPayServiceQuote();
+    await client.getZadperServiceQuote();
 
     expect(requestedOrigins).toEqual([
-      "https://service.agentpay.example",
-      "https://service.agentpay.example"
+      "https://service.Zadper.example",
+      "https://service.Zadper.example"
     ]);
   });
 
-  it("loads a fresh AgentPay x402 charge as the payment checker target", async () => {
+  it("loads a fresh Zadper x402 charge as the payment checker target", async () => {
     const address = `hash-${"a".repeat(64)}`;
     vi.stubGlobal(
       "fetch",
@@ -156,7 +156,7 @@ describe("useAuditFlow honest states", () => {
         expect(requestUrl.searchParams.get("network")).toBe("botchain:mainnet");
         return jsonResponse({
           quoteId: "quote-live-1",
-          paymentResource: { url: "https://agentpay.example/api/reports/buy/quote-live-1" },
+          paymentResource: { url: "https://Zadper.example/api/reports/buy/quote-live-1" },
           paymentRequirements: [{ scheme: "exact" }],
           paymentReadiness: { status: "ready", reason: null }
         });
@@ -165,18 +165,18 @@ describe("useAuditFlow honest states", () => {
 
     const { result } = renderHook(() => useAuditFlow());
     await act(async () => {
-      await result.current.loadAgentPayService();
+      await result.current.loadZadperService();
     });
 
     expect(result.current.liveService.status).toBe("success");
     expect(result.current.probeInput).toEqual({
-      url: "https://agentpay.example/api/reports/buy/quote-live-1",
+      url: "https://Zadper.example/api/reports/buy/quote-live-1",
       method: "POST",
       body: {}
     });
   });
 
-  it("does not label AgentPay's own charge ready when the payment service is unavailable", async () => {
+  it("does not label Zadper's own charge ready when the payment service is unavailable", async () => {
     const address = `hash-${"a".repeat(64)}`;
     vi.stubGlobal(
       "fetch",
@@ -187,7 +187,7 @@ describe("useAuditFlow honest states", () => {
         }
         return jsonResponse({
           quoteId: "quote-unavailable-1",
-          paymentResource: { url: "https://agentpay.example/api/reports/buy/quote-unavailable-1" },
+          paymentResource: { url: "https://Zadper.example/api/reports/buy/quote-unavailable-1" },
           paymentRequirements: [],
           paymentReadiness: { status: "facilitator_unavailable", reason: "facilitator_unavailable" }
         });
@@ -196,7 +196,7 @@ describe("useAuditFlow honest states", () => {
 
     const { result } = renderHook(() => useAuditFlow());
     await act(async () => {
-      await result.current.loadAgentPayService();
+      await result.current.loadZadperService();
     });
 
     expect(result.current.liveService.status).toBe("error");
@@ -335,7 +335,7 @@ describe("useAuditFlow honest states", () => {
     vi.useFakeTimers();
     let receiptReads = 0;
     const receiptBody = {
-      schemaVersion: "agentpay-purchase/v1",
+      schemaVersion: "Zadper-purchase/v1",
       receiptId: "receipt-check-1",
       checkId: "check-1",
       request: probeResult.request,

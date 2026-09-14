@@ -19,7 +19,7 @@ afterEach(() => {
   window.history.pushState({}, "", "/");
 });
 
-it("loads a fresh AgentPay Testnet charge into the payment checker", async () => {
+it("loads a fresh Zadper Testnet charge into the payment checker", async () => {
   const address = `hash-${"a".repeat(64)}`;
   vi.stubGlobal(
     "fetch",
@@ -42,7 +42,7 @@ it("loads a fresh AgentPay Testnet charge into the payment checker", async () =>
       return new Response(
         JSON.stringify({
           quoteId: "quote-live-1",
-          paymentResource: { url: "https://agentpay.example/api/reports/buy/quote-live-1" },
+          paymentResource: { url: "https://Zadper.example/api/reports/buy/quote-live-1" },
           paymentRequirements: [{ scheme: "exact" }],
           paymentReadiness: { status: "ready", reason: null }
         }),
@@ -59,11 +59,11 @@ it("loads a fresh AgentPay Testnet charge into the payment checker", async () =>
   expect(document.body.textContent).not.toContain("control surface");
   expect(document.body.textContent).not.toContain("Probe charge");
 
-  fireEvent.click(screen.getByRole("button", { name: "Use AgentPay's own charge" }));
+  fireEvent.click(screen.getByRole("button", { name: "Use Zadper's own charge" }));
 
   await waitFor(() => {
     expect((screen.getByLabelText("Service URL") as HTMLInputElement).value).toBe(
-      "https://agentpay.example/api/reports/buy/quote-live-1"
+      "https://Zadper.example/api/reports/buy/quote-live-1"
     );
   });
   expect((screen.getByLabelText("HTTP method") as HTMLSelectElement).value).toBe("POST");

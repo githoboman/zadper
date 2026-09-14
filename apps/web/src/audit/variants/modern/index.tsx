@@ -348,7 +348,7 @@ export default function ModernVariant({ flow, theme }: AuditVariantProps) {
           <p className="av-token-strip">
             {flow.walletSession.status === "success"
               ? "Bot Chain Wallet connected. Your session stays in this tab."
-              : "AgentPay token active for this tab."}
+              : "Zadper token active for this tab."}
             <button type="button" className="av-token-clear" onClick={() => flow.signOut()}>
               {flow.walletSession.status === "success" ? "End session" : "Clear token"}
             </button>
@@ -356,7 +356,7 @@ export default function ModernVariant({ flow, theme }: AuditVariantProps) {
         ) : null}
 
         <p className="av-footnote">
-          AgentPay only shows checks, transfers, and Bot Chain receipt records returned by the live services.
+          Zadper only shows checks, transfers, and Bot Chain receipt records returned by the live services.
           Testnet activity is labelled.
         </p>
       </div>

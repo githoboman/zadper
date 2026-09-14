@@ -1,6 +1,6 @@
 export const EXPLORER = "https://testnet.cspr.live";
-export const MCP_NPM_URL = "https://www.npmjs.com/package/@timidan/agentpay-mcp";
-export const CLI_NPM_URL = "https://www.npmjs.com/package/@timidan/agentpay-cli";
+export const MCP_NPM_URL = "https://www.npmjs.com/package/@timidan/Zadper-mcp";
+export const CLI_NPM_URL = "https://www.npmjs.com/package/@timidan/Zadper-cli";
 
 /** Middle-truncate a long hash so it fits 320px without overlap. */
 export function shortHash(value: string, head = 8, tail = 6): string {
@@ -16,8 +16,8 @@ export const AGENT_SURFACES: ReadonlyArray<{ id: string; name: string; title: st
   {
     id: "mcp",
     name: "MCP",
-    title: "@timidan/agentpay-mcp",
-    code: `npx --yes @timidan/agentpay-mcp
+    title: "@timidan/Zadper-mcp",
+    code: `npx --yes @timidan/Zadper-mcp
 
 # MCP tools an agent calls before it signs
 check_x402_payment      -> PAY | REVIEW | BLOCK
@@ -27,20 +27,20 @@ get_payment_receipt     -> receipt body + anchor state`
   {
     id: "cli",
     name: "CLI",
-    title: "@timidan/agentpay-cli",
-    code: `npm install --global @timidan/agentpay-cli
+    title: "@timidan/Zadper-cli",
+    code: `npm install --global @timidan/Zadper-cli
 
 # check a charge, then prove the settlement
-agentpay check              -> PAY | REVIEW | BLOCK
-agentpay verify-settlement  -> match | pending | mismatch | unverifiable
-agentpay receipt show|verify
-agentpay provider pin|deny
-agentpay policy show|set`
+Zadper check              -> PAY | REVIEW | BLOCK
+Zadper verify-settlement  -> match | pending | mismatch | unverifiable
+Zadper receipt show|verify
+Zadper provider pin|deny
+Zadper policy show|set`
   },
   {
     id: "http",
     name: "HTTP",
-    title: "agentpay · HTTP bridge",
+    title: "Zadper · HTTP bridge",
     code: `# the same three tools over the HTTP bridge
 POST /tools/check_x402_payment
 POST /tools/verify_x402_settlement
@@ -73,7 +73,7 @@ export const PHASES: ReadonlyArray<{
 }> = [
   {
     name: "Check",
-    body: "AgentPay captures the service's real charge and decides: PAY, REVIEW, or BLOCK, with concrete reasons.",
+    body: "Zadper captures the service's real charge and decides: PAY, REVIEW, or BLOCK, with concrete reasons.",
     steps: ["Read charge", "Check", "Decision"]
   },
   {
@@ -88,7 +88,7 @@ export const PHASES: ReadonlyArray<{
   },
   {
     name: "Receipt",
-    body: "The receipt hash is written to the AgentPay registry on Bot Chain and read back for confirmation.",
+    body: "The receipt hash is written to the Zadper registry on Bot Chain and read back for confirmation.",
     steps: ["Receipt saved"]
   }
 ];

@@ -13,7 +13,7 @@ type Verdict = NonNullable<AuditFlow["decision"]>;
 const FACE: Record<Verdict, { word: string; qualifier: string }> = {
   pay: {
     word: "PAY",
-    qualifier: "This charge matches your rules. The buyer can sign it in their own wallet; AgentPay has not paid it."
+    qualifier: "This charge matches your rules. The buyer can sign it in their own wallet; Zadper has not paid it."
   },
   review: {
     word: "REVIEW",
@@ -64,7 +64,7 @@ export function DecisionCard({ flow }: { flow: AuditFlow }) {
 
       {verdict ? (
         <ReasonList
-          label="Why AgentPay made this decision"
+          label="Why Zadper made this decision"
           reasons={reasons}
           emptyLabel="No blocking or review reasons were reported."
           showTechnicalDetails={false}

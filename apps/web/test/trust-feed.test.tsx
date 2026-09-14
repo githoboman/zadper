@@ -9,7 +9,7 @@ afterEach(() => {
 });
 
 describe("Shared results", () => {
-  it("links every result directly to its AgentPay card image", async () => {
+  it("links every result directly to its Zadper card image", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue(

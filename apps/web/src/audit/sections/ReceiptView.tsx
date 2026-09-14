@@ -23,7 +23,7 @@ export function serializeReceiptForDownload(receipt: PaymentReceiptRecord["recei
 
 export function receiptDownloadName(receiptId: string): string {
   const safeId = receiptId.replace(/[^a-zA-Z0-9._-]/g, "-");
-  return `agentpay-${safeId}.json`;
+  return `Zadper-${safeId}.json`;
 }
 
 function downloadReceipt(receipt: PaymentReceiptRecord["receipt"]): void {

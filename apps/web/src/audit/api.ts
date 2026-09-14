@@ -2,7 +2,7 @@
 //
 // Auth model (verified against apps/report-api/src/auditor/{routes,auth}.ts):
 //  - Every /v1 payment route authenticates a bearer token (Authorization:
-//    Bearer <token>) or the agentpay_session cookie. There is no unauthenticated
+//    Bearer <token>) or the Zadper_session cookie. There is no unauthenticated
 //    write path; the only unauthenticated reads are a share-tokened receipt and
 //    POST /receipts/verify.
 //  - Two principals: an operator session (minted from a Bot Chain-signed,
@@ -32,7 +32,7 @@ import type {
   ProviderDecision,
   Reason
 } from "../../../../packages/agent-pay-core/src/payment/types";
-import { agentPayServiceBase, publicEndpoint, reportApiBase } from "../runtime-origins";
+import { ZadperServiceBase, publicEndpoint, reportApiBase } from "../runtime-origins";
 
 export type {
   CheckPaymentResult,
@@ -45,7 +45,7 @@ export type {
 export type { AuthorizationIntent, OperatorPolicy, PaymentTerms, ProviderDecision, Reason };
 
 const REPORT_API_BASE = reportApiBase;
-const AGENTPAY_SERVICE_BASE = agentPayServiceBase;
+const Zadper_SERVICE_BASE = ZadperServiceBase;
 const REQUEST_TIMEOUT_MS = 20_000;
 const CASPER_PACKAGE_HASH = /^(?:hash-)?[0-9a-f]{64}$/i;
 
@@ -75,7 +75,7 @@ export type ProbeResult = {
   redirects: string[];
 };
 
-export type AgentPayServiceQuote = {
+export type ZadperServiceQuote = {
   quoteId: string;
   paymentResource: {
     url: string;
@@ -163,7 +163,7 @@ export class AuditApiClient {
   private readonly baseUrl: string;
   private readonly serviceBaseUrl: string;
 
-  constructor(baseUrl: string = REPORT_API_BASE, serviceBaseUrl: string = AGENTPAY_SERVICE_BASE) {
+  constructor(baseUrl: string = REPORT_API_BASE, serviceBaseUrl: string = Zadper_SERVICE_BASE) {
     this.baseUrl = baseUrl.replace(/\/+$/, "");
     this.serviceBaseUrl = serviceBaseUrl.replace(/\/+$/, "");
   }
@@ -228,7 +228,7 @@ export class AuditApiClient {
     return this.request({ path: "/v1/policies/revisions", method: "POST", token, body: input });
   }
 
-  async getAgentPayServiceQuote(): Promise<AgentPayServiceQuote> {
+  async getZadperServiceQuote(): Promise<ZadperServiceQuote> {
     const resolved = await this.request<{ address: string; network: string }>(
       {
         path: "/resolve",
@@ -250,7 +250,7 @@ export class AuditApiClient {
         retryable: true
       });
     }
-    const quote = await this.request<AgentPayServiceQuote>(
+    const quote = await this.request<ZadperServiceQuote>(
       {
         path: "/reports/quote",
         method: "GET",
@@ -265,7 +265,7 @@ export class AuditApiClient {
     ) {
       throw new AuditApiError({
         code: "service_charge_unavailable",
-        message: "AgentPay's own charge is unavailable because its Testnet payment service is not ready. Try again shortly.",
+        message: "Zadper's own charge is unavailable because its Testnet payment service is not ready. Try again shortly.",
         status: 503,
         retryable: true,
         field: "paymentReadiness.status",
@@ -357,8 +357,8 @@ export class AuditApiClient {
       throw new AuditApiError({
         code: timedOut ? "request_timeout" : "network_error",
         message: timedOut
-          ? "AgentPay did not respond before the request timed out."
-          : "AgentPay could not be reached. Check that the report API is running.",
+          ? "Zadper did not respond before the request timed out."
+          : "Zadper could not be reached. Check that the report API is running.",
         status: 0,
         retryable: true
       });
@@ -372,7 +372,7 @@ export class AuditApiClient {
       } catch {
         throw new AuditApiError({
           code: "malformed_response",
-          message: "AgentPay returned a response that was not valid JSON.",
+          message: "Zadper returned a response that was not valid JSON.",
           status: response.status
         });
       }
@@ -398,7 +398,7 @@ function toApiError(body: unknown, status: number): AuditApiError {
         ? record.message
         : typeof record?.reason === "string"
           ? record.reason
-          : "AgentPay rejected the request.",
+          : "Zadper rejected the request.",
     status,
     retryable: record?.retryable === true,
     field: typeof record?.field === "string" ? record.field : null,

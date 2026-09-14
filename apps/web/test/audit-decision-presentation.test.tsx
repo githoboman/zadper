@@ -70,7 +70,7 @@ describe("payment decision presentation", () => {
       liveService: { status: "idle", data: null, error: null },
       probeInput: { url: "", method: "GET" },
       authorizationText: "",
-      loadAgentPayService: vi.fn(),
+      loadZadperService: vi.fn(),
       runProbe: vi.fn(),
       setProbeInput: vi.fn(),
       setAuthorizationText: vi.fn()
@@ -79,7 +79,7 @@ describe("payment decision presentation", () => {
     render(<ChargeTerms flow={flow} />);
 
     expect(screen.getByText("charge not read")).toBeTruthy();
-    expect(screen.getByText(/Connect Bot Chain Wallet or enter an AgentPay token/i)).toBeTruthy();
+    expect(screen.getByText(/Connect Bot Chain Wallet or enter an Zadper token/i)).toBeTruthy();
     expect(document.body.textContent).not.toContain("Authenticate step");
   });
 
@@ -188,7 +188,7 @@ describe("payment decision presentation", () => {
     } as unknown as AuditFlow;
 
     render(<OperatorAction flow={flow} />);
-    expect(screen.getByText("Use the AgentPay CLI")).toBeTruthy();
+    expect(screen.getByText("Use the Zadper CLI")).toBeTruthy();
     expect(screen.getByText(/operator-key\.pem/)).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Approve this provider" })).toBeNull();
   });
@@ -289,7 +289,7 @@ describe("payment decision presentation", () => {
       authorizationText: "",
       authorization: { status: "idle", data: null, error: null },
       preparePaymentDetails,
-      loadAgentPayService: vi.fn(),
+      loadZadperService: vi.fn(),
       runProbe: vi.fn(),
       setProbeInput: vi.fn(),
       setAuthorizationText: vi.fn()
@@ -329,7 +329,7 @@ describe("payment decision presentation", () => {
     fireEvent.click(screen.getByRole("button", { name: "Pay with Bot Chain Wallet" }));
 
     expect(payWithWallet).toHaveBeenCalledOnce();
-    expect(screen.getByText("Use the AgentPay CLI")).toBeTruthy();
-    expect(screen.getByText(/agentpay call/)).toBeTruthy();
+    expect(screen.getByText("Use the Zadper CLI")).toBeTruthy();
+    expect(screen.getByText(/Zadper call/)).toBeTruthy();
   });
 });

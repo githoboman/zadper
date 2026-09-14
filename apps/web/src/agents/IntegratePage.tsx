@@ -2,12 +2,12 @@ import { bridgeUrl, reportApiOrigin } from "../api";
 import { SiteFooter, SiteNav } from "../components/SiteChrome";
 import "./integrate-page.css";
 
-const MCP_NPM_URL = "https://www.npmjs.com/package/@timidan/agentpay-mcp";
-const CLI_NPM_URL = "https://www.npmjs.com/package/@timidan/agentpay-cli";
+const MCP_NPM_URL = "https://www.npmjs.com/package/@timidan/Zadper-mcp";
+const CLI_NPM_URL = "https://www.npmjs.com/package/@timidan/Zadper-cli";
 
 const PRIMARY_TOOLS = [
   { name: "check_x402_payment", body: "Checks a captured Bot Chain x402 charge and payment details the wallet has not signed yet. Returns PAY, REVIEW, or BLOCK before a key signs anything." },
-  { name: "verify_x402_settlement", body: "Compares the executed Bot Chain transaction with the exact charge AgentPay approved." },
+  { name: "verify_x402_settlement", body: "Compares the executed Bot Chain transaction with the exact charge Zadper approved." },
   { name: "get_payment_receipt", body: "Returns the signed policy, approval, settlement proof, service response, and Bot Chain anchor state." },
   { name: "assess_subject", body: "Runs a paid token or account check using live Bot Chain evidence and records the result on Testnet." },
   { name: "payment_status", body: "Shows whether the hosted Bot Chain x402 payment path is ready before an agent starts a purchase." }
@@ -17,7 +17,7 @@ const MCP_CONFIG = `{
   "mcpServers": {
     "agent-pay": {
       "command": "npx",
-      "args": ["--yes", "@timidan/agentpay-mcp"],
+      "args": ["--yes", "@timidan/Zadper-mcp"],
       "env": {
         "AGENT_PAY_API_TOKEN": "<scoped-agent-token>"
       }
@@ -25,8 +25,8 @@ const MCP_CONFIG = `{
   }
 }`;
 
-const CLI_SETUP = `npm install --global @timidan/agentpay-cli
-agentpay agent-token issue \\
+const CLI_SETUP = `npm install --global @timidan/Zadper-cli
+Zadper agent-token issue \\
   --name my-agent \\
   --key ./testnet_secret_key.pem \\
   --json`;
@@ -72,11 +72,11 @@ export default function IntegratePage({ onBack, onOpenAsk, navigate, theme, onTo
         <section className="ag-section">
           <h2>Install from npm</h2>
           <p className="ag-package-line">
-            <a href={MCP_NPM_URL} target="_blank" rel="noreferrer">@timidan/agentpay-mcp</a>
+            <a href={MCP_NPM_URL} target="_blank" rel="noreferrer">@timidan/Zadper-mcp</a>
             <span>runs the MCP server through <code>npx</code>.</span>
           </p>
           <p className="ag-package-line">
-            <a href={CLI_NPM_URL} target="_blank" rel="noreferrer">@timidan/agentpay-cli</a>
+            <a href={CLI_NPM_URL} target="_blank" rel="noreferrer">@timidan/Zadper-cli</a>
             <span>creates tokens and runs checks from a terminal.</span>
           </p>
           <p className="ag-note">Use Node.js 22 or a later version.</p>
@@ -92,7 +92,7 @@ export default function IntegratePage({ onBack, onOpenAsk, navigate, theme, onTo
         <section className="ag-section">
           <div className="ag-section-head">
             <h2>Add the MCP server</h2>
-            <code className="ag-resource">skill://agentpay</code>
+            <code className="ag-resource">skill://Zadper</code>
           </div>
           <pre className="ag-code">
             <code>{MCP_CONFIG}</code>

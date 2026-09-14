@@ -20,8 +20,8 @@ const quote: Quote = {
   expiresAt: new Date(Date.now() + 300_000).toISOString(),
   expiresInSeconds: 300,
   paymentResource: {
-    url: "https://agentpay.timidan.xyz/api/reports/buy/agent-pay-live-1000-aaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbb",
-    description: "AgentPay live evidence report cspr-trade-pairs-1111111111111111",
+    url: "https://zadper-web.vercel.app/api/reports/buy/agent-pay-live-1000-aaaaaaaaaaaaaaaa-bbbbbbbbbbbbbbbb",
+    description: "Zadper live evidence report cspr-trade-pairs-1111111111111111",
     mimeType: "application/json"
   },
   paymentRequirements: [
@@ -143,7 +143,7 @@ const registryStatus = {
   rpc: null
 };
 
-describe("AgentPay console", () => {
+describe("Zadper console", () => {
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
@@ -172,7 +172,7 @@ describe("AgentPay console", () => {
     expect(screen.queryByRole("button", { name: /run live check/i })).toBeNull();
     expect(screen.getByText("From the charge to a receipt on Bot Chain.")).toBeTruthy();
 
-    await launchAgentPay();
+    await launchZadper();
 
     // No simulated in-browser connection: agents connect over MCP/HTTP and
     // the console observes that real traffic.
@@ -218,18 +218,18 @@ describe("AgentPay console", () => {
     expect(screen.getByRole("heading", { name: "Let AI agents pay Bot Chain APIs without signing blind." })).toBeTruthy();
     expect(
       screen.getByText(
-        "AgentPay checks who gets paid, how much they asked for, and the buyer's rules before signing. After settlement, it checks the Bot Chain transfer, records the service response, and creates a receipt tied to Bot Chain."
+        "Zadper checks who gets paid, how much they asked for, and the buyer's rules before signing. After settlement, it checks the Bot Chain transfer, records the service response, and creates a receipt tied to Bot Chain."
       )
     ).toBeTruthy();
     expect(screen.getAllByRole("button", { name: /open the payment checker/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("button", { name: /open the console/i }).length).toBeGreaterThan(0);
-    expect(screen.queryByLabelText("AgentPay settlement animation")).toBeNull();
+    expect(screen.queryByLabelText("Zadper settlement animation")).toBeNull();
 
     await waitFor(() => {
       expect(fetchSpy.mock.calls.filter(([url]) => isLandingStatusCall(url))).toHaveLength(2);
     });
     const consoleCallStart = fetchSpy.mock.calls.length;
-    await launchAgentPay();
+    await launchZadper();
     await runLive();
 
     await waitFor(() => {
@@ -278,7 +278,7 @@ describe("AgentPay console", () => {
     vi.stubGlobal("fetch", fetchSpy);
 
     render(<App />);
-    await launchAgentPay();
+    await launchZadper();
     await runLive("WCSPR");
 
     await waitFor(() => expect(screen.getByText(/signed payment needed/i)).toBeTruthy());
@@ -306,7 +306,7 @@ describe("AgentPay console", () => {
     vi.stubGlobal("fetch", fetchSpy);
 
     render(<App />);
-    await launchAgentPay();
+    await launchZadper();
     fireEvent.click(
       within(screen.getByRole("group", { name: "Evidence network" })).getByRole("button", {
         name: "Testnet"
@@ -407,7 +407,7 @@ describe("AgentPay console", () => {
       expect(fetchSpy.mock.calls.filter(([url]) => isLandingStatusCall(url))).toHaveLength(2);
     });
     const consoleCallStart = fetchSpy.mock.calls.length;
-    await launchAgentPay();
+    await launchZadper();
     await runLive();
     await waitFor(() => {
       expect(screen.getByText(/signed payment needed/i)).toBeTruthy();
@@ -438,14 +438,14 @@ describe("AgentPay console", () => {
     expect(container.querySelector(".agent-pay-app")?.getAttribute("data-theme")).toBe("dark");
 
     // The console inherits the same theme state and offers the same toggle.
-    await launchAgentPay();
+    await launchZadper();
     expect(container.querySelector(".agent-pay-app")?.getAttribute("data-theme")).toBe("dark");
     await userEvent.click(screen.getByRole("button", { name: /switch to light mode/i }));
     expect(container.querySelector(".agent-pay-app")?.getAttribute("data-theme")).toBe("light");
   });
 });
 
-async function launchAgentPay() {
+async function launchZadper() {
   await userEvent.click(screen.getAllByRole("button", { name: /open the console/i })[0]);
 }
 

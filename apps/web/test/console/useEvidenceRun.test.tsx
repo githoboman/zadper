@@ -47,7 +47,7 @@ describe("useEvidenceRun", () => {
     const { result } = renderHook(() => useEvidenceRun({ callTool, resolveToken: vi.fn() }));
 
     await act(async () => {
-      await result.current.runAgentPay(`hash-${"a".repeat(64)}`);
+      await result.current.runZadper(`hash-${"a".repeat(64)}`);
     });
 
     await waitFor(() => expect(result.current.state).toBe("complete"));
@@ -62,7 +62,7 @@ describe("useEvidenceRun", () => {
     const { result } = renderHook(() => useEvidenceRun({ callTool, resolveToken: vi.fn() }));
 
     await act(async () => {
-      await result.current.runAgentPay(`hash-${"a".repeat(64)}`);
+      await result.current.runZadper(`hash-${"a".repeat(64)}`);
     });
 
     await waitFor(() => expect(result.current.state).toBe("error"));
@@ -76,7 +76,7 @@ describe("useEvidenceRun", () => {
     const { result } = renderHook(() => useEvidenceRun({ callTool, resolveToken: vi.fn() }));
 
     await act(async () => {
-      await result.current.runAgentPay(`hash-${"a".repeat(64)}`);
+      await result.current.runZadper(`hash-${"a".repeat(64)}`);
     });
 
     await waitFor(() => expect(result.current.state).toBe("payment_required"));
@@ -87,7 +87,7 @@ describe("useEvidenceRun", () => {
     const { result } = renderHook(() => useEvidenceRun({ callTool, resolveToken: vi.fn() }));
 
     await act(async () => {
-      await result.current.runAgentPay("   ");
+      await result.current.runZadper("   ");
     });
 
     expect(result.current.state).toBe("error");

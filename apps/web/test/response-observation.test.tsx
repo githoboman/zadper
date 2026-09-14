@@ -15,7 +15,7 @@ it("shows an automatically recorded response as read-only completed evidence", (
         created: true,
         observation: {
           checkId: "check-1",
-          observerVersion: "agentpay-web/0.1.0",
+          observerVersion: "zadper-web/0.1.0",
           status: 200,
           contentType: "application/json",
           bodyBytes: 3274,

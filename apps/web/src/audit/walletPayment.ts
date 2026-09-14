@@ -53,7 +53,7 @@ export async function submitCheckedWalletPayment(
   if (!verifyAuthorizationSignature(authorization, signature)) {
     throw paymentError(
       "wallet_signature_invalid",
-      "The wallet signature did not match the payment AgentPay approved."
+      "The wallet signature did not match the payment Zadper approved."
     );
   }
 
@@ -109,14 +109,14 @@ export async function submitCheckedWalletPayment(
   if (!transactionHash) {
     throw paymentError(
       "payment_transaction_missing",
-      "The paid service did not return a Bot Chain transaction hash, so AgentPay cannot verify settlement."
+      "The paid service did not return a Bot Chain transaction hash, so Zadper cannot verify settlement."
     );
   }
 
   return {
     transactionHash,
     observation: {
-      observerVersion: "agentpay-web/0.1.0",
+      observerVersion: "Zadper-web/0.1.0",
       status: response.status,
       contentType: response.headers.get("content-type"),
       bodyBytes: responseBytes.byteLength,
@@ -130,7 +130,7 @@ function approvedAuthorization(check: PaymentCheck): NonNullable<PaymentCheck["a
   if (check.decision.verdict !== "pay" || check.status !== "reserved" || !check.authorization) {
     throw paymentError(
       "payment_not_approved",
-      "AgentPay must return PAY before Bot Chain Wallet can sign this charge."
+      "Zadper must return PAY before Bot Chain Wallet can sign this charge."
     );
   }
   if (
@@ -153,7 +153,7 @@ function checkedChallenge(
   if (!normalized.ok) {
     throw paymentError(
       "payment_charge_changed",
-      "The service charge is no longer the one AgentPay checked. Run the check again."
+      "The service charge is no longer the one Zadper checked. Run the check again."
     );
   }
   if (
@@ -162,7 +162,7 @@ function checkedChallenge(
   ) {
     throw paymentError(
       "payment_charge_changed",
-      "The service charge is no longer the one AgentPay checked. Run the check again."
+      "The service charge is no longer the one Zadper checked. Run the check again."
     );
   }
   const root = asRecord(paymentRequired);
@@ -342,14 +342,14 @@ async function cancelBody(response: Response): Promise<void> {
 function requestChanged(): AuditApiError {
   return paymentError(
     "payment_request_changed",
-    "The URL, method, or request body changed after AgentPay checked it. Run the check again."
+    "The URL, method, or request body changed after Zadper checked it. Run the check again."
   );
 }
 
 function responseTooLarge(): AuditApiError {
   return paymentError(
     "payment_response_too_large",
-    "The paid service returned more data than AgentPay can verify safely."
+    "The paid service returned more data than Zadper can verify safely."
   );
 }
 
@@ -365,7 +365,7 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 
 function validNow(value: Date): string {
   if (!(value instanceof Date) || !Number.isFinite(value.getTime())) {
-    throw new TypeError("AgentPay browser clock returned an invalid date");
+    throw new TypeError("Zadper browser clock returned an invalid date");
   }
   return value.toISOString();
 }

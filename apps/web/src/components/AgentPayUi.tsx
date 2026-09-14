@@ -18,9 +18,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn as agentPayCn } from "@/lib/utils";
+import { cn as ZadperCn } from "@/lib/utils";
 
-const agentPayButtonVariants = cva(
+const ZadperButtonVariants = cva(
   "agent-pay-button rounded-lg font-semibold shadow-sm transition-[background-color,border-color,box-shadow,color,transform] duration-300 ease-out",
   {
     variants: {
@@ -51,24 +51,24 @@ const agentPayButtonVariants = cva(
   }
 );
 
-type AgentPayButtonProps = Omit<ComponentPropsWithoutRef<typeof Button>, "size" | "variant"> &
-  VariantProps<typeof agentPayButtonVariants>;
+type ZadperButtonProps = Omit<ComponentPropsWithoutRef<typeof Button>, "size" | "variant"> &
+  VariantProps<typeof ZadperButtonVariants>;
 
-export const AgentPayButton = forwardRef<ElementRef<typeof Button>, AgentPayButtonProps>(
+export const ZadperButton = forwardRef<ElementRef<typeof Button>, ZadperButtonProps>(
   ({ className, size, variant, ...props }, ref) => (
     <Button
-      className={agentPayCn(agentPayButtonVariants({ size, variant }), className)}
+      className={ZadperCn(ZadperButtonVariants({ size, variant }), className)}
       ref={ref}
       variant={variant === "ghost" || variant === "explorer" || variant === "primary" ? "ghost" : "secondary"}
       {...props}
     />
   )
 );
-AgentPayButton.displayName = "AgentPayButton";
+ZadperButton.displayName = "ZadperButton";
 
-type AgentPayBadgeProps = ComponentPropsWithoutRef<"span"> & { state?: "idle" | "running" | "payment_required" | "complete" | "error" };
+type ZadperBadgeProps = ComponentPropsWithoutRef<"span"> & { state?: "idle" | "running" | "payment_required" | "complete" | "error" };
 
-export const AgentPayBadge = forwardRef<HTMLSpanElement, AgentPayBadgeProps>(
+export const ZadperBadge = forwardRef<HTMLSpanElement, ZadperBadgeProps>(
   ({ children, className, state = "idle", ...props }, ref) => {
     const chipClass = {
       idle: "aspect-chip--neutral",
@@ -79,7 +79,7 @@ export const AgentPayBadge = forwardRef<HTMLSpanElement, AgentPayBadgeProps>(
     }[state ?? "idle"] ?? "aspect-chip--neutral";
     return (
       <span
-        className={agentPayCn("agent-pay-badge aspect-chip", chipClass, className)}
+        className={ZadperCn("agent-pay-badge aspect-chip", chipClass, className)}
         ref={ref}
         {...props}
       >
@@ -88,30 +88,30 @@ export const AgentPayBadge = forwardRef<HTMLSpanElement, AgentPayBadgeProps>(
     );
   }
 );
-AgentPayBadge.displayName = "AgentPayBadge";
+ZadperBadge.displayName = "ZadperBadge";
 
-export const AgentPayCard = forwardRef<ElementRef<typeof Card>, ComponentPropsWithoutRef<typeof Card>>(
+export const ZadperCard = forwardRef<ElementRef<typeof Card>, ComponentPropsWithoutRef<typeof Card>>(
   ({ className, ...props }, ref) => (
-    <Card className={agentPayCn("agent-pay-card panel border-border bg-card text-card-foreground", className)} ref={ref} {...props} />
+    <Card className={ZadperCn("agent-pay-card panel border-border bg-card text-card-foreground", className)} ref={ref} {...props} />
   )
 );
-AgentPayCard.displayName = "AgentPayCard";
+ZadperCard.displayName = "ZadperCard";
 
-export const AgentPayCardHeader = forwardRef<ElementRef<typeof CardHeader>, ComponentPropsWithoutRef<typeof CardHeader>>(
+export const ZadperCardHeader = forwardRef<ElementRef<typeof CardHeader>, ComponentPropsWithoutRef<typeof CardHeader>>(
   ({ className, ...props }, ref) => (
-    <CardHeader className={agentPayCn("agent-pay-card-header panel-header", className)} ref={ref} {...props} />
+    <CardHeader className={ZadperCn("agent-pay-card-header panel-header", className)} ref={ref} {...props} />
   )
 );
-AgentPayCardHeader.displayName = "AgentPayCardHeader";
+ZadperCardHeader.displayName = "ZadperCardHeader";
 
-export const AgentPayTextarea = forwardRef<ElementRef<typeof Textarea>, ComponentPropsWithoutRef<typeof Textarea>>(
+export const ZadperTextarea = forwardRef<ElementRef<typeof Textarea>, ComponentPropsWithoutRef<typeof Textarea>>(
   ({ className, ...props }, ref) => (
-    <Textarea className={agentPayCn("agent-pay-textarea bg-background", className)} ref={ref} {...props} />
+    <Textarea className={ZadperCn("agent-pay-textarea bg-background", className)} ref={ref} {...props} />
   )
 );
-AgentPayTextarea.displayName = "AgentPayTextarea";
+ZadperTextarea.displayName = "ZadperTextarea";
 
-const agentPaySurfaceVariants = cva("agent-pay-surface border-border bg-card text-card-foreground", {
+const ZadperSurfaceVariants = cva("agent-pay-surface border-border bg-card text-card-foreground", {
   variants: {
     variant: {
       default: "",
@@ -144,27 +144,27 @@ const agentPaySurfaceVariants = cva("agent-pay-surface border-border bg-card tex
   }
 });
 
-type AgentPaySurfaceProps = ComponentPropsWithoutRef<"div"> &
-  VariantProps<typeof agentPaySurfaceVariants> & {
+type ZadperSurfaceProps = ComponentPropsWithoutRef<"div"> &
+  VariantProps<typeof ZadperSurfaceVariants> & {
     asChild?: boolean;
   };
 
-export const AgentPaySurface = forwardRef<HTMLDivElement, AgentPaySurfaceProps>(
+export const ZadperSurface = forwardRef<HTMLDivElement, ZadperSurfaceProps>(
   ({ asChild = false, className, state, variant, ...props }, ref) => {
     const Component = asChild ? Slot : "div";
 
     return (
       <Component
-        className={agentPayCn(agentPaySurfaceVariants({ state, variant }), className)}
+        className={ZadperCn(ZadperSurfaceVariants({ state, variant }), className)}
         ref={ref}
         {...props}
       />
     );
   }
 );
-AgentPaySurface.displayName = "AgentPaySurface";
+ZadperSurface.displayName = "ZadperSurface";
 
-const agentPayAlertVariants = cva("", {
+const ZadperAlertVariants = cva("", {
   variants: {
     variant: {
       error: "error-banner border-destructive/40 bg-destructive/10 text-destructive",
@@ -176,118 +176,118 @@ const agentPayAlertVariants = cva("", {
   }
 });
 
-type AgentPayAlertProps = Omit<ComponentPropsWithoutRef<typeof Alert>, "variant"> &
-  VariantProps<typeof agentPayAlertVariants>;
+type ZadperAlertProps = Omit<ComponentPropsWithoutRef<typeof Alert>, "variant"> &
+  VariantProps<typeof ZadperAlertVariants>;
 
-export const AgentPayAlert = forwardRef<ElementRef<typeof Alert>, AgentPayAlertProps>(
+export const ZadperAlert = forwardRef<ElementRef<typeof Alert>, ZadperAlertProps>(
   ({ className, variant, ...props }, ref) => (
     <Alert
-      className={agentPayCn("agent-pay-alert", agentPayAlertVariants({ variant }), className)}
+      className={ZadperCn("agent-pay-alert", ZadperAlertVariants({ variant }), className)}
       ref={ref}
       variant={variant === "error" ? "destructive" : "default"}
       {...props}
     />
   )
 );
-AgentPayAlert.displayName = "AgentPayAlert";
+ZadperAlert.displayName = "ZadperAlert";
 
-export const AgentPayField = forwardRef<ElementRef<typeof Label>, ComponentPropsWithoutRef<typeof Label>>(
+export const ZadperField = forwardRef<ElementRef<typeof Label>, ComponentPropsWithoutRef<typeof Label>>(
   ({ className, ...props }, ref) => (
-    <Label className={agentPayCn("agent-pay-field", className)} ref={ref} {...props} />
+    <Label className={ZadperCn("agent-pay-field", className)} ref={ref} {...props} />
   )
 );
-AgentPayField.displayName = "AgentPayField";
+ZadperField.displayName = "ZadperField";
 
-export const AgentPayFieldLabel = forwardRef<HTMLSpanElement, ComponentPropsWithoutRef<"span">>(
+export const ZadperFieldLabel = forwardRef<HTMLSpanElement, ComponentPropsWithoutRef<"span">>(
   ({ className, ...props }, ref) => (
-    <span className={agentPayCn("agent-pay-field-label text-muted-foreground", className)} ref={ref} {...props} />
+    <span className={ZadperCn("agent-pay-field-label text-muted-foreground", className)} ref={ref} {...props} />
   )
 );
-AgentPayFieldLabel.displayName = "AgentPayFieldLabel";
+ZadperFieldLabel.displayName = "ZadperFieldLabel";
 
-export const AgentPayCodeBlock = forwardRef<HTMLElement, ComponentPropsWithoutRef<"code">>(
+export const ZadperCodeBlock = forwardRef<HTMLElement, ComponentPropsWithoutRef<"code">>(
   ({ className, ...props }, ref) => (
-    <code className={agentPayCn("agent-pay-code-block tx-hash bg-muted text-foreground", className)} ref={ref} {...props} />
+    <code className={ZadperCn("agent-pay-code-block tx-hash bg-muted text-foreground", className)} ref={ref} {...props} />
   )
 );
-AgentPayCodeBlock.displayName = "AgentPayCodeBlock";
+ZadperCodeBlock.displayName = "ZadperCodeBlock";
 
-export const AgentPayInlineCode = forwardRef<HTMLElement, ComponentPropsWithoutRef<"code">>(
+export const ZadperInlineCode = forwardRef<HTMLElement, ComponentPropsWithoutRef<"code">>(
   ({ className, ...props }, ref) => (
-    <code className={agentPayCn("agent-pay-inline-code bg-muted text-foreground", className)} ref={ref} {...props} />
+    <code className={ZadperCn("agent-pay-inline-code bg-muted text-foreground", className)} ref={ref} {...props} />
   )
 );
-AgentPayInlineCode.displayName = "AgentPayInlineCode";
+ZadperInlineCode.displayName = "ZadperInlineCode";
 
-export const AgentPaySeparator = forwardRef<ElementRef<typeof Separator>, ComponentPropsWithoutRef<typeof Separator>>(
+export const ZadperSeparator = forwardRef<ElementRef<typeof Separator>, ComponentPropsWithoutRef<typeof Separator>>(
   ({ className, ...props }, ref) => (
-    <Separator className={agentPayCn("agent-pay-separator", className)} ref={ref} {...props} />
+    <Separator className={ZadperCn("agent-pay-separator", className)} ref={ref} {...props} />
   )
 );
-AgentPaySeparator.displayName = "AgentPaySeparator";
+ZadperSeparator.displayName = "ZadperSeparator";
 
 
-export const AgentPayTabs = Tabs;
+export const ZadperTabs = Tabs;
 
-export const AgentPayTabsList = forwardRef<ElementRef<typeof TabsList>, ComponentPropsWithoutRef<typeof TabsList>>(
+export const ZadperTabsList = forwardRef<ElementRef<typeof TabsList>, ComponentPropsWithoutRef<typeof TabsList>>(
   ({ className, ...props }, ref) => (
-    <TabsList className={agentPayCn("agent-pay-tabs-list", className)} ref={ref} {...props} />
+    <TabsList className={ZadperCn("agent-pay-tabs-list", className)} ref={ref} {...props} />
   )
 );
-AgentPayTabsList.displayName = "AgentPayTabsList";
+ZadperTabsList.displayName = "ZadperTabsList";
 
-export const AgentPayTabsTrigger = forwardRef<ElementRef<typeof TabsTrigger>, ComponentPropsWithoutRef<typeof TabsTrigger>>(
+export const ZadperTabsTrigger = forwardRef<ElementRef<typeof TabsTrigger>, ComponentPropsWithoutRef<typeof TabsTrigger>>(
   ({ className, ...props }, ref) => (
-    <TabsTrigger className={agentPayCn("agent-pay-tabs-trigger", className)} ref={ref} {...props} />
+    <TabsTrigger className={ZadperCn("agent-pay-tabs-trigger", className)} ref={ref} {...props} />
   )
 );
-AgentPayTabsTrigger.displayName = "AgentPayTabsTrigger";
+ZadperTabsTrigger.displayName = "ZadperTabsTrigger";
 
-export const AgentPayTabsContent = forwardRef<ElementRef<typeof TabsContent>, ComponentPropsWithoutRef<typeof TabsContent>>(
+export const ZadperTabsContent = forwardRef<ElementRef<typeof TabsContent>, ComponentPropsWithoutRef<typeof TabsContent>>(
   ({ className, ...props }, ref) => (
-    <TabsContent className={agentPayCn("agent-pay-tabs-content", className)} ref={ref} {...props} />
+    <TabsContent className={ZadperCn("agent-pay-tabs-content", className)} ref={ref} {...props} />
   )
 );
-AgentPayTabsContent.displayName = "AgentPayTabsContent";
+ZadperTabsContent.displayName = "ZadperTabsContent";
 
-export const AgentPayTable = forwardRef<ElementRef<typeof Table>, ComponentPropsWithoutRef<typeof Table>>(
+export const ZadperTable = forwardRef<ElementRef<typeof Table>, ComponentPropsWithoutRef<typeof Table>>(
   ({ className, ...props }, ref) => (
-    <Table className={agentPayCn("agent-pay-table", className)} ref={ref} {...props} />
+    <Table className={ZadperCn("agent-pay-table", className)} ref={ref} {...props} />
   )
 );
-AgentPayTable.displayName = "AgentPayTable";
+ZadperTable.displayName = "ZadperTable";
 
-export const AgentPayTableHeader = TableHeader;
-export const AgentPayTableBody = TableBody;
-export const AgentPayTableRow = TableRow;
-export const AgentPayTableHead = TableHead;
-export const AgentPayTableCell = TableCell;
+export const ZadperTableHeader = TableHeader;
+export const ZadperTableBody = TableBody;
+export const ZadperTableRow = TableRow;
+export const ZadperTableHead = TableHead;
+export const ZadperTableCell = TableCell;
 
-export const AgentPaySheet = Sheet;
+export const ZadperSheet = Sheet;
 
-export const AgentPaySheetContent = forwardRef<ElementRef<typeof SheetContent>, ComponentPropsWithoutRef<typeof SheetContent>>(
+export const ZadperSheetContent = forwardRef<ElementRef<typeof SheetContent>, ComponentPropsWithoutRef<typeof SheetContent>>(
   ({ className, ...props }, ref) => (
-    <SheetContent className={agentPayCn("agent-pay-sheet-content", className)} ref={ref} {...props} />
+    <SheetContent className={ZadperCn("agent-pay-sheet-content", className)} ref={ref} {...props} />
   )
 );
-AgentPaySheetContent.displayName = "AgentPaySheetContent";
+ZadperSheetContent.displayName = "ZadperSheetContent";
 
-export const AgentPaySheetHeader = SheetHeader;
-export const AgentPaySheetTitle = SheetTitle;
-export const AgentPaySheetDescription = SheetDescription;
+export const ZadperSheetHeader = SheetHeader;
+export const ZadperSheetTitle = SheetTitle;
+export const ZadperSheetDescription = SheetDescription;
 
-export const AgentPayTooltipProvider = TooltipProvider;
-export const AgentPayTooltip = Tooltip;
-export const AgentPayTooltipTrigger = TooltipTrigger;
+export const ZadperTooltipProvider = TooltipProvider;
+export const ZadperTooltip = Tooltip;
+export const ZadperTooltipTrigger = TooltipTrigger;
 
-export const AgentPayTooltipContent = forwardRef<ElementRef<typeof TooltipContent>, ComponentPropsWithoutRef<typeof TooltipContent>>(
+export const ZadperTooltipContent = forwardRef<ElementRef<typeof TooltipContent>, ComponentPropsWithoutRef<typeof TooltipContent>>(
   ({ className, ...props }, ref) => (
-    <TooltipContent className={agentPayCn("agent-pay-tooltip-content", className)} ref={ref} {...props} />
+    <TooltipContent className={ZadperCn("agent-pay-tooltip-content", className)} ref={ref} {...props} />
   )
 );
-AgentPayTooltipContent.displayName = "AgentPayTooltipContent";
+ZadperTooltipContent.displayName = "ZadperTooltipContent";
 
-export function AgentPayIconAction({
+export function ZadperIconAction({
   children,
   label,
   onClick,
@@ -297,13 +297,13 @@ export function AgentPayIconAction({
   onClick: () => void;
 }) {
   return (
-    <AgentPayTooltip>
-      <AgentPayTooltipTrigger asChild>
-        <AgentPayButton variant="icon" aria-label={label} onClick={onClick}>
+    <ZadperTooltip>
+      <ZadperTooltipTrigger asChild>
+        <ZadperButton variant="icon" aria-label={label} onClick={onClick}>
           {children}
-        </AgentPayButton>
-      </AgentPayTooltipTrigger>
-      <AgentPayTooltipContent>{label}</AgentPayTooltipContent>
-    </AgentPayTooltip>
+        </ZadperButton>
+      </ZadperTooltipTrigger>
+      <ZadperTooltipContent>{label}</ZadperTooltipContent>
+    </ZadperTooltip>
   );
 }

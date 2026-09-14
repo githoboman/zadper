@@ -22,46 +22,46 @@ import {
   ToolCallError,
   type Verification
 } from "./api";
-import { AgentPayDecisionReceipt } from "./components/AgentPayDecisionReceipt";
-import { AgentPayPipelineRail, type EvidenceStep } from "./components/AgentPayPipelineRail";
+import { ZadperDecisionReceipt } from "./components/ZadperDecisionReceipt";
+import { ZadperPipelineRail, type EvidenceStep } from "./components/ZadperPipelineRail";
 import {
-  AgentPayEvidenceNetworkSelector,
-  AgentPayVerdictHero,
+  ZadperEvidenceNetworkSelector,
+  ZadperVerdictHero,
   type HeroMode
-} from "./components/AgentPayVerdictHero";
-import { AgentPayCheckList } from "./components/AgentPayCheckList";
-import { AgentPayProofPath } from "./components/AgentPayProofPath";
+} from "./components/ZadperVerdictHero";
+import { ZadperCheckList } from "./components/ZadperCheckList";
+import { ZadperProofPath } from "./components/ZadperProofPath";
 import {
-  AgentPayAlert,
-  AgentPayBadge,
-  AgentPayButton,
-  AgentPayIconAction,
-  AgentPayCard,
-  AgentPayCardHeader,
-  AgentPayCodeBlock,
-  AgentPayField,
-  AgentPayFieldLabel,
-  AgentPayInlineCode,
-  AgentPaySeparator,
-  AgentPaySheet,
-  AgentPaySheetContent,
-  AgentPaySheetDescription,
-  AgentPaySheetHeader,
-  AgentPaySheetTitle,
-  AgentPaySurface,
-  AgentPayTable,
-  AgentPayTableBody,
-  AgentPayTableCell,
-  AgentPayTableHead,
-  AgentPayTableHeader,
-  AgentPayTableRow,
-  AgentPayTabs,
-  AgentPayTabsContent,
-  AgentPayTabsList,
-  AgentPayTabsTrigger,
-  AgentPayTextarea,
-  AgentPayTooltipProvider
-} from "./components/AgentPayUi";
+  ZadperAlert,
+  ZadperBadge,
+  ZadperButton,
+  ZadperIconAction,
+  ZadperCard,
+  ZadperCardHeader,
+  ZadperCodeBlock,
+  ZadperField,
+  ZadperFieldLabel,
+  ZadperInlineCode,
+  ZadperSeparator,
+  ZadperSheet,
+  ZadperSheetContent,
+  ZadperSheetDescription,
+  ZadperSheetHeader,
+  ZadperSheetTitle,
+  ZadperSurface,
+  ZadperTable,
+  ZadperTableBody,
+  ZadperTableCell,
+  ZadperTableHead,
+  ZadperTableHeader,
+  ZadperTableRow,
+  ZadperTabs,
+  ZadperTabsContent,
+  ZadperTabsList,
+  ZadperTabsTrigger,
+  ZadperTextarea,
+  ZadperTooltipProvider
+} from "./components/ZadperUi";
 import IntegratePage from "./agents/IntegratePage";
 import AuditPage from "./audit/AuditPage";
 import { SiteFooter, SiteNav } from "./components/SiteChrome";
@@ -96,7 +96,7 @@ function AppShell() {
   const { pathname } = useLocation();
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window === "undefined") return "light";
-    const stored = window.localStorage.getItem("agentpay-theme");
+    const stored = window.localStorage.getItem("Zadper-theme");
     if (stored === "light" || stored === "dark") return stored;
     // Intentional first impression: default light; a saved toggle still wins.
     return "light";
@@ -108,7 +108,7 @@ function AppShell() {
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     document.documentElement.style.colorScheme = theme;
-    window.localStorage.setItem("agentpay-theme", theme);
+    window.localStorage.setItem("Zadper-theme", theme);
 
     return () => {
       document.documentElement.classList.remove("dark");
@@ -138,7 +138,7 @@ function AppShell() {
   }
 
   return (
-    <AgentPayTooltipProvider delayDuration={140}>
+    <ZadperTooltipProvider delayDuration={140}>
       <Routes>
         <Route
           path="/"
@@ -195,7 +195,7 @@ function AppShell() {
           path="/app"
           element={
             <main className={`agent-pay-app agent-pay-workspace-view console-v2 state-${run.state}`} data-theme={theme}>
-              <AgentPayAppHeader
+              <ZadperAppHeader
                 state={run.state}
                 theme={theme}
                 onNav={navigate}
@@ -203,13 +203,13 @@ function AppShell() {
                 onToggleTheme={toggleTheme}
               />
               <div className="console-shell">
-                <AgentPayConsole
+                <ZadperConsole
                   error={run.error}
                   evidenceNetwork={run.evidenceNetwork}
                   onChangePaymentPayload={run.setPaymentPayloadText}
                   onChangeEvidenceNetwork={run.setEvidenceNetwork}
                   onContinueSettlement={run.continueSettlement}
-                  onRunAgentPay={run.runAgentPay}
+                  onRunZadper={run.runZadper}
                   paidReport={run.paidReport}
                   paymentPayloadText={run.paymentPayloadText}
                   quote={run.quote}
@@ -229,7 +229,7 @@ function AppShell() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </AgentPayTooltipProvider>
+    </ZadperTooltipProvider>
   );
 }
 
@@ -260,7 +260,7 @@ function LandingRoute(props: {
   );
 }
 
-function AgentPayAppHeader({
+function ZadperAppHeader({
   state,
   theme,
   onNav,
@@ -285,24 +285,24 @@ function AgentPayAppHeader({
       actions={
         <>
           {state !== "idle" ? (
-            <AgentPayBadge state={state}>{humanizeKey(state)}</AgentPayBadge>
+            <ZadperBadge state={state}>{humanizeKey(state)}</ZadperBadge>
           ) : null}
-          <AgentPayIconAction label="Reset AgentPay" onClick={onReset}>
+          <ZadperIconAction label="Reset Zadper" onClick={onReset}>
             <ArrowCounterClockwise size={17} weight="bold" aria-hidden="true" />
-          </AgentPayIconAction>
+          </ZadperIconAction>
         </>
       }
     />
   );
 }
 
-function AgentPayConsole({
+function ZadperConsole({
   error,
   evidenceNetwork,
   onChangePaymentPayload,
   onChangeEvidenceNetwork,
   onContinueSettlement,
-  onRunAgentPay,
+  onRunZadper,
   paidReport,
   paymentPayloadText,
   quote,
@@ -320,7 +320,7 @@ function AgentPayConsole({
   onChangePaymentPayload: (value: string) => void;
   onChangeEvidenceNetwork: (value: EvidenceNetwork) => void;
   onContinueSettlement: () => void;
-  onRunAgentPay: (subjectInput: string) => void;
+  onRunZadper: (subjectInput: string) => void;
   paidReport: PaidReport | null;
   paymentPayloadText: string;
   quote: Quote | null;
@@ -402,7 +402,7 @@ function AgentPayConsole({
 
   return (
     <section id="agent-pay-app" className="agent-pay-console" aria-label="Zardper app">
-      <h1 className="agentpay-sr-only">Zardper evidence console</h1>
+      <h1 className="Zadper-sr-only">Zardper evidence console</h1>
       <header className="console-header">
         <div className="console-heading">
           <h2>Evidence console</h2>
@@ -413,14 +413,14 @@ function AgentPayConsole({
         </div>
       </header>
 
-      {error ? <AgentPayAlert variant="error">{error}</AgentPayAlert> : null}
+      {error ? <ZadperAlert variant="error">{error}</ZadperAlert> : null}
 
       {heroMode === null ? (
         /* Idle: just the run input. The verdict surface appears only when
            there is a real verdict or a real blocked state to show. */
-        <AgentPaySurface className="console-run">
+        <ZadperSurface className="console-run">
           <div className="hero-run">
-            <AgentPayEvidenceNetworkSelector
+            <ZadperEvidenceNetworkSelector
               disabled={state === "running"}
               onChange={onChangeEvidenceNetwork}
               value={evidenceNetwork}
@@ -433,17 +433,17 @@ function AgentPayConsole({
               value={subjectInput}
               onChange={(event) => setSubjectInput(event.target.value)}
             />
-            <AgentPayButton
+            <ZadperButton
               variant="primary"
               disabled={state === "running" || subjectInput.trim().length === 0}
-              onClick={() => onRunAgentPay(subjectInput)}
+              onClick={() => onRunZadper(subjectInput)}
             >
               {state === "running" ? primaryLabel : "Run live check"}
-            </AgentPayButton>
+            </ZadperButton>
           </div>
-        </AgentPaySurface>
+        </ZadperSurface>
       ) : (
-        <AgentPayVerdictHero
+        <ZadperVerdictHero
           mode={heroMode}
           verdict={verdict ?? undefined}
           subjectLabel={subjectLabel}
@@ -457,13 +457,13 @@ function AgentPayConsole({
           evidenceNetwork={evidenceNetwork}
           onChangeSubject={setSubjectInput}
           onChangeEvidenceNetwork={onChangeEvidenceNetwork}
-          onRun={onRunAgentPay}
+          onRun={onRunZadper}
           onShowPayment={canPay ? () => setPaymentSheetDismissed(false) : undefined}
         />
       )}
 
       {state === "payment_required" && quote && quote.paymentRequirements.length > 0 && !paymentSheetDismissed ? (
-        <AgentPayPaymentSheet
+        <ZadperPaymentSheet
           paymentPayloadText={paymentPayloadText}
           quote={quote}
           onChangePaymentPayload={onChangePaymentPayload}
@@ -474,17 +474,17 @@ function AgentPayConsole({
 
       {/* The rail and workspace exist only once a run does; the idle screen
           is the input and nothing else. */}
-      {state !== "idle" ? <AgentPayPipelineRail steps={timeline} /> : null}
+      {state !== "idle" ? <ZadperPipelineRail steps={timeline} /> : null}
 
-      <AgentPayBridgePanel />
+      <ZadperBridgePanel />
 
       {state !== "idle" || quote || receipt ? (
       <section className="agent-pay-workspace">
-        <AgentPayCard className="timeline-panel operation-card">
+        <ZadperCard className="timeline-panel operation-card">
           <PanelHeader title="Evidence checks" sub="What Zardper read, grouped by severity." />
-          <AgentPaySeparator />
+          <ZadperSeparator />
           {verdict ? (
-            <AgentPayCheckList
+            <ZadperCheckList
               flags={verdict.flags}
               notChecked={verdict.notChecked}
               passed={verdict.passed}
@@ -495,7 +495,7 @@ function AgentPayConsole({
               }
             />
           ) : (
-            <AgentPayEmptyState
+            <ZadperEmptyState
               title={heroMode === "blocked" ? "Checks appear after the fee settles" : "Checks appear after a run"}
               body={
                 heroMode === "blocked"
@@ -504,46 +504,46 @@ function AgentPayConsole({
               }
             />
           )}
-        </AgentPayCard>
+        </ZadperCard>
 
-        <AgentPayTabs value={workspaceTab} onValueChange={setWorkspaceTab} className="workspace-tabs">
-          <AgentPayCard className="workspace-panel">
+        <ZadperTabs value={workspaceTab} onValueChange={setWorkspaceTab} className="workspace-tabs">
+          <ZadperCard className="workspace-panel">
             <div className="workspace-panel-top">
               <PanelHeader title="What we found" sub="Live sources, how Zardper verifies them, and the Bot Chain record." />
-              <AgentPayTabsList aria-label="Zardper workspace sections">
-                <AgentPayTabsTrigger value="evidence">Evidence</AgentPayTabsTrigger>
-                <AgentPayTabsTrigger value="proof">Proof</AgentPayTabsTrigger>
-                <AgentPayTabsTrigger value="registry">Registry</AgentPayTabsTrigger>
-              </AgentPayTabsList>
+              <ZadperTabsList aria-label="Zardper workspace sections">
+                <ZadperTabsTrigger value="evidence">Evidence</ZadperTabsTrigger>
+                <ZadperTabsTrigger value="proof">Proof</ZadperTabsTrigger>
+                <ZadperTabsTrigger value="registry">Registry</ZadperTabsTrigger>
+              </ZadperTabsList>
             </div>
-            <AgentPaySeparator />
+            <ZadperSeparator />
 
-            <AgentPayTabsContent forceMount value="evidence">
+            <ZadperTabsContent forceMount value="evidence">
               <div className="tab-panel-flow">
                 {paidReport ? (
                   <>
-                    <AgentPaySettlementEvidence payment={paidReport.payment} receiptHash={paidReport.paymentReceiptHash} />
-                    <AgentPayEvidenceRecordView record={paidReport.report} />
+                    <ZadperSettlementEvidence payment={paidReport.payment} receiptHash={paidReport.paymentReceiptHash} />
+                    <ZadperEvidenceRecordView record={paidReport.report} />
                   </>
                 ) : quote ? (
                   <>
-                    <AgentPaySourceSummaryList quote={quote} />
-                    <AgentPayPaymentReadiness readiness={quote.paymentReadiness} />
+                    <ZadperSourceSummaryList quote={quote} />
+                    <ZadperPaymentReadiness readiness={quote.paymentReadiness} />
                   </>
                 ) : (
-                  <AgentPayEmptyState
+                  <ZadperEmptyState
                     title="Sources appear after a quote"
                     body="Run a live check above to load the evidence sources. Each source contributes to one evidence fingerprint."
                   />
                 )}
               </div>
-            </AgentPayTabsContent>
+            </ZadperTabsContent>
 
-            <AgentPayTabsContent forceMount value="proof">
+            <ZadperTabsContent forceMount value="proof">
               <div className="tab-panel-flow">
                 {paidReport ? (
                   <>
-                    <AgentPayProofVerdict
+                    <ZadperProofVerdict
                       quote={quote}
                       paidReport={paidReport}
                       verification={verification}
@@ -551,25 +551,25 @@ function AgentPayConsole({
                       onTamper={onTamper}
                       onRestore={onRestore}
                     />
-                    <AgentPayProofPath proof={paidReport?.proof ?? []} />
+                    <ZadperProofPath proof={paidReport?.proof ?? []} />
                   </>
                 ) : (
-                  <AgentPayEmptyState
+                  <ZadperEmptyState
                     title="Proof appears after settlement"
-                    body="After the fee is paid, AgentPay verifies that every evidence item belongs to the quoted set and shows the verification path here."
+                    body="After the fee is paid, Zadper verifies that every evidence item belongs to the quoted set and shows the verification path here."
                   />
                 )}
               </div>
-            </AgentPayTabsContent>
+            </ZadperTabsContent>
 
-            <AgentPayTabsContent forceMount value="registry">
+            <ZadperTabsContent forceMount value="registry">
               <div className="tab-panel-flow">
-                <AgentPayRegistryReadiness status={registryStatus} />
-                <AgentPayDecisionReceipt receipt={receipt} proofDepth={paidReport?.proof?.length} />
+                <ZadperRegistryReadiness status={registryStatus} />
+                <ZadperDecisionReceipt receipt={receipt} proofDepth={paidReport?.proof?.length} />
               </div>
-            </AgentPayTabsContent>
-          </AgentPayCard>
-        </AgentPayTabs>
+            </ZadperTabsContent>
+          </ZadperCard>
+        </ZadperTabs>
       </section>
       ) : null}
     </section>
@@ -578,16 +578,16 @@ function AgentPayConsole({
 
 function PanelHeader({ title, sub }: { title: string; sub: string }) {
   return (
-    <AgentPayCardHeader>
+    <ZadperCardHeader>
       <div>
         <h2>{title}</h2>
         <p>{sub}</p>
       </div>
-    </AgentPayCardHeader>
+    </ZadperCardHeader>
   );
 }
 
-function AgentPayEmptyState({ title, body }: { title: string; body: string }) {
+function ZadperEmptyState({ title, body }: { title: string; body: string }) {
   return (
     <div className="agent-pay-empty-state">
       <div className="empty-state-copy">
@@ -603,7 +603,7 @@ function AgentPayEmptyState({ title, body }: { title: string; body: string }) {
  * "connection": agents talk MCP (stdio) or the HTTP bridge, and this panel
  * observes that real traffic.
  */
-function AgentPayBridgePanel() {
+function ZadperBridgePanel() {
   const [bridgeLive, setBridgeLive] = useState<boolean | null>(null);
   const [activity, setActivity] = useState<BridgeActivityEntry[]>([]);
 
@@ -630,12 +630,12 @@ function AgentPayBridgePanel() {
 
   // One status line, not a panel: the integration story lives on /agents.
   return (
-    <section className="bridge-strip" aria-label="AgentPay agent bridge">
+    <section className="bridge-strip" aria-label="Zadper agent bridge">
       <span className="connection-flag">Agent bridge</span>
       <span className={`bridge-state ${bridgeLive ? "is-live" : "is-down"}`}>
         {bridgeLive === null ? "checking bridge" : bridgeLive ? "bridge live" : "bridge unreachable"}
       </span>
-      <AgentPayInlineCode>POST {bridgeUrl}/tools/&lt;name&gt;</AgentPayInlineCode>
+      <ZadperInlineCode>POST {bridgeUrl}/tools/&lt;name&gt;</ZadperInlineCode>
       {activity.slice(0, 2).map((entry, index) => (
         <span className="bridge-last" key={`${entry.at}-${index}`}>
           <code>{entry.tool}</code> <span>{entry.status}</span> · {entry.ms}ms
@@ -645,7 +645,7 @@ function AgentPayBridgePanel() {
   );
 }
 
-function AgentPayPaymentSheet({
+function ZadperPaymentSheet({
   quote,
   paymentPayloadText,
   onChangePaymentPayload,
@@ -663,15 +663,15 @@ function AgentPayPaymentSheet({
   const requirement = quote.paymentRequirements[0];
 
   return (
-    <AgentPaySheet open modal={false} onOpenChange={(open) => { if (!open) onDismiss(); }}>
-      <AgentPaySheetContent className="payment-sheet-drawer">
-        <AgentPaySheetHeader className="payment-sheet-copy">
-          <AgentPaySheetTitle>{canAcceptPayment ? "x402 payment required" : "Payment configuration required"}</AgentPaySheetTitle>
-          <AgentPaySheetDescription>
-          Quote <AgentPayInlineCode>{quote.quoteId}</AgentPayInlineCode>
-          </AgentPaySheetDescription>
-        </AgentPaySheetHeader>
-        <AgentPaySeparator />
+    <ZadperSheet open modal={false} onOpenChange={(open) => { if (!open) onDismiss(); }}>
+      <ZadperSheetContent className="payment-sheet-drawer">
+        <ZadperSheetHeader className="payment-sheet-copy">
+          <ZadperSheetTitle>{canAcceptPayment ? "x402 payment required" : "Payment configuration required"}</ZadperSheetTitle>
+          <ZadperSheetDescription>
+          Quote <ZadperInlineCode>{quote.quoteId}</ZadperInlineCode>
+          </ZadperSheetDescription>
+        </ZadperSheetHeader>
+        <ZadperSeparator />
         {canAcceptPayment ? (
           <div className="payment-sheet-form">
             {requirement ? (
@@ -699,37 +699,37 @@ function AgentPayPaymentSheet({
             ) : null}
             <div className="payment-sheet-howto">
               <p className="muted">Buyer CLI</p>
-              <AgentPayCodeBlock>{BUYER_CLI_COMMAND}</AgentPayCodeBlock>
+              <ZadperCodeBlock>{BUYER_CLI_COMMAND}</ZadperCodeBlock>
               <a className="payment-sheet-docs-link" href="/agents">
                 How agents connect (MCP + HTTP bridge)
               </a>
             </div>
-            <AgentPayField className="payload-field">
-              <AgentPayFieldLabel>x402 payment payload</AgentPayFieldLabel>
-              <AgentPayTextarea
+            <ZadperField className="payload-field">
+              <ZadperFieldLabel>x402 payment payload</ZadperFieldLabel>
+              <ZadperTextarea
                 aria-label="x402 payment payload"
                 rows={6}
                 spellCheck={false}
                 value={paymentPayloadText}
                 onChange={(event) => onChangePaymentPayload(event.target.value)}
               />
-            </AgentPayField>
-            <AgentPayButton variant="primary" onClick={onContinue}>
+            </ZadperField>
+            <ZadperButton variant="primary" onClick={onContinue}>
               Continue with signed payment
-            </AgentPayButton>
+            </ZadperButton>
           </div>
         ) : (
           <div className="payment-sheet-reason">
             <p className="muted">{configReason.headline}</p>
-            {configReason.detail ? <AgentPayInlineCode>{configReason.detail}</AgentPayInlineCode> : null}
+            {configReason.detail ? <ZadperInlineCode>{configReason.detail}</ZadperInlineCode> : null}
           </div>
         )}
-      </AgentPaySheetContent>
-    </AgentPaySheet>
+      </ZadperSheetContent>
+    </ZadperSheet>
   );
 }
 
-function AgentPayProofVerdict({
+function ZadperProofVerdict({
   quote,
   paidReport,
   verification,
@@ -754,11 +754,11 @@ function AgentPayProofVerdict({
   const verified = tamper ? tamper.verified : Boolean(verification?.verified);
 
   return (
-    <AgentPaySurface className={`proof-verdict ${verified ? "is-clear" : "is-danger"}`}>
+    <ZadperSurface className={`proof-verdict ${verified ? "is-clear" : "is-danger"}`}>
       <div className="proof-verdict-head">
-        <AgentPayBadge state={verified ? "complete" : "error"}>
+        <ZadperBadge state={verified ? "complete" : "error"}>
           {verified ? "Evidence matches quote" : "Evidence changed"}
-        </AgentPayBadge>
+        </ZadperBadge>
         <p className="proof-verdict-note">
           {tamper
             ? "One fact changed, so the evidence no longer matches the quoted fingerprint."
@@ -771,12 +771,12 @@ function AgentPayProofVerdict({
           <div>
             <dt>Quoted block</dt>
             <dd>
-              <AgentPayButton asChild variant="explorer" size="compact">
+              <ZadperButton asChild variant="explorer" size="compact">
                 <a href={`${explorer}/block/${blockHash}`} target="_blank" rel="noreferrer">
                   #{formatFact(blockHeight)}
                   <ArrowSquareOut size={13} aria-hidden="true" />
                 </a>
-              </AgentPayButton>
+              </ZadperButton>
               <code>{`${blockHash.slice(0, 18)}…`}</code>
             </dd>
           </div>
@@ -784,12 +784,12 @@ function AgentPayProofVerdict({
         <div>
           <dt>Settlement</dt>
           <dd>
-            <AgentPayButton asChild variant="explorer" size="compact">
+            <ZadperButton asChild variant="explorer" size="compact">
               <a href={`${explorer}/${settlementPath}/${settlementHash}`} target="_blank" rel="noreferrer">
                 cspr.live
                 <ArrowSquareOut size={13} aria-hidden="true" />
               </a>
-            </AgentPayButton>
+            </ZadperButton>
             <code>{`${settlementHash.slice(0, 18)}…`}</code>
           </dd>
         </div>
@@ -804,21 +804,21 @@ function AgentPayProofVerdict({
                 {humanizeKey(tamper.field)}: {formatFact(tamper.original)} → <b>{formatFact(tamper.mutated)}</b>
               </code>
             </p>
-            <AgentPayButton variant="secondary" size="compact" onClick={onRestore}>
+            <ZadperButton variant="secondary" size="compact" onClick={onRestore}>
               Restore the real value
-            </AgentPayButton>
+            </ZadperButton>
           </>
         ) : (
-          <AgentPayButton variant="ghost" size="compact" onClick={onTamper}>
+          <ZadperButton variant="ghost" size="compact" onClick={onTamper}>
             Tamper one fact
-          </AgentPayButton>
+          </ZadperButton>
         )}
       </div>
-    </AgentPaySurface>
+    </ZadperSurface>
   );
 }
 
-function AgentPaySettlementEvidence({
+function ZadperSettlementEvidence({
   payment,
   receiptHash
 }: {
@@ -826,46 +826,46 @@ function AgentPaySettlementEvidence({
   receiptHash: string;
 }) {
   return (
-    <AgentPaySurface variant="readiness" state="ready">
+    <ZadperSurface variant="readiness" state="ready">
       <div>
-        <span className="strip-label">AgentPay settlement</span>
+        <span className="strip-label">Zadper settlement</span>
         <strong>{humanizeKey(payment.confirmation.executionState)}</strong>
         <p className="muted">{humanizeKey(payment.confirmation.method)}</p>
       </div>
-      <AgentPayCodeBlock>{payment.transactionHash}</AgentPayCodeBlock>
-      <AgentPayTable>
-        <AgentPayTableHeader>
-          <AgentPayTableRow>
-            <AgentPayTableHead>Check</AgentPayTableHead>
-            <AgentPayTableHead>Observation</AgentPayTableHead>
-          </AgentPayTableRow>
-        </AgentPayTableHeader>
-        <AgentPayTableBody>
-          <AgentPayTableRow>
-            <AgentPayTableCell>rpc</AgentPayTableCell>
-            <AgentPayTableCell>
+      <ZadperCodeBlock>{payment.transactionHash}</ZadperCodeBlock>
+      <ZadperTable>
+        <ZadperTableHeader>
+          <ZadperTableRow>
+            <ZadperTableHead>Check</ZadperTableHead>
+            <ZadperTableHead>Observation</ZadperTableHead>
+          </ZadperTableRow>
+        </ZadperTableHeader>
+        <ZadperTableBody>
+          <ZadperTableRow>
+            <ZadperTableCell>rpc</ZadperTableCell>
+            <ZadperTableCell>
               <span>{payment.confirmation.rpcUrl}</span>
-              <AgentPayInlineCode>{payment.confirmation.blockHash ? payment.confirmation.blockHash : "pending"}</AgentPayInlineCode>
-            </AgentPayTableCell>
-          </AgentPayTableRow>
-          <AgentPayTableRow>
-            <AgentPayTableCell>receipt</AgentPayTableCell>
-            <AgentPayTableCell>
+              <ZadperInlineCode>{payment.confirmation.blockHash ? payment.confirmation.blockHash : "pending"}</ZadperInlineCode>
+            </ZadperTableCell>
+          </ZadperTableRow>
+          <ZadperTableRow>
+            <ZadperTableCell>receipt</ZadperTableCell>
+            <ZadperTableCell>
               <span>{payment.facilitatorHash}</span>
-              <AgentPayInlineCode>{receiptHash}</AgentPayInlineCode>
-            </AgentPayTableCell>
-          </AgentPayTableRow>
-        </AgentPayTableBody>
-      </AgentPayTable>
-    </AgentPaySurface>
+              <ZadperInlineCode>{receiptHash}</ZadperInlineCode>
+            </ZadperTableCell>
+          </ZadperTableRow>
+        </ZadperTableBody>
+      </ZadperTable>
+    </ZadperSurface>
   );
 }
 
-function AgentPaySourceSummaryList({ quote }: { quote: Quote }) {
+function ZadperSourceSummaryList({ quote }: { quote: Quote }) {
   return (
     <div className="source-list">
       {quote.sourceSummary.map((source) => (
-        <AgentPaySurface asChild variant="source" key={source.recordHash}>
+        <ZadperSurface asChild variant="source" key={source.recordHash}>
           <article>
           <div>
             <strong>{source.product}</strong>
@@ -873,53 +873,53 @@ function AgentPaySourceSummaryList({ quote }: { quote: Quote }) {
               {source.network} / {source.subject}
             </span>
           </div>
-          <AgentPayTable>
-            <AgentPayTableBody>
+          <ZadperTable>
+            <ZadperTableBody>
             {Object.entries(source.facts)
               .slice(0, 3)
               .map(([key, value]) => (
-                <AgentPayTableRow key={key}>
-                  <AgentPayTableCell>{humanizeKey(key)}</AgentPayTableCell>
-                  <AgentPayTableCell>{formatFact(value)}</AgentPayTableCell>
-                </AgentPayTableRow>
+                <ZadperTableRow key={key}>
+                  <ZadperTableCell>{humanizeKey(key)}</ZadperTableCell>
+                  <ZadperTableCell>{formatFact(value)}</ZadperTableCell>
+                </ZadperTableRow>
               ))}
-            </AgentPayTableBody>
-          </AgentPayTable>
+            </ZadperTableBody>
+          </ZadperTable>
           </article>
-        </AgentPaySurface>
+        </ZadperSurface>
       ))}
     </div>
   );
 }
 
-function AgentPayEvidenceRecordView({ record }: { record: PaidReport["report"] }) {
+function ZadperEvidenceRecordView({ record }: { record: PaidReport["report"] }) {
   return (
-    <AgentPaySurface variant="record">
+    <ZadperSurface variant="record">
       <div>
         <span className="strip-label">{record.network}</span>
         <strong>{record.product}</strong>
         <p className="muted">{record.subject}</p>
       </div>
-      <AgentPayTable className="metrics">
-        <AgentPayTableBody>
+      <ZadperTable className="metrics">
+        <ZadperTableBody>
         {Object.entries(record.facts).map(([key, value]) => (
-          <AgentPayTableRow key={key}>
-            <AgentPayTableCell>{humanizeKey(key)}</AgentPayTableCell>
-            <AgentPayTableCell>{formatFact(value)}</AgentPayTableCell>
-          </AgentPayTableRow>
+          <ZadperTableRow key={key}>
+            <ZadperTableCell>{humanizeKey(key)}</ZadperTableCell>
+            <ZadperTableCell>{formatFact(value)}</ZadperTableCell>
+          </ZadperTableRow>
         ))}
-        </AgentPayTableBody>
-      </AgentPayTable>
-      <AgentPayCodeBlock>{record.rawHash}</AgentPayCodeBlock>
-    </AgentPaySurface>
+        </ZadperTableBody>
+      </ZadperTable>
+      <ZadperCodeBlock>{record.rawHash}</ZadperCodeBlock>
+    </ZadperSurface>
   );
 }
 
-function AgentPayPaymentReadiness({ readiness }: { readiness: PaymentReadiness }) {
+function ZadperPaymentReadiness({ readiness }: { readiness: PaymentReadiness }) {
   return (
-    <AgentPaySurface variant="readiness" state={readiness.status}>
+    <ZadperSurface variant="readiness" state={readiness.status}>
       <div>
-        <span className="strip-label">AgentPay settlement</span>
+        <span className="strip-label">Zadper settlement</span>
         <strong>{humanizeKey(readiness.status)}</strong>
         <p className="muted">
           {readiness.reason
@@ -929,63 +929,63 @@ function AgentPayPaymentReadiness({ readiness }: { readiness: PaymentReadiness }
               : "Payment service status checked."}
         </p>
       </div>
-      <AgentPayTable>
-        <AgentPayTableHeader>
-          <AgentPayTableRow>
-            <AgentPayTableHead>Status</AgentPayTableHead>
-            <AgentPayTableHead>Check</AgentPayTableHead>
-          </AgentPayTableRow>
-        </AgentPayTableHeader>
-        <AgentPayTableBody>
+      <ZadperTable>
+        <ZadperTableHeader>
+          <ZadperTableRow>
+            <ZadperTableHead>Status</ZadperTableHead>
+            <ZadperTableHead>Check</ZadperTableHead>
+          </ZadperTableRow>
+        </ZadperTableHeader>
+        <ZadperTableBody>
         {readiness.checks.map((check) => (
-          <AgentPayTableRow key={check.name}>
-            <AgentPayTableCell>{check.status}</AgentPayTableCell>
-            <AgentPayTableCell>
+          <ZadperTableRow key={check.name}>
+            <ZadperTableCell>{check.status}</ZadperTableCell>
+            <ZadperTableCell>
               <span>{humanizeKey(check.name)}</span>
-              <AgentPayInlineCode>{check.message}</AgentPayInlineCode>
-            </AgentPayTableCell>
-          </AgentPayTableRow>
+              <ZadperInlineCode>{check.message}</ZadperInlineCode>
+            </ZadperTableCell>
+          </ZadperTableRow>
         ))}
-        </AgentPayTableBody>
-      </AgentPayTable>
-    </AgentPaySurface>
+        </ZadperTableBody>
+      </ZadperTable>
+    </ZadperSurface>
   );
 }
 
-function AgentPayRegistryReadiness({ status }: { status: RegistryStatus | null }) {
+function ZadperRegistryReadiness({ status }: { status: RegistryStatus | null }) {
   if (!status) {
     return <p className="muted">The Bot Chain registry status appears after a quote is requested.</p>;
   }
 
   return (
-    <AgentPaySurface variant="readiness" state={status.status}>
+    <ZadperSurface variant="readiness" state={status.status}>
       <div>
-        <span className="strip-label">AgentPay registry</span>
+        <span className="strip-label">Zadper registry</span>
         <strong>{humanizeKey(status.status)}</strong>
         <p className="muted">
           {status.reason ? friendlyReason(status.reason).headline : status.rpc?.chainspecName ?? "Bot Chain registry checked"}
         </p>
       </div>
-      <AgentPayTable>
-        <AgentPayTableHeader>
-          <AgentPayTableRow>
-            <AgentPayTableHead>Status</AgentPayTableHead>
-            <AgentPayTableHead>Registry check</AgentPayTableHead>
-          </AgentPayTableRow>
-        </AgentPayTableHeader>
-        <AgentPayTableBody>
+      <ZadperTable>
+        <ZadperTableHeader>
+          <ZadperTableRow>
+            <ZadperTableHead>Status</ZadperTableHead>
+            <ZadperTableHead>Registry check</ZadperTableHead>
+          </ZadperTableRow>
+        </ZadperTableHeader>
+        <ZadperTableBody>
         {status.checks.map((check) => (
-          <AgentPayTableRow key={check.name}>
-            <AgentPayTableCell>{check.status}</AgentPayTableCell>
-            <AgentPayTableCell>
+          <ZadperTableRow key={check.name}>
+            <ZadperTableCell>{check.status}</ZadperTableCell>
+            <ZadperTableCell>
               <span>{humanizeKey(check.name)}</span>
-              <AgentPayInlineCode>{check.message}</AgentPayInlineCode>
-            </AgentPayTableCell>
-          </AgentPayTableRow>
+              <ZadperInlineCode>{check.message}</ZadperInlineCode>
+            </ZadperTableCell>
+          </ZadperTableRow>
         ))}
-        </AgentPayTableBody>
-      </AgentPayTable>
-    </AgentPaySurface>
+        </ZadperTableBody>
+      </ZadperTable>
+    </ZadperSurface>
   );
 }
 

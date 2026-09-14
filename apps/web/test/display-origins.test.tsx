@@ -24,16 +24,16 @@ describe("agent integration display origins", () => {
 
     expect(screen.getByText(`curl ${REPORT_API_ORIGIN}/skill.md`)).toBeTruthy();
     expect(screen.getByText(`POST ${BRIDGE_ORIGIN}/tools/<name>`)).toBeTruthy();
-    expect(screen.getByRole("link", { name: "@timidan/agentpay-mcp" }).getAttribute("href"))
-      .toBe("https://www.npmjs.com/package/@timidan/agentpay-mcp");
-    expect(screen.getByRole("link", { name: "@timidan/agentpay-cli" }).getAttribute("href"))
-      .toBe("https://www.npmjs.com/package/@timidan/agentpay-cli");
+    expect(screen.getByRole("link", { name: "@timidan/Zadper-mcp" }).getAttribute("href"))
+      .toBe("https://www.npmjs.com/package/@timidan/Zadper-mcp");
+    expect(screen.getByRole("link", { name: "@timidan/Zadper-cli" }).getAttribute("href"))
+      .toBe("https://www.npmjs.com/package/@timidan/Zadper-cli");
 
     const codeBlocks = Array.from(document.querySelectorAll("pre code"), (node) => node.textContent ?? "");
     expect(codeBlocks).toContainEqual(expect.stringContaining(`"command": "npx"`));
-    expect(codeBlocks).toContainEqual(expect.stringContaining(`"args": ["--yes", "@timidan/agentpay-mcp"]`));
-    expect(codeBlocks).toContainEqual(expect.stringContaining("npm install --global @timidan/agentpay-cli"));
-    expect(codeBlocks).toContainEqual(expect.stringContaining("agentpay agent-token issue"));
+    expect(codeBlocks).toContainEqual(expect.stringContaining(`"args": ["--yes", "@timidan/Zadper-mcp"]`));
+    expect(codeBlocks).toContainEqual(expect.stringContaining("npm install --global @timidan/Zadper-cli"));
+    expect(codeBlocks).toContainEqual(expect.stringContaining("Zadper agent-token issue"));
     expect(codeBlocks).toContainEqual(expect.stringContaining(`"name": "quote_report"`));
     expect(codeBlocks).toContainEqual(expect.stringContaining(
       `"subject": "hash-3d80df21ba4ee4d66a2a1f60c32570dd5685e4b279f6538162a5fd1314847c1e"`
@@ -96,7 +96,7 @@ function readyQuote() {
     expiresInSeconds: 300,
     paymentResource: {
       url: `${REPORT_API_ORIGIN}/reports/buy/report-1`,
-      description: "AgentPay report",
+      description: "Zadper report",
       mimeType: "application/json"
     },
     paymentRequirements: [{

@@ -35,7 +35,7 @@ export function OperatorAction({ flow }: { flow: AuditFlow }) {
   );
 
   const command = [
-    `agentpay provider ${cliKind} \\`,
+    `Zadper provider ${cliKind} \\`,
     `  --origin ${shellArgument(origin)} \\`,
     `  --path-prefix ${shellArgument(path)} \\`,
     `  --payee ${shellArgument(payee)} \\`,
@@ -51,7 +51,7 @@ export function OperatorAction({ flow }: { flow: AuditFlow }) {
   return (
     <section className="audit-section" aria-label="Operator action" data-step-state={needsDecision ? "review" : "idle"}>
       <div className="audit-section-head">
-        <h2>Choose what AgentPay should do</h2>
+        <h2>Choose what Zadper should do</h2>
         <span className="audit-tag" data-state={needsDecision ? "review" : "idle"}>
           {needsDecision ? "needs your choice" : "not needed"}
         </span>
@@ -127,7 +127,7 @@ export function OperatorAction({ flow }: { flow: AuditFlow }) {
           ) : (
             <>
               <p className="audit-note">
-                This session uses an AgentPay token, so the provider rule must be signed on your machine.
+                This session uses an Zadper token, so the provider rule must be signed on your machine.
               </p>
               <div className="audit-actions" role="group" aria-label="CLI provider choice">
                 <label className="audit-note">
@@ -138,7 +138,7 @@ export function OperatorAction({ flow }: { flow: AuditFlow }) {
                 </label>
               </div>
               <details className="audit-disclosure">
-                <summary>Use the AgentPay CLI</summary>
+                <summary>Use the Zadper CLI</summary>
                 <pre className="audit-code-block audit-scroll-x">{command}</pre>
               </details>
             </>

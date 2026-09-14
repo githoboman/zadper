@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { AgentPayIconAction, AgentPayTooltipProvider } from "../src/components/AgentPayUi";
+import { ZadperIconAction, ZadperTooltipProvider } from "../src/components/ZadperUi";
 import App from "../src/App";
 
 function stubMatchMedia() {
@@ -38,14 +38,14 @@ describe("Landing integration", () => {
     expect(screen.getByRole("heading", { name: "Let AI agents pay Bot Chain APIs without signing blind." })).toBeTruthy();
     expect(
       screen.getByText(
-        "AgentPay checks who gets paid, how much they asked for, and the buyer's rules before signing. After settlement, it checks the Bot Chain transfer, records the service response, and creates a receipt tied to Bot Chain."
+        "Zadper checks who gets paid, how much they asked for, and the buyer's rules before signing. After settlement, it checks the Bot Chain transfer, records the service response, and creates a receipt tied to Bot Chain."
       )
     ).toBeTruthy();
     expect(screen.getByText("From the charge to a receipt on Bot Chain.")).toBeTruthy();
-    expect(screen.getByRole("link", { name: "@timidan/agentpay-mcp" }).getAttribute("href"))
-      .toBe("https://www.npmjs.com/package/@timidan/agentpay-mcp");
-    expect(screen.getByRole("link", { name: "@timidan/agentpay-cli" }).getAttribute("href"))
-      .toBe("https://www.npmjs.com/package/@timidan/agentpay-cli");
+    expect(screen.getByRole("link", { name: "@timidan/Zadper-mcp" }).getAttribute("href"))
+      .toBe("https://www.npmjs.com/package/@timidan/Zadper-mcp");
+    expect(screen.getByRole("link", { name: "@timidan/Zadper-cli" }).getAttribute("href"))
+      .toBe("https://www.npmjs.com/package/@timidan/Zadper-cli");
     expect(document.body.textContent).not.toContain("@agent-pay/client");
     fireEvent.click(screen.getAllByRole("button", { name: /open the console/i })[0]);
     expect(screen.getByText("Evidence console")).toBeTruthy();
@@ -54,7 +54,7 @@ describe("Landing integration", () => {
   it("explains the pre-payment checks without showing an invented service result", () => {
     render(<App />);
 
-    expect(screen.getByText("What AgentPay checks")).toBeTruthy();
+    expect(screen.getByText("What Zadper checks")).toBeTruthy();
     expect(document.body.textContent).not.toContain("service.example");
     expect(document.body.textContent).not.toMatch(/\b(?:hash-)?[a-f0-9]{64}\b/i);
   });
@@ -130,15 +130,15 @@ describe("Landing integration", () => {
   });
 });
 
-describe("AgentPayIconAction", () => {
+describe("ZadperIconAction", () => {
   it("renders an icon button with the label and fires onClick", () => {
     const onClick = vi.fn();
     render(
-      <AgentPayTooltipProvider>
-        <AgentPayIconAction label="Switch to dark mode" onClick={onClick}>
+      <ZadperTooltipProvider>
+        <ZadperIconAction label="Switch to dark mode" onClick={onClick}>
           <span aria-hidden="true">x</span>
-        </AgentPayIconAction>
-      </AgentPayTooltipProvider>
+        </ZadperIconAction>
+      </ZadperTooltipProvider>
     );
     const button = screen.getByRole("button", { name: "Switch to dark mode" });
     fireEvent.click(button);
@@ -148,11 +148,11 @@ describe("AgentPayIconAction", () => {
 
 describe("Theme persistence", () => {
   it("initializes theme from localStorage", () => {
-    window.localStorage.setItem("agentpay-theme", "dark");
+    window.localStorage.setItem("Zadper-theme", "dark");
     render(<App />);
     // The theme effect adds the `dark` class to <html> when theme is dark.
     expect(document.documentElement.classList.contains("dark")).toBe(true);
-    window.localStorage.removeItem("agentpay-theme");
+    window.localStorage.removeItem("Zadper-theme");
   });
 });
 
@@ -182,11 +182,11 @@ describe("Ask/Feed entry points", () => {
 
     fireEvent.click(screen.getAllByRole("button", { name: "Check a token" })[0]);
     expect(screen.getByRole("heading", { name: "Check a token before you buy it." })).toBeTruthy();
-    fireEvent.click(screen.getByRole("link", { name: "AgentPay overview" }));
+    fireEvent.click(screen.getByRole("link", { name: "Zadper overview" }));
 
     fireEvent.click(screen.getByRole("button", { name: "Check a wallet" }));
     expect(screen.getByRole("heading", { name: "Check a Bot Chain account before you send funds." })).toBeTruthy();
-    fireEvent.click(screen.getByRole("link", { name: "AgentPay overview" }));
+    fireEvent.click(screen.getByRole("link", { name: "Zadper overview" }));
 
     const currentSharedResultsButtons = screen.getAllByRole("button", { name: "See shared results" });
     fireEvent.click(currentSharedResultsButtons[currentSharedResultsButtons.length - 1]);
@@ -200,9 +200,9 @@ describe("Agent integration entry point", () => {
 
     fireEvent.click(screen.getAllByRole("button", { name: "Agent docs" })[0]);
 
-    expect(screen.getByRole("heading", { name: "How agents talk to AgentPay" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "How agents talk to Zadper" })).toBeTruthy();
     expect(screen.getByText("curl http://localhost:3000/api/skill.md")).toBeTruthy();
-    expect(screen.getByText("skill://agentpay")).toBeTruthy();
+    expect(screen.getByText("skill://Zadper")).toBeTruthy();
   });
 
   it("renders the agent integration page directly at /agents", () => {
@@ -210,7 +210,7 @@ describe("Agent integration entry point", () => {
 
     render(<App />);
 
-    expect(screen.getByRole("heading", { name: "How agents talk to AgentPay" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "How agents talk to Zadper" })).toBeTruthy();
   });
 });
 
@@ -227,6 +227,6 @@ describe("Verdict vocabulary routes", () => {
     expect(vocabulary.textContent).toContain(
       "Evidence verdicts: CLEAR / CAUTION / DANGER tell you what the paid Bot Chain evidence says about this subject."
     );
-    expect(screen.queryByText("AgentPay on Bot Chain")).toBeNull();
+    expect(screen.queryByText("Zadper on Bot Chain")).toBeNull();
   });
 });

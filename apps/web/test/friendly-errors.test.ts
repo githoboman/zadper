@@ -32,7 +32,7 @@ describe("friendlyReason", () => {
   });
 
   it("maps registry and RPC config errors to operator copy", () => {
-    expect(friendlyReason("AGENT_PAY_REGISTRY_PACKAGE_HASH is required to record an AgentPay decision").headline).toMatch(
+    expect(friendlyReason("AGENT_PAY_REGISTRY_PACKAGE_HASH is required to record an Zadper decision").headline).toMatch(
       /registry contract isn't configured/
     );
     expect(friendlyReason("CASPER_RPC_URL is required to confirm a Bot Chain decision submission").headline).toMatch(

@@ -1,21 +1,21 @@
-import agentPayLogo from "../assets/agentpay-logo.png";
+import ZadperLogo from "../assets/Zadper-logo.png";
 
-type AgentPayLogoProps = {
+type ZadperLogoProps = {
   className?: string;
   decorative?: boolean;
   variant?: "icon" | "full";
 };
 
-export function AgentPayLogo({ className = "", decorative = false, variant = "icon" }: AgentPayLogoProps) {
+export function ZadperLogo({ className = "", decorative = false, variant = "icon" }: ZadperLogoProps) {
   return (
     <span className={`agent-pay-logo ${variant} ${className}`}>
       <img
-        alt={decorative ? "" : "AgentPay logo"}
+        alt={decorative ? "" : "Zadper logo"}
         aria-hidden={decorative ? true : undefined}
         draggable={false}
-        src={agentPayLogo}
+        src={ZadperLogo}
       />
-      {variant === "full" ? <span className="agent-pay-logo-word">AgentPay</span> : null}
+      {variant === "full" ? <span className="agent-pay-logo-word">Zadper</span> : null}
     </span>
   );
 }

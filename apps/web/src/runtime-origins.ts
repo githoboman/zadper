@@ -6,18 +6,18 @@ function endpoint(value: string | undefined, fallback: string): string {
 
   const url = new URL(candidate);
   if (url.protocol !== "http:" && url.protocol !== "https:") {
-    throw new TypeError("AgentPay browser endpoints must use HTTP or HTTPS");
+    throw new TypeError("Zadper browser endpoints must use HTTP or HTTPS");
   }
   if (url.protocol !== "https:" && !isLocalHostname(url.hostname)) {
-    throw new TypeError("AgentPay browser endpoints must use HTTPS outside local development");
+    throw new TypeError("Zadper browser endpoints must use HTTPS outside local development");
   }
   return candidate.replace(/\/+$/, "");
 }
 
 export const reportApiBase = endpoint(import.meta.env.VITE_REPORT_API_URL, "/api");
 export const bridgeApiBase = endpoint(import.meta.env.VITE_MCP_SERVER_URL, "/bridge");
-export const agentPayServiceBase = endpoint(
-  import.meta.env.VITE_AGENTPAY_SERVICE_URL,
+export const ZadperServiceBase = endpoint(
+  import.meta.env.VITE_Zadper_SERVICE_URL,
   reportApiBase
 );
 

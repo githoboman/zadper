@@ -122,7 +122,7 @@ describe("VerdictCard SHARE button", () => {
     });
   });
 
-  it("renders and copies the AgentPay check receipt", async () => {
+  it("renders and copies the Zadper check receipt", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, "clipboard", {
       value: { writeText },
@@ -132,27 +132,27 @@ describe("VerdictCard SHARE button", () => {
 
     render(<VerdictCard verdict={dangerVerdict} />);
 
-    expect(screen.getByRole("region", { name: "AgentPay check proof" })).toBeTruthy();
+    expect(screen.getByRole("region", { name: "Zadper check proof" })).toBeTruthy();
     expect(screen.getByText("Checked data ID")).toBeTruthy();
     expect(screen.getByText("Payment proof ID")).toBeTruthy();
     expect(screen.getByText("Testnet payment")).toBeTruthy();
     expect(screen.getByText("Bot Chain result record")).toBeTruthy();
 
-    fireEvent.click(screen.getByRole("button", { name: /copy agentpay check receipt/i }));
+    fireEvent.click(screen.getByRole("button", { name: /copy zadper check receipt/i }));
 
     await waitFor(() => {
-      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('"product": "AgentPay Check Receipt"'));
+      expect(writeText).toHaveBeenCalledWith(expect.stringContaining('"product": "Zadper Check Receipt"'));
     });
     expect(writeText.mock.calls[0][0]).toContain(dangerVerdict.datasetRoot);
     expect(writeText.mock.calls[0][0]).toContain(dangerVerdict.paymentReceiptHash);
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /copy agentpay check receipt/i }).textContent).toBe("Copied");
+      expect(screen.getByRole("button", { name: /copy zadper check receipt/i }).textContent).toBe("Copied");
     });
   });
 });
 
 describe("buildShareLink deep-link helper", () => {
-  it("returns the public AgentPay card image URL", () => {
+  it("returns the public Zadper card image URL", () => {
     const link = buildShareLink("card-abc123");
     expect(link).toBe("http://localhost:3000/api/card/card-abc123.png");
   });
@@ -169,7 +169,7 @@ describe("check receipt builder", () => {
     const receipt = buildCheckReceipt(dangerVerdict);
 
     expect(receipt).toMatchObject({
-      product: "AgentPay Check Receipt",
+      product: "Zadper Check Receipt",
       aspect: "DANGER",
       decision: "rejected",
       subject: {
@@ -191,6 +191,6 @@ describe("check receipt builder", () => {
         explorerUrl: dangerVerdict.explorerUrl
       }
     });
-    expect(serializeCheckReceipt(receipt)).toContain('"product": "AgentPay Check Receipt"');
+    expect(serializeCheckReceipt(receipt)).toContain('"product": "Zadper Check Receipt"');
   });
 });

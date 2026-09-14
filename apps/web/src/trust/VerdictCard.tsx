@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import type { Verdict } from "../api";
 import { buildShareLink, shareVerdict, storeVerdictCard } from "../api";
 import { friendlyError } from "../lib/friendly-errors";
-import { AgentPayCheckList } from "../components/AgentPayCheckList";
+import { ZadperCheckList } from "../components/ZadperCheckList";
 import { buildCheckReceipt, botchainTransactionUrl, serializeCheckReceipt } from "./check-receipt";
 
 type VerdictCardProps = {
@@ -110,7 +110,7 @@ export function VerdictCard({ verdict, subjectLabel = "Token", subjectHint }: Ve
 
       <p className="verdict-rationale">{verdict.rationale}</p>
 
-      <AgentPayCheckList
+      <ZadperCheckList
         flags={verdict.flags}
         notChecked={verdict.notChecked}
         passed={verdict.passed}

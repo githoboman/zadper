@@ -1,7 +1,7 @@
 import type { Verdict } from "../api";
 
-export type AgentPayCheckReceipt = {
-  product: "AgentPay Check Receipt";
+export type ZadperCheckReceipt = {
+  product: "Zadper Check Receipt";
   aspect: Verdict["aspect"];
   decision: Verdict["decision"];
   subject: {
@@ -24,9 +24,9 @@ export type AgentPayCheckReceipt = {
   };
 };
 
-export function buildCheckReceipt(verdict: Verdict): AgentPayCheckReceipt {
+export function buildCheckReceipt(verdict: Verdict): ZadperCheckReceipt {
   return {
-    product: "AgentPay Check Receipt",
+    product: "Zadper Check Receipt",
     aspect: verdict.aspect,
     decision: verdict.decision,
     subject: {
@@ -50,7 +50,7 @@ export function buildCheckReceipt(verdict: Verdict): AgentPayCheckReceipt {
   };
 }
 
-export function serializeCheckReceipt(receipt: AgentPayCheckReceipt): string {
+export function serializeCheckReceipt(receipt: ZadperCheckReceipt): string {
   return JSON.stringify(receipt, null, 2);
 }
 

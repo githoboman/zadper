@@ -18,7 +18,7 @@ export function SigningHandoff({ flow }: { flow: AuditFlow }) {
   const walletPaid = flow.walletPayment.status === "success";
 
   const command = [
-    `agentpay call \\`,
+    `Zadper call \\`,
     `  --url ${shellArgument(url)} \\`,
     `  --method ${shellArgument(method)} \\`,
     `  --key ${shellArgument("<buyer-key.pem>")} \\`,
@@ -71,7 +71,7 @@ export function SigningHandoff({ flow }: { flow: AuditFlow }) {
           ) : null}
 
           <details className="audit-disclosure">
-            <summary className="audit-note">Use the AgentPay CLI</summary>
+            <summary className="audit-note">Use the Zadper CLI</summary>
             <pre className="audit-code-block audit-scroll-x">{command}</pre>
             <form
               className="audit-actions"

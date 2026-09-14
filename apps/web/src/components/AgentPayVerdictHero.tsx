@@ -1,7 +1,7 @@
 import { ArrowSquareOut } from "@phosphor-icons/react";
 import type { RuleResult } from "../../../../packages/agent-pay-core/src/trust/rules";
 import type { EvidenceNetwork } from "../api";
-import { AgentPayButton, AgentPaySurface } from "./AgentPayUi";
+import { ZadperButton, ZadperSurface } from "./ZadperUi";
 
 export type HeroMode = "verdict" | "blocked";
 
@@ -24,7 +24,7 @@ const ASPECT_CLASS: Record<RuleResult["aspect"], string> = {
   DANGER: "is-danger"
 };
 
-export function AgentPayVerdictHero({
+export function ZadperVerdictHero({
   mode,
   verdict,
   subjectLabel,
@@ -58,14 +58,14 @@ export function AgentPayVerdictHero({
   onShowPayment?: () => void;
 }) {
   if (mode === "verdict" && !verdict) {
-    throw new TypeError("A verified AgentPay verdict is required in verdict mode");
+    throw new TypeError("A verified Zadper verdict is required in verdict mode");
   }
   const rootClass = mode === "blocked" ? "is-blocked" : ASPECT_CLASS[verdict!.aspect];
 
   const canRun = !running && subjectInput.trim().length > 0;
 
   return (
-    <AgentPaySurface className={`agent-pay-verdict-hero ${rootClass}`}>
+    <ZadperSurface className={`agent-pay-verdict-hero ${rootClass}`}>
       {mode === "blocked" ? (
         <div className="verdict-blocked">
           <h2 className="verdict-word verdict-word--blocked">Signed payment needed</h2>
@@ -73,9 +73,9 @@ export function AgentPayVerdictHero({
             {blockedNote ?? "The buyer must sign and submit the x402 payment before verification can continue."}
           </p>
           {onShowPayment ? (
-            <AgentPayButton variant="secondary" size="compact" onClick={onShowPayment}>
+            <ZadperButton variant="secondary" size="compact" onClick={onShowPayment}>
               Show x402 payment
-            </AgentPayButton>
+            </ZadperButton>
           ) : null}
         </div>
       ) : (
@@ -107,7 +107,7 @@ export function AgentPayVerdictHero({
       )}
 
       <div className="hero-run">
-        <AgentPayEvidenceNetworkSelector
+        <ZadperEvidenceNetworkSelector
           disabled={running}
           onChange={onChangeEvidenceNetwork}
           value={evidenceNetwork}
@@ -120,15 +120,15 @@ export function AgentPayVerdictHero({
           value={subjectInput}
           onChange={(event) => onChangeSubject(event.target.value)}
         />
-        <AgentPayButton variant="primary" disabled={!canRun} onClick={() => onRun(subjectInput)}>
+        <ZadperButton variant="primary" disabled={!canRun} onClick={() => onRun(subjectInput)}>
           {running ? primaryLabel : "Run live check"}
-        </AgentPayButton>
+        </ZadperButton>
       </div>
-    </AgentPaySurface>
+    </ZadperSurface>
   );
 }
 
-export function AgentPayEvidenceNetworkSelector({
+export function ZadperEvidenceNetworkSelector({
   disabled = false,
   onChange,
   value

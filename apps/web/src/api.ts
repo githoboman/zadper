@@ -276,7 +276,7 @@ export async function storeVerdictCard(data: {
     body: JSON.stringify(data)
   });
   if (!response.ok) {
-    await throwReportApiError(response, "AgentPay could not create the share card.");
+    await throwReportApiError(response, "Zadper could not create the share card.");
   }
   return response.json() as Promise<{ id: string }>;
 }
@@ -288,7 +288,7 @@ export async function shareVerdict(cardId: string, optIn: boolean): Promise<{ ok
     body: JSON.stringify({ cardId, optIn })
   });
   if (!response.ok) {
-    await throwReportApiError(response, "AgentPay could not publish this check.");
+    await throwReportApiError(response, "Zadper could not publish this check.");
   }
   return response.json() as Promise<{ ok: boolean }>;
 }
@@ -304,7 +304,7 @@ export function absoluteCardImageUrl(cardImageUrl: string): string {
 export async function getFeed(): Promise<{ entries: FeedEntry[] }> {
   const response = await fetch(`${reportApiBase}/feed`);
   if (!response.ok) {
-    await throwReportApiError(response, "AgentPay could not load shared checks.");
+    await throwReportApiError(response, "Zadper could not load shared checks.");
   }
   const body = (await response.json()) as { entries: FeedEntry[] };
   return {
@@ -342,7 +342,7 @@ export async function resolveToken(symbol: string): Promise<ResolvedToken | null
     return null;
   }
   if (!response.ok) {
-    await throwReportApiError(response, "AgentPay could not look up that token symbol.");
+    await throwReportApiError(response, "Zadper could not look up that token symbol.");
   }
   return response.json() as Promise<ResolvedToken>;
 }
@@ -384,7 +384,7 @@ export async function callTool<T>(tool: string, payload: unknown): Promise<T> {
       body = raw ? JSON.parse(raw) : null;
     } catch {
       throw new ToolCallError(
-        "AgentPay returned an unexpected response. Check that its services are running, then try again.",
+        "Zadper returned an unexpected response. Check that its services are running, then try again.",
         response.status,
         null
       );

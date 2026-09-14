@@ -24,7 +24,7 @@ export function TokenGate({ flow }: { flow: AuditFlow }) {
         <>
           <p className="audit-note">
             Connect Bot Chain Wallet and sign a login message to use your payment rules. This does not send a transaction,
-            and AgentPay never receives your private key.
+            and Zadper never receives your private key.
           </p>
           <div className="audit-actions">
             <button
@@ -53,7 +53,7 @@ export function TokenGate({ flow }: { flow: AuditFlow }) {
       ) : null}
 
       <details className="audit-disclosure">
-        <summary className="audit-note">Use an AgentPay token instead</summary>
+        <summary className="audit-note">Use an Zadper token instead</summary>
         <p className="audit-note">
           Agents and developers can paste an operator session or scoped agent token. It stays in memory for this tab.
           Never paste a private key. Any Bot Chain keypair can create a session with the CLI, which signs a one-time
@@ -61,8 +61,8 @@ export function TokenGate({ flow }: { flow: AuditFlow }) {
         </p>
         <pre className="audit-code-block audit-terminal">
           <code>
-            <span className="audit-terminal-prompt">$ </span>npm install -g @timidan/agentpay-cli{"\n"}
-            <span className="audit-terminal-prompt">$ </span>agentpay session create --key {"<secret.pem>"} --json
+            <span className="audit-terminal-prompt">$ </span>npm install -g @timidan/Zadper-cli{"\n"}
+            <span className="audit-terminal-prompt">$ </span>Zadper session create --key {"<secret.pem>"} --json
           </code>
         </pre>
         <form
@@ -80,8 +80,8 @@ export function TokenGate({ flow }: { flow: AuditFlow }) {
             type="password"
             autoComplete="off"
             spellCheck={false}
-            aria-label="AgentPay token"
-            placeholder="AgentPay token"
+            aria-label="Zadper token"
+            placeholder="Zadper token"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
           />

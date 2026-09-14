@@ -30,12 +30,12 @@ export function ChargeTerms({ flow }: { flow: AuditFlow }) {
           className="audit-button"
           type="button"
           disabled={flow.liveService.status === "running"}
-          onClick={() => void flow.loadAgentPayService()}
+          onClick={() => void flow.loadZadperService()}
         >
           <Lightning size={15} weight="bold" aria-hidden="true" />
           {flow.liveService.status === "running"
             ? "Getting a fresh charge…"
-            : "Use AgentPay's own charge"}
+            : "Use Zadper's own charge"}
         </button>
         <input
           className="audit-input"
@@ -66,7 +66,7 @@ export function ChargeTerms({ flow }: { flow: AuditFlow }) {
 
       {flow.liveService.status === "success" ? (
         <p className="audit-note" data-state="success">
-          Loaded a real AgentPay token-check charge using official WCSPR. It settles on Bot Chain Testnet.
+          Loaded a real Zadper token-check charge using official WCSPR. It settles on Bot Chain Testnet.
         </p>
       ) : null}
       {flow.liveService.status === "error" ? (
@@ -79,14 +79,14 @@ export function ChargeTerms({ flow }: { flow: AuditFlow }) {
         emptyLabel={
           flow.tokenPresent
             ? "Enter a service URL, then read its x402 charge."
-            : "Connect Bot Chain Wallet or enter an AgentPay token before reading a charge."
+            : "Connect Bot Chain Wallet or enter an Zadper token before reading a charge."
         }
       />
 
       {result && !terms ? (
         <p className="audit-note" data-state="not_checked">
           This service did not return a supported Bot Chain payment request. It answered HTTP {result.response.status};
-          AgentPay needs a 402 response with one Bot Chain x402 v2 payment option.
+          Zadper needs a 402 response with one Bot Chain x402 v2 payment option.
         </p>
       ) : null}
 
@@ -141,7 +141,7 @@ export function ChargeTerms({ flow }: { flow: AuditFlow }) {
           {flow.walletSession.status === "success" ? (
             <div className="audit-preparation">
               <p className="audit-note">
-                Prepare the exact payer, recipient, amount, token, and short validity window for AgentPay to check.
+                Prepare the exact payer, recipient, amount, token, and short validity window for Zadper to check.
                 This does not sign or send the payment.
               </p>
               <div className="audit-actions">

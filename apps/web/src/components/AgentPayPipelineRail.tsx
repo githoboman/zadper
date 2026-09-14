@@ -14,7 +14,7 @@ export type EvidenceStep = {
  * single ordered story. State reads through the number badge, a colored left
  * edge, and a tick or warning glyph. No dots.
  */
-export function AgentPayPipelineRail({ steps }: { steps: EvidenceStep[] }) {
+export function ZadperPipelineRail({ steps }: { steps: EvidenceStep[] }) {
   return (
     <ol className="agent-pay-pipeline-rail" aria-label="Payment check progress">
       {steps.map((step, index) => (

@@ -7,7 +7,7 @@ import { labelForNotChecked } from "../lib/not-checked-labels";
  * danger, then caution, then passed, then not-checked. Every row is a colored
  * left edge plus a glyph (mark, flag, tick, dash). No dots.
  */
-export function AgentPayCheckList({
+export function ZadperCheckList({
   flags,
   notChecked,
   passed,

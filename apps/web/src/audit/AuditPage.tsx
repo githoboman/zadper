@@ -4,7 +4,7 @@ import ModernVariant from "./variants/modern";
 import type { AuditTheme } from "./variants/types";
 import "./audit-base.css";
 
-// The canonical audit surface ("AgentPay Modern"). The exploration-era variant
+// The canonical audit surface ("Zadper Modern"). The exploration-era variant
 // switcher is gone; the flow mounts once and the one UI renders it.
 export default function AuditPage({
   theme,

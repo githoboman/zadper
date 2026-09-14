@@ -12,7 +12,7 @@ import {
   ToolCallError,
   type Verification
 } from "../api";
-import type { EvidenceStep } from "../components/AgentPayPipelineRail";
+import type { EvidenceStep } from "../components/ZadperPipelineRail";
 import { friendlyReason } from "../lib/friendly-errors";
 import { decisionForPaidReport } from "./evidenceVerdict";
 
@@ -53,7 +53,7 @@ export type EvidenceRun = {
   timeline: EvidenceStep[];
   setEvidenceNetwork: (network: EvidenceNetwork) => void;
   setPaymentPayloadText: (value: string) => void;
-  runAgentPay: (rawSubject?: string) => Promise<void>;
+  runZadper: (rawSubject?: string) => Promise<void>;
   continueSettlement: () => Promise<void>;
   reset: () => void;
   tamperReport: () => Promise<void>;
@@ -116,7 +116,7 @@ export function useEvidenceRun(deps: Partial<EvidenceRunDeps> = {}): EvidenceRun
       },
       {
         label: "Record",
-        caption: "writes the decision to the AgentPay registry",
+        caption: "writes the decision to the Zadper registry",
         value: receipt ? "recorded" : "waiting",
         state: stepState(recordDone, "record"),
         kind: "record"
@@ -166,7 +166,7 @@ export function useEvidenceRun(deps: Partial<EvidenceRunDeps> = {}): EvidenceRun
     setState("complete");
   }
 
-  async function runAgentPay(rawSubject = "") {
+  async function runZadper(rawSubject = "") {
     clearFlowState();
 
     const trimmed = rawSubject.trim();
@@ -296,7 +296,7 @@ export function useEvidenceRun(deps: Partial<EvidenceRunDeps> = {}): EvidenceRun
     timeline,
     setEvidenceNetwork,
     setPaymentPayloadText,
-    runAgentPay,
+    runZadper,
     continueSettlement,
     reset: clearFlowState,
     tamperReport,

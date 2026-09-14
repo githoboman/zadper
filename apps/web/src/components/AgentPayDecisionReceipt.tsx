@@ -41,7 +41,7 @@ function HashValue({ value, label }: { value: string; label: string }) {
   );
 }
 
-export function AgentPayDecisionReceipt({
+export function ZadperDecisionReceipt({
   receipt,
   proofDepth
 }: {

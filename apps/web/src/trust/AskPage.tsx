@@ -131,7 +131,7 @@ export default function AskPage({
       <div className="ask2-main">
         {state.status === "done" ? (
           <div className="ask2-result ask2-reveal">
-            <h1 className="agentpay-sr-only">Token check result</h1>
+            <h1 className="Zadper-sr-only">Token check result</h1>
             <button type="button" className="ask2-again" onClick={() => check.reset()}>
               ← Check another token
             </button>

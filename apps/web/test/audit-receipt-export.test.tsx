@@ -10,7 +10,7 @@ import type { AuditFlow } from "../src/audit/useAuditFlow";
 
 const receipt = {
   receiptId: "receipt-demo/unsafe",
-  schemaVersion: "agentpay-purchase/v1",
+  schemaVersion: "Zadper-purchase/v1",
   checkId: "check-demo",
   decision: { verdict: "pay" },
   terms: { amount: "10000", extra: { symbol: "WCSPR" } },
@@ -30,12 +30,12 @@ describe("payment receipt export", () => {
   it("serializes the immutable receipt without a UI wrapper", () => {
     expect(JSON.parse(serializeReceiptForDownload(receipt))).toEqual(receipt);
     expect(receiptDownloadName(receipt.receiptId)).toBe(
-      "agentpay-receipt-demo-unsafe.json"
+      "Zadper-receipt-demo-unsafe.json"
     );
   });
 
   it("downloads JSON that the CLI can verify offline", () => {
-    const createObjectURL = vi.fn(() => "blob:agentpay-receipt");
+    const createObjectURL = vi.fn(() => "blob:Zadper-receipt");
     const revokeObjectURL = vi.fn();
     Object.defineProperty(URL, "createObjectURL", { configurable: true, value: createObjectURL });
     Object.defineProperty(URL, "revokeObjectURL", { configurable: true, value: revokeObjectURL });
@@ -56,6 +56,6 @@ describe("payment receipt export", () => {
 
     expect(createObjectURL).toHaveBeenCalledOnce();
     expect(click).toHaveBeenCalledOnce();
-    expect(revokeObjectURL).toHaveBeenCalledWith("blob:agentpay-receipt");
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:Zadper-receipt");
   });
 });
