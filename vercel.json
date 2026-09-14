@@ -1,5 +1,5 @@
 {
   "buildCommand": "pnpm --filter @agent-pay/web build",
   "outputDirectory": "apps/web/dist",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./"
+  "ignoreCommand": "git diff --quiet HEAD~1 HEAD ./ 2>/dev/null"
 }
