@@ -28,7 +28,7 @@ const signals: SubjectSignals = {
 const rule = scoreSubject(signals);
 const verdictReport = {
   ...buildVerdictReport({
-    subject: { kind: "token", address: "a".repeat(64), raw: `hash-${"a".repeat(64)}` },
+    subject: { kind: "token", address: "0x" + "a".repeat(40), raw: `hash-${"0x" + "a".repeat(40)}` },
     signals,
     rule,
     rationale: "Every check required by this policy ran and passed. Review the receipt before you proceed.",
@@ -40,7 +40,7 @@ const verdictReport = {
   payment: {
     amount: "10000",
     amountDisplay: "0.00001",
-    asset: "b".repeat(64),
+    asset: "0x" + "b".repeat(40),
     assetSymbol: "WCSPR",
     assetDecimals: 9,
     network: "botchain:testnet"
@@ -50,10 +50,10 @@ const verdictReport = {
 const submission: VerdictCardSubmission = {
   card: {
     aspect: rule.aspect,
-    subjectShortHash: "a".repeat(8),
+    subjectShortHash: "0x" + "a".repeat(6),
     flags: rule.flags.map(({ code, message }) => ({ code, message })),
     notChecked: rule.notChecked,
-    decisionTxHash: "c".repeat(64),
+    decisionTxHash: "0x" + "c".repeat(64),
     policyHash: policyHash()
   },
   proof: {
@@ -81,8 +81,8 @@ const accountReport = {
   ...buildVerdictReport({
     subject: {
       kind: "account" as const,
-      address: "f".repeat(64),
-      raw: `account-hash-${"f".repeat(64)}`
+      address: "0x" + "f".repeat(40),
+      raw: `account-hash-${"0x" + "f".repeat(40)}`
     },
     signals: accountSignals,
     rule: accountRule,
@@ -97,10 +97,10 @@ const accountReport = {
 const accountSubmission: VerdictCardSubmission = {
   card: {
     aspect: accountRule.aspect,
-    subjectShortHash: "f".repeat(8),
+    subjectShortHash: "0x" + "f".repeat(6),
     flags: accountRule.flags.map(({ code, message }) => ({ code, message })),
     notChecked: accountRule.notChecked,
-    decisionTxHash: "1".repeat(64),
+    decisionTxHash: "0x" + "1".repeat(64),
     policyHash: accountPolicyHash()
   },
   proof: {
@@ -164,3 +164,6 @@ describe("parseVerdictCardSubmission", () => {
     expect(parseVerdictCardSubmission(accountSubmission)).toEqual(accountSubmission);
   });
 });
+
+
+

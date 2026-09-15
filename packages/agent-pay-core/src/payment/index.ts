@@ -6,7 +6,8 @@ export {
   buildAuthorizationWindow,
   transferWithAuthorizationDigest,
   transferWithAuthorizationTypedData,
-  verifyAuthorizationSignature
+  verifyAuthorizationSignature,
+  parseBotChainPublicKey
 } from "./authorization.js";
 export {
   evaluatePayment
@@ -19,7 +20,9 @@ export {
 } from "./settlement.js";
 export {
   buildPurchaseReceipt,
-  verifyPurchaseReceipt
+  verifyPurchaseReceipt,
+  verifyBotChainMessageSignature,
+  operatorActionMessage
 } from "./receipt.js";
 export {
   decodePaymentRequiredHeader,

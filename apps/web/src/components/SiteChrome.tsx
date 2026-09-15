@@ -1,6 +1,6 @@
 import type { MouseEvent, ReactNode } from "react";
 import { ArrowSquareOut, Moon, Sun } from "@phosphor-icons/react";
-import { ZardperLogo } from "./ZardperLogo";
+import { ZadperLogo } from "./ZadperLogo";
 import { EXPLORER } from "../landing2/data";
 
 // Shared page chrome for every routed page except the landing (the landing is
@@ -33,7 +33,7 @@ function linkClick(path: string, navigate?: Navigate) {
 
 export function SiteNavLinks({ current, navigate }: { current: SiteKey; navigate?: Navigate }) {
   return (
-    <nav className="site-links" aria-label="Zardper pages">
+    <nav className="site-links" aria-label="Zadper pages">
       {PRIMARY_LINKS.map((link) => (
         <a
           key={link.key}
@@ -65,10 +65,10 @@ export function SiteNav({
 }) {
   return (
     <header className="site-nav">
-      <a className="site-brand" href="/" onClick={linkClick("/", navigate)} aria-label="Zardper overview">
-        <ZardperLogo className="site-brand-logo" decorative />
+      <a className="site-brand" href="/" onClick={linkClick("/", navigate)} aria-label="Zadper overview">
+        <ZadperLogo className="site-brand-logo" decorative />
         <span className="site-brand-copy">
-          <span className="site-brand-name">Zardper</span>
+          <span className="site-brand-name">Zadper</span>
           <span className="site-brand-sub">{sub}</span>
         </span>
       </a>
@@ -101,10 +101,10 @@ export function SiteFooter({ current, navigate }: { current: SiteKey; navigate?:
     <footer className="site-footer">
       <div className="site-footer-inner">
         <div className="site-footer-brand">
-          <span className="site-footer-name">Zardper</span>
+          <span className="site-footer-name">Zadper</span>
           <span className="site-footer-line">The Arcane Eye of Agentic Payments. Sees every charge before your agent signs it.</span>
         </div>
-        <nav className="site-footer-links" aria-label="Zardper pages, footer">
+        <nav className="site-footer-links" aria-label="Zadper pages, footer">
           {[...PRIMARY_LINKS, CONSOLE_LINK].map((link) => (
             <a
               key={link.key}

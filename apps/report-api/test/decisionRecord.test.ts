@@ -5,7 +5,7 @@ import {
 } from "../src/decisionRecord.js";
 
 const TRANSACTION_HASH = "1".repeat(64);
-const PACKAGE_HASH = "2".repeat(64);
+const PACKAGE_HASH = "2".repeat(40);
 
 const proof: DecisionRecordProof = {
   hashKind: "deploy",
@@ -21,7 +21,7 @@ describe("verifyDecisionRecordOnChain", () => {
   it("accepts only an executed Testnet registry call with the exact committed fields", async () => {
     const result = await verifyDecisionRecordOnChain(proof, {
       rpcUrl: "https://node.testnet.example/rpc",
-      registryPackageHash: `hash-${PACKAGE_HASH}`,
+      registryPackageHash: PACKAGE_HASH,
       fetchImpl: rpcResponse(proof)
     });
 
@@ -35,7 +35,7 @@ describe("verifyDecisionRecordOnChain", () => {
     };
     const result = await verifyDecisionRecordOnChain(transactionProof, {
       rpcUrl: "https://node.testnet.example/rpc",
-      registryPackageHash: `hash-${PACKAGE_HASH}`,
+      registryPackageHash: PACKAGE_HASH,
       fetchImpl: rpcTransactionResponse(transactionProof)
     });
 

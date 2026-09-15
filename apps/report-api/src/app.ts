@@ -12,7 +12,8 @@ import {
   type PaymentAssetEvidence,
   type ProofStep,
   type ReportProof,
-  type SubjectRef
+  type SubjectRef,
+  type Dataset
 } from "@agent-pay/core";
 import {
   parseVerdictCardSubmission,
@@ -22,9 +23,6 @@ import {
   verdictCardId,
   type VerdictCardData
 } from "./card.js";
-import { resolveTokenBySymbol, type LiveEvidenceDataset } from "./liveEvidence.js";
-import { getHeroTokenList } from "./botChainEvidence.js";
-import { normalizeCsprName, resolveCsprName } from "./csprName.js";
 import { buildSubjectEvidence } from "./subjectEvidence.js";
 import { buildAccountEvidence } from "./accountEvidence.js";
 import {
@@ -97,7 +95,7 @@ type QuoteSnapshot = {
   reportId: string;
   reportHash: string;
   evidenceNetwork: EvidenceNetwork;
-  dataset: LiveEvidenceDataset;
+  dataset: Dataset;
   expiresAt: number;
   paymentResource: PaymentResource;
   paymentRequirement: PaymentRequirement | null;
@@ -572,54 +570,6 @@ export function createReportApp(options: CreateReportAppOptions = {}): Express {
   //  Token discovery (landing hero) — live CSPR.cloud, best-effort    //
   // ---------------------------------------------------------------- //
 
-  // Resolves a token symbol to its package hash within cspr.trade's pair set.
-  app.get("/resolve", async (request, response) => {
-    const symbol = typeof request.query.symbol === "string" ? request.query.symbol.trim() : "";
-    if (!symbol || symbol.length > 24) {
-      response.status(400).json({ error: "invalid_symbol" });
-      return;
-    }
-    try {
-      const resolved = await resolveTokenBySymbol(symbol);
-      if (!resolved) {
-        response.status(404).json({ error: "not_listed", symbol });
-        return;
-      }
-      response.json(resolved);
-    } catch (error) {
-      console.error("/resolve failed:", error instanceof Error ? error.message : error);
-      response.status(503).json(sourceUnavailableBody("CSPR.trade"));
-    }
-  });
-
-  app.get("/resolve-account", async (request, response) => {
-    const name = normalizeCsprName(request.query.name);
-    if (!name) {
-      response.status(400).json({ error: "invalid_cspr_name" });
-      return;
-    }
-    try {
-      const resolved = await resolveCsprName(name);
-      if (!resolved) {
-        response.status(404).json({ error: "not_found", name });
-        return;
-      }
-      response.json(resolved);
-    } catch (error) {
-      console.error("/resolve-account failed:", error instanceof Error ? error.message : error);
-      response.status(503).json(sourceUnavailableBody("CSPR.name", "account resolution"));
-    }
-  });
-
-  app.get("/tokens", async (_request, response) => {
-    try {
-      response.json({ tokens: await getHeroTokenList() });
-    } catch (error) {
-      console.error("/tokens failed:", error instanceof Error ? error.message : error);
-      response.status(503).json(sourceUnavailableBody("CSPR.cloud"));
-    }
-  });
-
   if (options.auditorRouter) app.use("/v1", options.auditorRouter);
 
   app.use((error: unknown, _request: express.Request, response: express.Response, _next: express.NextFunction) => {
@@ -715,7 +665,7 @@ async function createQuoteSnapshot(
   };
 }
 
-function chooseReport(dataset: LiveEvidenceDataset): ReportProof {
+function chooseReport(dataset: Dataset): ReportProof {
   return (
     dataset.reports.find((report) => report.record.product === "CSPR.trade MCP") ??
     dataset.reports[dataset.reports.length - 1]
@@ -1025,15 +975,15 @@ function paymentRequirementConfiguration():
   if (!assetPackageHash) {
     return { ok: false, reason: "x402_asset_package_hash_required" };
   }
-  if (!/^[0-9a-f]{64}$/i.test(assetPackageHash)) {
-    return { ok: false, reason: "x402_asset_package_hash_must_be_64_hex_chars" };
+  if (!/^0x[0-9a-f]{40}$/i.test(assetPackageHash)) {
+    return { ok: false, reason: "x402_asset_must_be_evm_address" };
   }
   const payTo = process.env.PAYEE_ADDRESS?.trim();
   if (!payTo) {
     return { ok: false, reason: "payee_address_required" };
   }
-  if (!/^00[0-9a-f]{64}$/i.test(payTo)) {
-    return { ok: false, reason: "payee_address_must_be_00_plus_64_hex_chars" };
+  if (!/^0x[0-9a-f]{40}$/i.test(payTo)) {
+    return { ok: false, reason: "payee_address_must_be_evm_address" };
   }
   const amount = process.env.AGENT_PAY_REPORT_AMOUNT?.trim();
   if (!amount) return { ok: false, reason: "agent_pay_report_amount_required" };

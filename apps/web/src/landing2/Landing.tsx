@@ -11,7 +11,7 @@ import {
   Sun,
   X,
 } from "@phosphor-icons/react";
-import { ZardperLogo } from "../components/ZardperLogo";
+import { ZadperLogo } from "../components/ZadperLogo";
 import {
   callTool,
   getBridgeHealth,
@@ -476,8 +476,8 @@ export default function Landing2({
       <header className={`lp2-nav ${scrolled ? "lp2-nav--scrolled" : ""}`}>
         <div className="lp2-nav-inner">
           <a className="lp2-brand" href="#top" onClick={scrollTo("top")}>
-            <ZardperLogo className="lp2-logo" decorative variant="icon" />
-            <span className="lp2-brandword">Zardper</span>
+            <ZadperLogo className="lp2-logo" decorative variant="icon" />
+            <span className="lp2-brandword">Zadper</span>
           </a>
 
           <nav className="lp2-navlinks" aria-label="Sections">
@@ -756,7 +756,7 @@ export default function Landing2({
         <div className="lp2-footer-inner">
           <div className="lp2-footer-brand">
             <span className="lp2-brand">
-              <ZardperLogo className="lp2-logo" decorative variant="full" />
+              <ZadperLogo className="landing2-footer-logo" variant="full" />
             </span>
             <p className="lp2-footer-line">The Arcane Eye of Agentic Payments. Sees every charge before your agent signs it.</p>
             <div className="lp2-footer-marks">

@@ -40,7 +40,7 @@ afterEach(async () => {
 
 describe("checked x402 call over HTTP", () => {
   it("runs challenge, PAY, local signing, settlement verification, observation, and receipt creation", async () => {
-    const signer = createEVMSigner("ed25519", new Uint8Array(32).fill(7));
+    const signer = createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex"));
     let publishTransaction: ((result: unknown) => void) | null = null;
     let unsignedRequests = 0;
     let signedRequests = 0;
@@ -227,3 +227,4 @@ async function closeServer(server: Server): Promise<void> {
     server.close((error) => error ? reject(error) : resolve());
   });
 }
+

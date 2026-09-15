@@ -10,11 +10,11 @@ import type {
 } from "./types.js";
 import { ethers } from "ethers";
 
-function operatorActionMessage(payload: Record<string, unknown>): string {
+export function operatorActionMessage(payload: Record<string, unknown>): string {
   return "AgentPay Operator Action v1\n" + canonicalJson(payload);
 }
 
-function verifyBotChainMessageSignature(input: { message: string, publicKeyHex: string, signatureHex: string }): boolean {
+export function verifyBotChainMessageSignature(input: { message: string, publicKeyHex: string, signatureHex: string }): boolean {
   try {
     const recovered = ethers.verifyMessage(input.message, input.signatureHex);
     return recovered.toLowerCase() === input.publicKeyHex.toLowerCase();

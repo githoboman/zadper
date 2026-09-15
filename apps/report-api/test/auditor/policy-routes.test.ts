@@ -1,5 +1,5 @@
 import express, { type Express } from "express";
-import { ed25519 } from "@noble/curves/ed25519";
+import { computeAddress, SigningKey, hashMessage } from "ethers";
 import request from "supertest";
 import { afterEach, describe, expect, it } from "vitest";
 import {
@@ -22,9 +22,9 @@ const ORIGIN = "https://agentpay.example";
 const NOW = "2026-07-15T21:00:00.000Z";
 const PRIVATE_KEY = Uint8Array.from({ length: 32 }, (_value, index) => index + 1);
 const OTHER_PRIVATE_KEY = new Uint8Array(32).fill(9);
-const OPERATOR = `01${Buffer.from(ed25519.getPublicKey(PRIVATE_KEY)).toString("hex")}`;
-const OTHER_OPERATOR = `01${Buffer.from(ed25519.getPublicKey(OTHER_PRIVATE_KEY)).toString("hex")}`;
-const PAYER = `01${Buffer.from(ed25519.getPublicKey(new Uint8Array(32).fill(7))).toString("hex")}`;
+const OPERATOR = computeAddress("0x" + Buffer.from(PRIVATE_KEY).toString("hex")).toLowerCase();
+const OTHER_OPERATOR = computeAddress("0x" + Buffer.from(OTHER_PRIVATE_KEY).toString("hex")).toLowerCase();
+const PAYER = computeAddress("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex")).toLowerCase();
 const ASSET = "5".repeat(64);
 const PAYEE = `00${"6".repeat(64)}`;
 const repositories: SqliteAuditorRepository[] = [];
@@ -439,6 +439,6 @@ function providerAction(decision: ProviderDecision): OperatorActionDescriptor {
 }
 
 function signMessage(message: string, privateKey = PRIVATE_KEY): string {
-  const bytes = new TextEncoder().encode(`Bot Chain Message:\n${message}`);
-  return Buffer.from(ed25519.sign(bytes, privateKey)).toString("hex");
+  const signingKey = new SigningKey("0x" + Buffer.from(privateKey).toString("hex"));
+  return signingKey.sign(hashMessage(message)).serialized;
 }

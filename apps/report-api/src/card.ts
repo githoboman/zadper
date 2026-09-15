@@ -38,8 +38,8 @@ export type VerdictCardSubmission = {
 };
 
 const CARD_ASPECTS = new Set<VerdictCardData["aspect"]>(["CLEAR", "CAUTION", "DANGER"]);
-const HEX_HASH_PATTERN = /^[0-9a-f]{64}$/i;
-const SUBJECT_HASH_PATTERN = /^[0-9a-f]{8,64}$/i;
+const HEX_HASH_PATTERN = /^(?:0x)?[0-9a-f]{64}$/i;
+const SUBJECT_HASH_PATTERN = /^(?:0x)?[0-9a-f]{6,64}$/i;
 
 function isBoundedString(value: unknown, maxLength: number): value is string {
   return typeof value === "string" && value.length > 0 && value.length <= maxLength;
@@ -131,7 +131,7 @@ export function parseVerdictCardSubmission(value: unknown): VerdictCardSubmissio
   const address = typeof subject?.address === "string"
     ? normalizeAddress(subject.address)
     : "";
-  if (!signals || !HEX_HASH_PATTERN.test(address)) return null;
+  if (!signals || !/^(?:0x)?[0-9a-f]{40}$/i.test(address)) return null;
 
   const account = subject?.kind === "account";
   if (!account && subject?.kind !== "token") return null;
@@ -195,7 +195,7 @@ function validPayment(payment: Record<string, unknown> | null): boolean {
     typeof payment.amountDisplay === "string" &&
     payment.amountDisplay.length > 0 &&
     typeof payment.asset === "string" &&
-    HEX_HASH_PATTERN.test(payment.asset) &&
+    /^(?:0x)?[0-9a-f]{40}$/i.test(payment.asset) &&
     typeof payment.assetSymbol === "string" &&
     payment.assetSymbol.length > 0 &&
     (payment.assetDecimals === null ||

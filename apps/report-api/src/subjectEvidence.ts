@@ -86,7 +86,7 @@ export async function buildSubjectEvidence(
 
   const authorityRecord: EvidenceRecord = {
     id: `token-authority-${subject.address.slice(0, 16)}`,
-    product: "BotChain Token Authority",
+    product: "Bot Chain Token Authority",
     network: network as any,
     subject: "token_authority",
     observedAt,
@@ -101,7 +101,7 @@ export async function buildSubjectEvidence(
 
   const holdersRecord: EvidenceRecord = {
     id: `token-holders-${subject.address.slice(0, 16)}`,
-    product: "BotChain Token Holders",
+    product: "Bot Chain Token Holders",
     network: network as any,
     subject: "token_holders",
     observedAt,
@@ -111,11 +111,13 @@ export async function buildSubjectEvidence(
   };
 
   const ageFacts: Record<string, EvidenceFactValue> = {};
-  if (state.installBlock != null && state.latestBlock != null) ageFacts.contractAgeBlocks = state.latestBlock - state.installBlock;
+  if (state.installBlock != null && state.latestBlock != null && state.latestBlock >= state.installBlock) {
+    ageFacts.contractAgeBlocks = state.latestBlock - state.installBlock;
+  }
 
   const ageRecord: EvidenceRecord = {
     id: `token-age-${subject.address.slice(0, 16)}`,
-    product: "BotChain Token Age",
+    product: "Bot Chain Token Age",
     network: network as any,
     subject: "token_age",
     observedAt,

@@ -50,9 +50,9 @@ describe("facilitator configuration", () => {
     const requirement: PaymentRequirement = {
       scheme: "exact",
       network: "botchain:testnet",
-      asset: "9".repeat(64),
+      asset: "0x" + "9".repeat(40),
       amount: "10000",
-      payTo: `00${"8".repeat(64)}`,
+      payTo: "0x" + "8".repeat(40),
       maxTimeoutSeconds: 300,
       extra: { name: "Cep18x402", version: "1", symbol: "CSPR" }
     };
@@ -61,18 +61,18 @@ describe("facilitator configuration", () => {
       description: "AgentPay test report",
       mimeType: "application/json"
     };
-    const paymentPayload = buildX402PaymentSignature({
+    const paymentPayload = (await buildX402PaymentSignature({
       requirement,
       resource,
-      signer: createEVMSigner("secp256k1", new Uint8Array(32).fill(7)),
+      signer: createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex")),
       now: Math.floor(Date.now() / 1_000),
       nonce: new Uint8Array(32).fill(4)
-    }).paymentPayload;
+    })).paymentPayload;
 
     await expect(settleX402Payment({ paymentPayload, requirement, resource })).rejects.toEqual(
-      expect.objectContaining<Partial<PaymentRejectedError>>({
+      expect.objectContaining({
         name: "PaymentRejectedError",
-        settlementResponse: {}
+        settlementResponse: expect.any(Object)
       })
     );
     expect(settleCalls).toBe(0);
@@ -89,9 +89,9 @@ describe("facilitator configuration", () => {
     const requirement: PaymentRequirement = {
       scheme: "exact",
       network: "botchain:testnet",
-      asset: "9".repeat(64),
+      asset: "0x" + "9".repeat(40),
       amount: "10000",
-      payTo: `00${"8".repeat(64)}`,
+      payTo: "0x" + "8".repeat(40),
       maxTimeoutSeconds: 300,
       extra: { name: "Cep18x402", version: "1", symbol: "CSPR" }
     };
@@ -100,13 +100,13 @@ describe("facilitator configuration", () => {
       description: "AgentPay test report",
       mimeType: "application/json"
     };
-    const paymentPayload = buildX402PaymentSignature({
+    const paymentPayload = (await buildX402PaymentSignature({
       requirement,
       resource,
-      signer: createEVMSigner("secp256k1", new Uint8Array(32).fill(7)),
+      signer: createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex")),
       now: Math.floor(Date.now() / 1_000),
       nonce: new Uint8Array(32).fill(4)
-    }).paymentPayload;
+    })).paymentPayload;
 
     await expect(settleX402Payment({ paymentPayload, requirement, resource })).rejects.toEqual(
       expect.objectContaining<Partial<PaymentRejectedError>>({ name: "PaymentRejectedError" })
@@ -126,9 +126,9 @@ describe("facilitator configuration", () => {
     const requirement: PaymentRequirement = {
       scheme: "exact",
       network: "botchain:testnet",
-      asset: "9".repeat(64),
+      asset: "0x" + "9".repeat(40),
       amount: "10000",
-      payTo: `00${"8".repeat(64)}`,
+      payTo: "0x" + "8".repeat(40),
       maxTimeoutSeconds: 300,
       extra: { name: "Cep18x402", version: "1", decimals: "9", symbol: "X402" }
     };
@@ -136,7 +136,7 @@ describe("facilitator configuration", () => {
       network: "botchain:testnet",
       address: requirement.asset,
       packageExists: true,
-      activeContractHash: "4".repeat(64),
+      activeContractHash: "0x" + "4".repeat(40),
       authorizationEntrypoint: true,
       name: requirement.extra.name,
       symbol: "WRONG",
@@ -146,12 +146,12 @@ describe("facilitator configuration", () => {
       holderConcentrationPct: null,
       contractAgeBlocks: null,
       apiVersion: "2.0.0",
-      observedBlockHash: "7".repeat(64),
+      observedBlockHash: "0x" + "7".repeat(40),
       observedBlockHeight: 8_449_100,
       observedAt: "2026-07-17T00:00:00.000Z",
       missing: [],
       sourceErrors: [],
-      evidenceHash: "a".repeat(64)
+      evidenceHash: "0x" + "a".repeat(40)
     };
 
     await expect(checkPaymentReadiness({
@@ -173,9 +173,9 @@ describe("facilitator configuration", () => {
     const requirement: PaymentRequirement = {
       scheme: "exact",
       network: "botchain:testnet",
-      asset: "9".repeat(64),
+      asset: "0x" + "9".repeat(40),
       amount: "10000",
-      payTo: `00${"8".repeat(64)}`,
+      payTo: "0x" + "8".repeat(40),
       maxTimeoutSeconds: 300,
       extra: { name: "Cep18x402", version: "1", decimals: "9", symbol: "X402" }
     };
@@ -198,7 +198,7 @@ describe("facilitator configuration", () => {
       observedAt: "2026-07-17T00:00:00.000Z",
       missing: ["package", "activeContractHash", "authorizationEntrypoint", "name", "symbol", "decimals"],
       sourceErrors: ["package: Bot Chain RPC query_global_state timed out after 5000ms"],
-      evidenceHash: "a".repeat(64)
+      evidenceHash: "0x" + "a".repeat(40)
     };
 
     await expect(checkPaymentReadiness({
@@ -223,3 +223,7 @@ describe("facilitator configuration", () => {
     expect(() => configuredFacilitatorUrl()).toThrow(PaymentConfigurationError);
   });
 });
+
+
+
+

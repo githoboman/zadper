@@ -13,7 +13,7 @@ import {
 // flow is exercised without depending on a specific live token. Two distinct
 // subjects are needed where a test creates two separate quotes at once.
 const QUOTE_SUBJECT = "a".repeat(64);
-const QUOTE_SUBJECT_B = "b".repeat(64);
+const QUOTE_SUBJECT_B = "0x" + "b".repeat(40);
 
 const envSnapshot = { ...process.env };
 
@@ -180,8 +180,8 @@ describe("report API", () => {
       expect(response.body.paymentRequirements[0]).toMatchObject({
         scheme: "exact",
         network: "botchain:testnet",
-        asset: "9".repeat(64),
-        payTo: `00${"8".repeat(64)}`,
+        asset: "0x" + "9".repeat(40),
+        payTo: "0x" + "8".repeat(40),
         amount: "10000",
         extra: {
           name: "Cep18x402",
@@ -272,7 +272,7 @@ describe("report API", () => {
       configureX402Payment(facilitatorUrl);
       const app = createReportApp();
       const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
-      const paymentPayload = boundPaymentPayload(quote.body);
+      const paymentPayload = await boundPaymentPayload(quote.body);
 
       const response = await request(app)
         .post(`/reports/buy/${quote.body.quoteId}`)
@@ -300,7 +300,7 @@ describe("report API", () => {
       configureX402Payment(facilitatorUrl);
       const app = createReportApp();
       const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
-      const paymentPayload = boundPaymentPayload(quote.body);
+      const paymentPayload = await boundPaymentPayload(quote.body);
 
       const response = await request(app)
         .post(`/reports/buy/${quote.body.quoteId}`)
@@ -322,7 +322,7 @@ describe("report API", () => {
       const app = createReportApp();
       const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
       const paymentPayload = {
-        ...boundPaymentPayload(quote.body),
+        ...await boundPaymentPayload(quote.body),
         x402Version: 1
       };
 
@@ -346,7 +346,7 @@ describe("report API", () => {
       const app = createReportApp();
       const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
       const paymentPayload = {
-        ...boundPaymentPayload(quote.body),
+        ...await boundPaymentPayload(quote.body),
         accepted: {
           ...quote.body.paymentRequirements[0],
           amount: "1"
@@ -373,7 +373,7 @@ describe("report API", () => {
       const app = createReportApp();
       const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
       const paymentPayload = {
-        ...boundPaymentPayload(quote.body),
+        ...await boundPaymentPayload(quote.body),
         resource: {
           ...quote.body.paymentResource,
           url: `${quote.body.paymentResource.url}/other`
@@ -429,8 +429,8 @@ describe("report API", () => {
                   timestamp: "2026-06-10T15:24:00.000Z",
                   era_id: 10,
                   protocol_version: "2.0.0",
-                  state_root_hash: "8".repeat(64),
-                  proposer: "9".repeat(64)
+                  state_root_hash: "0x" + "8".repeat(40),
+                  proposer: "0x" + "9".repeat(40)
                 },
                 body: {
                   transactions: {}
@@ -458,7 +458,7 @@ describe("report API", () => {
       return {
         jsonrpc: "2.0",
         id: requestBody.id,
-        result: matchingPaymentTransaction(transactionHash, {
+        result: await matchingPaymentTransaction(transactionHash, {
           blockHash,
           blockHeight: 8135708
         })
@@ -473,7 +473,7 @@ describe("report API", () => {
         process.env.CASPER_CONFIRMATION_DELAY_MS = "0";
         const app = createReportApp();
         const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
-        const paymentPayload = boundPaymentPayload(quote.body);
+        const paymentPayload = await boundPaymentPayload(quote.body);
 
         const response = await request(app)
           .post(`/reports/buy/${quote.body.quoteId}`)
@@ -521,7 +521,7 @@ describe("report API", () => {
 
           const response = await request(app)
             .post(`/reports/buy/${quote.body.quoteId}`)
-            .set("PAYMENT-SIGNATURE", encodePaymentPayload(boundPaymentPayload(quote.body)))
+            .set("PAYMENT-SIGNATURE", encodePaymentPayload(await boundPaymentPayload(quote.body)))
             .send({})
             .expect(200);
 
@@ -567,7 +567,7 @@ describe("report API", () => {
       return {
         jsonrpc: "2.0",
         id: requestBody.id,
-        result: matchingPaymentTransaction(
+        result: await matchingPaymentTransaction(
           transactionHash,
           { blockHash: "5".repeat(64), blockHeight: 8135708 },
           { amount: "1" }
@@ -588,7 +588,7 @@ describe("report API", () => {
 
           const response = await request(app)
             .post(`/reports/buy/${quote.body.quoteId}`)
-            .set("PAYMENT-SIGNATURE", encodePaymentPayload(boundPaymentPayload(quote.body)))
+            .set("PAYMENT-SIGNATURE", encodePaymentPayload(await boundPaymentPayload(quote.body)))
             .send({})
             .expect(402);
 
@@ -607,7 +607,7 @@ describe("report API", () => {
   }, 20_000);
 
   it("returns an already settled quote without settling the same payment twice", async () => {
-    const transactionHash = "b".repeat(64);
+    const transactionHash = "0x" + "b".repeat(40);
     const rpc = await withExecutedPaymentRpc(transactionHash);
     let verifyCalls = 0;
     let settleCalls = 0;
@@ -632,7 +632,7 @@ describe("report API", () => {
           process.env.CASPER_CONFIRMATION_DELAY_MS = "0";
           const app = createReportApp();
           const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
-          const paymentPayload = boundPaymentPayload(quote.body);
+          const paymentPayload = await boundPaymentPayload(quote.body);
 
           const first = await request(app)
             .post(`/reports/buy/${quote.body.quoteId}`)
@@ -684,7 +684,7 @@ describe("report API", () => {
           process.env.CASPER_CONFIRMATION_DELAY_MS = "0";
           const app = createReportApp();
           const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
-          const paymentHeader = encodePaymentPayload(boundPaymentPayload(quote.body));
+          const paymentHeader = encodePaymentPayload(await boundPaymentPayload(quote.body));
           const buy = () =>
             request(app)
               .post(`/reports/buy/${quote.body.quoteId}`)
@@ -721,13 +721,13 @@ describe("report API", () => {
 
         await request(app)
           .post(`/reports/buy/${firstQuote.body.quoteId}`)
-          .set("PAYMENT-SIGNATURE", encodePaymentPayload(boundPaymentPayload(firstQuote.body)))
+          .set("PAYMENT-SIGNATURE", encodePaymentPayload(await boundPaymentPayload(firstQuote.body)))
           .send({})
           .expect(200);
 
         const response = await request(app)
           .post(`/reports/buy/${secondQuote.body.quoteId}`)
-          .set("PAYMENT-SIGNATURE", encodePaymentPayload(boundPaymentPayload(secondQuote.body)))
+          .set("PAYMENT-SIGNATURE", encodePaymentPayload(await boundPaymentPayload(secondQuote.body)))
           .send({})
           .expect(402);
 
@@ -787,7 +787,7 @@ describe("report API", () => {
       return {
         jsonrpc: "2.0",
         id: requestBody.id,
-          result: matchingPaymentTransaction(transactionHash, null)
+          result: await matchingPaymentTransaction(transactionHash, null)
       };
     });
 
@@ -799,7 +799,7 @@ describe("report API", () => {
         process.env.CASPER_CONFIRMATION_DELAY_MS = "0";
         const app = createReportApp();
         const quote = await request(app).get(`/reports/quote?subject=${QUOTE_SUBJECT}`).expect(200);
-        const paymentPayload = boundPaymentPayload(quote.body);
+        const paymentPayload = await boundPaymentPayload(quote.body);
 
         const response = await request(app)
           .post(`/reports/buy/${quote.body.quoteId}`)
@@ -858,7 +858,7 @@ describe("report API", () => {
     try {
       clearX402Payment();
       process.env.CASPER_RPC_URL = rpc.url;
-      process.env.X402_ASSET_PACKAGE_HASH = "9".repeat(64);
+      process.env.X402_ASSET_PACKAGE_HASH = "0x" + "9".repeat(40);
       process.env.PAYEE_ADDRESS = "not-a-botchain-account-hash";
       const app = createReportApp();
 
@@ -866,10 +866,10 @@ describe("report API", () => {
 
       expect(quote.body.paymentRequirements).toEqual([]);
       expect(quote.body.paymentConfigurationRequired).toBe(true);
-      expect(quote.body.paymentConfigurationReason).toBe("payee_address_must_be_00_plus_64_hex_chars");
+      expect(quote.body.paymentConfigurationReason).toBe("payee_address_must_be_evm_address");
       expect(quote.body.paymentReadiness).toMatchObject({
         status: "configuration_required",
-        reason: "payee_address_must_be_00_plus_64_hex_chars"
+        reason: "payee_address_must_be_evm_address"
       });
     } finally {
       await rpc.close();
@@ -882,8 +882,8 @@ describe("report API", () => {
     try {
       clearX402Payment();
       process.env.CASPER_RPC_URL = rpc.url;
-      process.env.X402_ASSET_PACKAGE_HASH = "9".repeat(64);
-      process.env.PAYEE_ADDRESS = `00${"8".repeat(64)}`;
+      process.env.X402_ASSET_PACKAGE_HASH = "0x" + "9".repeat(40);
+      process.env.PAYEE_ADDRESS = "0x" + "8".repeat(40);
       process.env.AGENT_PAY_REPORT_AMOUNT = "0";
       process.env.X402_TOKEN_NAME = "Cep18x402";
       process.env.X402_TOKEN_VERSION = "1";
@@ -1305,7 +1305,7 @@ async function withExecutedPaymentRpc(transactionHash: string): Promise<{ url: s
     return {
       jsonrpc: "2.0",
       id: requestBody.id,
-      result: matchingPaymentTransaction(transactionHash, {
+      result: await matchingPaymentTransaction(transactionHash, {
         blockHash: "5".repeat(64),
         blockHeight: 8135710
       })
@@ -1322,8 +1322,8 @@ async function readRequestBody(request: IncomingMessage): Promise<string> {
 }
 
 function configureX402Payment(facilitatorUrl: string) {
-  process.env.X402_ASSET_PACKAGE_HASH = "9".repeat(64);
-  process.env.PAYEE_ADDRESS = `00${"8".repeat(64)}`;
+  process.env.X402_ASSET_PACKAGE_HASH = "0x" + "9".repeat(40);
+  process.env.PAYEE_ADDRESS = "0x" + "8".repeat(40);
   process.env.AGENT_PAY_REPORT_AMOUNT = "10000";
   process.env.AGENT_PAY_REPORT_ASSET = "CSPR";
   process.env.X402_NETWORK = "botchain:testnet";
@@ -1347,35 +1347,36 @@ function clearX402Payment() {
   delete process.env.X402_TOKEN_SYMBOL;
 }
 
-function boundPaymentPayload(quote: {
+async function boundPaymentPayload(quote: {
   paymentRequirements: [Record<string, unknown>, ...Record<string, unknown>[]];
   paymentResource: Record<string, unknown>;
 }) {
-  return buildX402PaymentSignature({
+  const built = await buildX402PaymentSignature({
     requirement: quote.paymentRequirements[0] as never,
     resource: quote.paymentResource as never,
     signer: TEST_PAYMENT_SIGNER,
     now: TEST_PAYMENT_NOW,
     nonce: TEST_PAYMENT_NONCE
-  }).paymentPayload;
+  });
+  return built.paymentPayload;
 }
 
-const TEST_PAYMENT_SIGNER = createEVMSigner("secp256k1", new Uint8Array(32).fill(7));
+const TEST_PAYMENT_SIGNER = createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex"));
 const TEST_PAYMENT_NOW = Math.floor(Date.now() / 1_000);
 const TEST_PAYMENT_NONCE = new Uint8Array(32).fill(4);
 
-function matchingPaymentTransaction(
+async function matchingPaymentTransaction(
   transactionHash: string,
   execution: { blockHash: string; blockHeight: number } | null,
   overrides: { amount?: string } = {}
 ) {
-  const built = buildX402PaymentSignature({
+  const built = await buildX402PaymentSignature({
     requirement: {
       scheme: "exact",
       network: "botchain:testnet",
-      asset: "9".repeat(64),
+      asset: "0x" + "9".repeat(40),
       amount: "10000",
-      payTo: `00${"8".repeat(64)}`,
+      payTo: "0x" + "8".repeat(40),
       maxTimeoutSeconds: 300,
       extra: { name: "Cep18x402", version: "1", symbol: "CSPR" }
     },
@@ -1397,7 +1398,7 @@ function matchingPaymentTransaction(
         payload: {
           chain_name: "botchain-test",
           fields: {
-            target: { Stored: { id: { ByPackageHash: { addr: "9".repeat(64) } } } },
+            target: { Stored: { id: { ByPackageHash: { addr: "0x" + "9".repeat(40) } } } },
             entry_point: { Custom: "transfer_with_authorization" },
             args: {
               Named: [
@@ -1440,3 +1441,8 @@ function byteListArgument(value: string) {
 function encodePaymentPayload(payload: unknown): string {
   return Buffer.from(JSON.stringify(payload)).toString("base64");
 }
+
+
+
+
+

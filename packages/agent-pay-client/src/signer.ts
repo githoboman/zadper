@@ -88,7 +88,7 @@ export async function signAuthorizationIntent(
     value: intent.amount,
     validAfter: intent.validAfter,
     validBefore: intent.validBefore,
-    nonce: intent.nonce
+    nonce: `0x${intent.nonce}`
   };
 
   return signer.signTypedData(domain, types, value);
@@ -125,7 +125,9 @@ export async function buildX402PaymentSignature(input: {
   const now = input.now ?? Math.floor(Date.now() / 1_000);
   const validAfter = now;
   const validBefore = now + (input.requirement.maxTimeoutSeconds || 300);
-  const nonce = ethers.hexlify(ethers.randomBytes(32));
+  const nonce = input.nonce
+    ? Buffer.from(input.nonce).toString("hex")
+    : ethers.hexlify(ethers.randomBytes(32)).slice(2);
   
   const intent: AuthorizationIntent = {
     payerPublicKey: input.signer.publicKeyHex,

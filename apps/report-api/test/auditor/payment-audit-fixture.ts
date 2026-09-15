@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { ed25519 } from "@noble/curves/ed25519";
+import { computeAddress, hashMessage, SigningKey } from "ethers";
 import type { Express } from "express";
 import request from "supertest";
 import {
@@ -23,13 +23,14 @@ import { openSqliteRepository, type SqliteAuditorRepository } from "../../src/au
 export const ORIGIN = "https://agentpay.example";
 export const NOW = "2026-07-09T16:13:00.000Z";
 export const TRANSACTION_HASH = "2458f77bcd56ae960c02d0dfba616c63f3008c7ee7e87bcfd861c4da87e774b4";
-export const ASSET = "50ec5690bde5e72f5152cb5154119eb706961e376b19050534a95a13ead8baaf";
-export const PAYEE = "00b728a64f7e93d583c1b6f291ff26f4fd2f257d51ed1bb788c417b4b5225436d8";
-export const PAYER = "01aff8a88e9d562dad2befec259a8818371d6d092328e8490bb6fc9644041c7c03";
+export const ASSET = "0x" + "9".repeat(40); // EVM contract address
+export const PAYEE = "0x" + "8".repeat(40); // EVM payee address
+const PAYER_PRIVATE_KEY = Uint8Array.from({ length: 32 }, (_value, index) => index + 1);
+const OPERATOR_PRIVATE_KEY = Uint8Array.from({ length: 32 }, (_value, index) => (index + 1) * 2);
+export const PAYER = computeAddress("0x" + Buffer.from(PAYER_PRIVATE_KEY).toString("hex")).toLowerCase();
+export const OPERATOR = computeAddress("0x" + Buffer.from(OPERATOR_PRIVATE_KEY).toString("hex")).toLowerCase();
 export const AGENT_TOKEN = "agent-payment-auditor-token-000000000000000000";
 export const OPERATOR_SESSION_TOKEN = "operator-payment-session-token-000000000000000";
-const OPERATOR_PRIVATE_KEY = Uint8Array.from({ length: 32 }, (_value, index) => index + 1);
-export const OPERATOR = `01${Buffer.from(ed25519.getPublicKey(OPERATOR_PRIVATE_KEY)).toString("hex")}`;
 export const FINALIZED_TRANSACTION_RESULT = (JSON.parse(
   readFileSync(
     fileURLToPath(new URL("../../../../packages/agent-pay-core/test/fixtures/tab402-transaction.json", import.meta.url)),
@@ -119,8 +120,10 @@ export async function createPayCheck(app: Express): Promise<string> {
     .post("/v1/checks")
     .set("Authorization", `Bearer ${AGENT_TOKEN}`)
     .set("Idempotency-Key", "tab402-payment-check")
-    .send(checkBody())
-    .expect(201);
+    .send(checkBody());
+  if (response.status !== 201) {
+    throw new Error(`Expected 201 Created but got ${response.status}: ${JSON.stringify(response.body)}`);
+  }
   if (response.body.check.decision.verdict !== "pay") {
     throw new Error(`Payment fixture did not produce PAY: ${JSON.stringify(response.body.check.decision.reasons)}`);
   }
@@ -154,7 +157,7 @@ export function mismatchedTransactionResult(): unknown {
 function checkBody() {
   const authorizationWithoutDigest = {
     payerPublicKey: PAYER,
-    from: "00e27bfb95afa9b87a76e76d993928d8d4a1d119aea0f202cf4bf2cc036d534b28",
+    from: PAYER,
     to: PAYEE,
     amount: "100000000",
     validAfter: "1783613540",
@@ -288,9 +291,10 @@ function signArtifact(kind: "policy_revision" | "provider_decision", artifactHas
     expiresAt: "2026-07-09T16:18:00.000Z",
     requestedAction: { kind, artifactHash: artifactHashValue, revision }
   });
-  const message = new TextEncoder().encode(`Bot Chain Message:\n${signatureMessage}`);
+  const signingKey = new SigningKey("0x" + Buffer.from(OPERATOR_PRIVATE_KEY).toString("hex"));
+  const signature = signingKey.sign(hashMessage(signatureMessage)).serialized;
   return {
     signatureMessage,
-    signature: Buffer.from(ed25519.sign(message, OPERATOR_PRIVATE_KEY)).toString("hex")
+    signature
   };
 }

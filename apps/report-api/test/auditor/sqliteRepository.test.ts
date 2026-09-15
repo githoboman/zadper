@@ -700,3 +700,4 @@ function makeAnchorJob(receiptId: string): AnchorJob {
     updatedAt: NOW
   };
 }
+

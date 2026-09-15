@@ -2,10 +2,18 @@ import { ethers } from "ethers";
 import type { AuthorizationIntent, PaymentTerms } from "./types.js";
 import { normalizeAddress as canonicalPackageHash } from "../address.js";
 
+const HEX_40 = /^[0-9a-f]{40}$/;
 const HEX_64 = /^[0-9a-f]{64}$/;
 const ADDRESS = /^(?:0x)?[0-9a-fA-F]{40}$/;
 const POSITIVE_INTEGER = /^(0|[1-9][0-9]*)$/;
 const AUTHORIZATION_CLOCK_SKEW_SECONDS = 5;
+
+export function parseBotChainPublicKey(value: unknown): { publicKeyHex: string } {
+  if (typeof value !== "string") throw new TypeError("BotChain public key must be a string");
+  const normalized = value.trim().toLowerCase();
+  if (!ADDRESS.test(normalized)) throw new TypeError("BotChain public key must be a valid EVM address");
+  return { publicKeyHex: normalized.startsWith("0x") ? normalized : `0x${normalized}` };
+}
 
 const TRANSFER_WITH_AUTHORIZATION_TYPES = {
   TransferWithAuthorization: [
@@ -62,10 +70,12 @@ export function transferWithAuthorizationTypedData(
   }
 
   // extract chainId from network (e.g. "botchain:968" -> 968)
-  const chainId = input.network.split(":")[1] || "968";
+  let chainId = input.network.split(":")[1] || "968";
+  if (chainId === "testnet") chainId = "968";
+  if (chainId === "mainnet") chainId = "888"; // assuming mainnet is 888 if not specified
 
   return {
-    domain: buildDomain(input.tokenName, input.tokenVersion, chainId, `0x${asset}`),
+    domain: buildDomain(input.tokenName, input.tokenVersion, chainId, asset),
     types: {
       TransferWithAuthorization: TRANSFER_WITH_AUTHORIZATION_TYPES.TransferWithAuthorization
     },
@@ -157,10 +167,10 @@ export function authorizationDigest(intent: Omit<AuthorizationIntent, "digest"> 
   });
 }
 
-export function verifyAuthorizationSignature(intent: AuthorizationIntent, signatureHex: string): boolean {
-  try {
-    if (intent.payerPublicKey.toLowerCase() !== intent.from.toLowerCase()) return false;
-    const computedDigest = authorizationDigest(intent);
+  export function verifyAuthorizationSignature(intent: AuthorizationIntent, signatureHex: string): boolean {
+    try {
+      if (ethers.computeAddress(intent.payerPublicKey).toLowerCase() !== intent.from.toLowerCase()) return false;
+      const computedDigest = authorizationDigest(intent);
     if (computedDigest !== intent.digest.toLowerCase()) return false;
     
     const typedData = transferWithAuthorizationTypedData({
@@ -184,9 +194,13 @@ export function verifyAuthorizationSignature(intent: AuthorizationIntent, signat
 }
 
 function normalizeAsset(value: string): string {
-  const normalized = canonicalPackageHash(value);
-  if (!HEX_64.test(normalized)) throw new TypeError("assetPackageHash must be 64 hexadecimal characters");
-  return normalized;
+  // Accept EVM contract addresses (0x + 40 hex chars) used after Bot Chain migration
+  const trimmed = value.trim().toLowerCase();
+  const stripped = trimmed.startsWith("0x") ? trimmed.slice(2) : trimmed;
+  if (HEX_40.test(stripped)) return `0x${stripped}`;
+  // Legacy: bare 64-char Casper package hash
+  if (HEX_64.test(stripped)) return stripped;
+  throw new TypeError(`assetPackageHash must be an EVM address (0x+40hex) or 64-char package hash, got: ${value}`);
 }
 
 function normalizeAddress(value: string, label: string): string {

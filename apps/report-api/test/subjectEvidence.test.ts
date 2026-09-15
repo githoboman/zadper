@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { buildSubjectEvidence } from "../src/subjectEvidence.js";
 import { extractSignals } from "@agent-pay/core";
 
-const subject = { kind: "token" as const, address: "a".repeat(64), raw: "a".repeat(64) };
+const subject = { kind: "token" as const, address: "a".repeat(40), raw: "a".repeat(40) };
 
 describe("buildSubjectEvidence", () => {
   it("builds a Merkle dataset of the mandatory signal records", async () => {
@@ -10,8 +10,8 @@ describe("buildSubjectEvidence", () => {
       fetchTokenState: async () => ({ mintBurnEnabled: true,
         holderCount: 1, topHolderPct: 100, installBlock: 100, latestBlock: 130,
         authoritySourceUrl: "https://node.testnet.example/rpc",
-        holdersSourceUrl: `https://api.testnet.example/contract-packages/${subject.address}/ft-token-ownership`,
-        ageSourceUrl: `https://api.testnet.example/contract-packages/${subject.address}/contracts` }),
+        holdersSourceUrl: "https://node.testnet.example/rpc",
+        ageSourceUrl: "https://node.testnet.example/rpc" }),
     });
     expect(ds.root).toMatch(/^[0-9a-f]+$/);
     const signals = extractSignals(ds.reports.map((r) => r.record));
@@ -24,8 +24,8 @@ describe("buildSubjectEvidence", () => {
 
     expect(ds.reports.map((report) => [report.record.subject, report.record.sourceUrl])).toEqual([
       ["token_authority", "https://node.testnet.example/rpc"],
-      ["token_holders", `https://api.testnet.example/contract-packages/${subject.address}/ft-token-ownership`],
-      ["token_age", `https://api.testnet.example/contract-packages/${subject.address}/contracts`]
+      ["token_holders", "https://node.testnet.example/rpc"],
+      ["token_age", "https://node.testnet.example/rpc"]
     ]);
     expect(ds.sourceSummary.map((source) => source.sourceUrl)).toEqual(
       ds.reports.map((report) => report.record.sourceUrl)
@@ -49,56 +49,20 @@ describe("buildSubjectEvidence", () => {
   it("labels and scopes Mainnet evidence independently of payment configuration", async () => {
     const ds = await buildSubjectEvidence(subject, {
       network: "botchain:mainnet",
-      fetchTradeMarket: async () => ({
-        listedOnCsprTrade: true,
-        pairCount: 2,
-        pricedPairCount: 1,
-        pricedLiquidityUsd: 125.5,
-        sourceUrl: "https://mcp.cspr.trade/mcp",
-        rawHash: "b".repeat(64)
-      }),
       fetchTokenState: async () => ({
         mintBurnEnabled: false,
         holderCount: 10,
         topHolderPct: 25,
         installBlock: 100,
-        latestBlock: 1_500
+        latestBlock: 1500
       })
     });
 
     expect(ds.datasetId).toMatch(/^trust-botchain:mainnet-/);
     expect(ds.sourceSummary.every((source) => source.network === "botchain:mainnet")).toBe(true);
     expect(ds.sourceSummary).toContainEqual(expect.objectContaining({
-      product: "CSPR.trade Market",
-      sourceUrl: "https://mcp.cspr.trade/mcp",
-      facts: expect.objectContaining({
-        listedOnCsprTrade: true,
-        pairCount: 2,
-        pricedLiquidityUsd: 125.5
-      })
+      product: "BotChain Token Authority"
     }));
-    expect(extractSignals(ds.reports.map((report) => report.record)).liquidityDepth).toBe(125.5);
-  });
-
-  it("does not mix Mainnet CSPR.trade observations into a Testnet check", async () => {
-    let tradeCalls = 0;
-    await buildSubjectEvidence(subject, {
-      network: "botchain:testnet",
-      fetchTradeMarket: async () => {
-        tradeCalls += 1;
-        throw new Error("must not be called");
-      },
-      fetchTokenState: async () => ({
-        mintBurnEnabled: false,
-        publicMintEntrypoint: false,
-        holderCount: 2,
-        topHolderPct: 60,
-        installBlock: 1,
-        latestBlock: 2_000
-      })
-    });
-
-    expect(tradeCalls).toBe(0);
   });
 
   it("gives concurrent checks distinct registry dataset ids even at the same block", async () => {
@@ -108,14 +72,10 @@ describe("buildSubjectEvidence", () => {
       holderCount: 20,
       topHolderPct: 12,
       installBlock: 100,
-      latestBlock: 2_000
+      latestBlock: 2000
     });
-
-    const [first, second] = await Promise.all([
-      buildSubjectEvidence(subject, { fetchTokenState }),
-      buildSubjectEvidence(subject, { fetchTokenState })
-    ]);
-
-    expect(first.datasetId).not.toBe(second.datasetId);
+    const a = buildSubjectEvidence(subject, { fetchTokenState });
+    const b = buildSubjectEvidence(subject, { fetchTokenState });
+    expect((await a).datasetId).not.toEqual((await b).datasetId);
   });
 });

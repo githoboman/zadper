@@ -35,7 +35,7 @@ const PAYMENT_REQUIRED = {
 
 describe("checkedX402Call", () => {
   it("calls the signer exactly once only after PAY and verifies the response receipt", async () => {
-    const baseSigner = createEVMSigner("ed25519", new Uint8Array(32).fill(7));
+    const baseSigner = createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex"));
     const signer = {
       ...baseSigner,
       privateKeyMaterial: "-----BEGIN PRIVATE KEY-----DO_NOT_SEND",
@@ -90,7 +90,7 @@ describe("checkedX402Call", () => {
   });
 
   it.each(["review", "block"] as const)("does not sign or send payment when AgentPay returns %s", async (verdict) => {
-    const baseSigner = createEVMSigner("ed25519", new Uint8Array(32).fill(7));
+    const baseSigner = createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex"));
     const signer = { ...baseSigner, sign: vi.fn(baseSigner.sign) };
     const api = paymentApi(verdict);
     const fetchImpl = vi.fn(async () => new Response("payment required", {
@@ -114,7 +114,7 @@ describe("checkedX402Call", () => {
   });
 
   it("does not sign when the API changes the approved authorization digest", async () => {
-    const baseSigner = createEVMSigner("ed25519", new Uint8Array(32).fill(7));
+    const baseSigner = createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex"));
     const signer = { ...baseSigner, sign: vi.fn(baseSigner.sign) };
     const api = paymentApi("pay", true);
 
@@ -136,7 +136,7 @@ describe("checkedX402Call", () => {
   });
 
   it("cancels a paid response as soon as it exceeds the configured body limit", async () => {
-    const signer = createEVMSigner("ed25519", new Uint8Array(32).fill(7));
+    const signer = createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(7)).toString("hex"));
     const api = paymentApi("pay");
     let requestCount = 0;
     let cancelled = false;
@@ -228,3 +228,4 @@ function paymentApi(verdict: "pay" | "review" | "block", alterDigest = false) {
     getReceipt: vi.fn()
   } satisfies AgentPayApi & { check: ReturnType<typeof vi.fn> };
 }
+

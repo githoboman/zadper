@@ -32,7 +32,7 @@ describe("auditor runtime", () => {
 
     expect(options).toEqual({
       allowLoopbackProbeTargets: false,
-      databasePath: "/tmp/agentpay-test.sqlite",
+      databasePath: resolve("/tmp/agentpay-test.sqlite"),
       publicOrigin: "https://agentpay.example",
       rpcUrl: "https://node.testnet.botchain.network/rpc",
       sessionCookiePath: "/v1"

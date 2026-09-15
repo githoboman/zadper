@@ -10,7 +10,7 @@ describe("evidence network configuration", () => {
   it("accepts only explicit Bot Chain evidence networks", () => {
     expect(parseEvidenceNetwork("botchain:mainnet")).toBe("botchain:mainnet");
     expect(parseEvidenceNetwork("botchain:testnet")).toBe("botchain:testnet");
-    expect(parseEvidenceNetwork("botchain:testnet")).toBeNull();
+    expect(parseEvidenceNetwork("ethereum:mainnet")).toBeNull();
   });
 
   it("keeps evidence RPC selection separate from the x402 payment RPC", () => {

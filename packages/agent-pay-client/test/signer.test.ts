@@ -28,7 +28,7 @@ describe("local Bot Chain signer compatibility", () => {
   });
 
   it("preserves the fixed secp256k1 identity, digest, and signature bytes", () => {
-    const signer = createEVMSigner("secp256k1", new Uint8Array(32).fill(1));
+    const signer = createEVMSigner("0x" + Buffer.from(new Uint8Array(32).fill(1)).toString("hex"));
     const requirement: PaymentRequirement = {
       scheme: "exact",
       network: "botchain:botchain-test",
@@ -67,3 +67,4 @@ describe("local Bot Chain signer compatibility", () => {
     );
   });
 });
+

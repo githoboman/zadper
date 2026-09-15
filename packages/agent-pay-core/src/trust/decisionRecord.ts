@@ -1,6 +1,6 @@
 import { normalizeAddress as canonicalPackageHash } from "../address.js";
 
-const HEX_64 = /^[0-9a-f]{64}$/i;
+const HEX_64 = /^(?:0x)?[0-9a-f]{64}$/i;
 const DATASET_ID = /^[A-Za-z0-9_.:-]{1,128}$/;
 
 export type DecisionRecordProof = {
@@ -95,7 +95,7 @@ function readDeployCall(
   const session = asRecord(asRecord(deploy.session)?.StoredVersionedContractByHash);
   if (
     !session ||
-    lowerHex(session.hash) !== address ||
+    normalizeAddress(session.hash as string) !== address ||
     session.entry_point !== "record_decision_with_root"
   ) {
     return { args: null, error: "record_contract_mismatch" };
@@ -123,7 +123,7 @@ function readVersion1Call(
   const byPackageHash = asRecord(target?.ByPackageHash);
   if (
     entryPoint?.Custom !== "record_decision_with_root" ||
-    lowerHex(byPackageHash?.addr) !== address
+    normalizeAddress(byPackageHash?.addr as string) !== address
   ) {
     return { args: null, error: "record_contract_mismatch" };
   }
@@ -146,7 +146,7 @@ function validProof(value: DecisionRecordProof): boolean {
 
 function normalizeAddress(value: string): string | null {
   const normalized = canonicalPackageHash(value);
-  return HEX_64.test(normalized) ? normalized : null;
+  return /^(?:0x)?[0-9a-f]{40}$/i.test(normalized) ? normalized : null;
 }
 
 function stringArguments(value: unknown): Map<string, string> {
