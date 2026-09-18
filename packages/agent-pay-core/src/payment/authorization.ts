@@ -169,7 +169,7 @@ export function authorizationDigest(intent: Omit<AuthorizationIntent, "digest"> 
 
   export function verifyAuthorizationSignature(intent: AuthorizationIntent, signatureHex: string): boolean {
     try {
-      if (ethers.computeAddress(intent.payerPublicKey).toLowerCase() !== intent.from.toLowerCase()) return false;
+      if (intent.payerPublicKey.toLowerCase() !== intent.from.toLowerCase()) return false;
       const computedDigest = authorizationDigest(intent);
     if (computedDigest !== intent.digest.toLowerCase()) return false;
     
@@ -187,8 +187,13 @@ export function authorizationDigest(intent: Omit<AuthorizationIntent, "digest"> 
     });
     
     const recoveredAddress = ethers.verifyTypedData(typedData.domain, typedData.types, typedData.message, signatureHex);
-    return recoveredAddress.toLowerCase() === intent.from.toLowerCase();
+    if (recoveredAddress.toLowerCase() !== intent.from.toLowerCase()) {
+      console.error("Signature mismatch: recovered", recoveredAddress, "expected", intent.from, "signatureHex", signatureHex);
+      return false;
+    }
+    return true;
   } catch (err) {
+    console.error("Error recovering signature", err);
     return false;
   }
 }

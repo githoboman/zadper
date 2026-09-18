@@ -32,7 +32,7 @@ describe("AgentPay Bot Chain Testnet scripts", () => {
           AGENT_PAY_REGISTRY_RECORDER_ACCOUNT_HASH: RECORDER_ACCOUNT_HASH,
           AGENT_PAY_REGISTRY_WASM: wasmPath,
           AGENT_PAY_INSTALL_PAYMENT_AMOUNT: "150000000000",
-          CASPER_NODE_ADDRESS: "https://node.testnet.botchain.network/rpc",
+          CASPER_NODE_ADDRESS: "https://rpc.bohr.life",
           CASPER_CHAIN_NAME: "botchain-test"
         }
       });
@@ -41,7 +41,7 @@ describe("AgentPay Bot Chain Testnet scripts", () => {
       expect(args).toEqual([
         "put-deploy",
         "--node-address",
-        "https://node.testnet.botchain.network/rpc",
+        "https://rpc.bohr.life",
         "--chain-name",
         "botchain-test",
         "--secret-key",
@@ -72,7 +72,7 @@ describe("AgentPay Bot Chain Testnet scripts", () => {
           CASPER_SECRET_KEY_PATH: secretKeyPath,
           AGENT_PAY_REGISTRY_RECORDER_ACCOUNT_HASH: RECORDER_ACCOUNT_HASH,
           AGENT_PAY_INSTALL_PAYMENT_AMOUNT: "150000000000",
-          CASPER_NODE_ADDRESS: "https://node.testnet.botchain.network/rpc",
+          CASPER_NODE_ADDRESS: "https://rpc.bohr.life",
           CASPER_CHAIN_NAME: "botchain-test"
         }
       });
@@ -109,7 +109,7 @@ describe("AgentPay Bot Chain Testnet scripts", () => {
             ...process.env,
             CASPER_CLIENT_COMMAND: fixture.clientPath,
             CASPER_SECRET_KEY_PATH: secretKeyPath,
-            CASPER_NODE_ADDRESS: "https://node.testnet.botchain.network/rpc",
+            CASPER_NODE_ADDRESS: "https://rpc.bohr.life",
             CASPER_CHAIN_NAME: "botchain-test",
             AGENT_PAY_RECORD_PAYMENT_AMOUNT: "5000000000",
             AGENT_PAY_REGISTRY_PACKAGE_HASH: `hash-${"d".repeat(64)}`
@@ -121,7 +121,7 @@ describe("AgentPay Bot Chain Testnet scripts", () => {
       expect(args).toEqual([
         "put-deploy",
         "--node-address",
-        "https://node.testnet.botchain.network/rpc",
+        "https://rpc.bohr.life",
         "--chain-name",
         "botchain-test",
         "--secret-key",
@@ -170,7 +170,7 @@ describe("AgentPay Bot Chain Testnet scripts", () => {
             CASPER_CLIENT_COMMAND: fixture.clientPath,
             CASPER_SECRET_KEY_PATH: "/buyer-key-must-not-be-used.pem",
             AGENT_PAY_REGISTRY_RECORDER_KEY_PATH: recorderKeyPath,
-            CASPER_NODE_ADDRESS: "https://node.testnet.botchain.network/rpc",
+            CASPER_NODE_ADDRESS: "https://rpc.bohr.life",
             CASPER_CHAIN_NAME: "botchain-test",
             AGENT_PAY_RECEIPT_RECORD_PAYMENT_AMOUNT: "5000000000",
             AGENT_PAY_REGISTRY_PACKAGE_HASH: `hash-${"d".repeat(64)}`
@@ -182,7 +182,7 @@ describe("AgentPay Bot Chain Testnet scripts", () => {
       expect(args).toEqual([
         "put-deploy",
         "--node-address",
-        "https://node.testnet.botchain.network/rpc",
+        "https://rpc.bohr.life",
         "--chain-name",
         "botchain-test",
         "--secret-key",

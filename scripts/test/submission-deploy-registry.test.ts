@@ -135,7 +135,7 @@ describe("AgentPay registry deploy evidence capture", () => {
         maxAttempts: 1,
         pollIntervalMs: 1
       }, {
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+        CASPER_RPC_URL: "https://rpc.bohr.life",
         CASPER_CLIENT_COMMAND: fixture.clientPath,
         CASPER_SECRET_KEY_PATH: fixture.secretKeyPath,
         CASPER_ACCOUNT_IDENTIFIER: `account-hash-${"d".repeat(64)}`,
@@ -156,7 +156,7 @@ describe("AgentPay registry deploy evidence capture", () => {
       expect(env.AGENT_PAY_REGISTRY_INSTALL_HASH).toBe(DEPLOY_HASH);
       expect(env.AGENT_PAY_REGISTRY_PACKAGE_HASH).toBe(`hash-${PACKAGE_HASH}`);
       expect((await readFile(fixture.deployCapturePath, "utf8")).trim()).toBe(RECORDER_ACCOUNT_HASH);
-      expect(globalThis.fetch).toHaveBeenCalledWith("https://node.testnet.botchain.network/rpc", expect.objectContaining({
+      expect(globalThis.fetch).toHaveBeenCalledWith("https://rpc.bohr.life", expect.objectContaining({
         method: "POST"
       }));
     } finally {
@@ -174,7 +174,7 @@ describe("AgentPay registry deploy evidence capture", () => {
         maxAttempts: 1,
         pollIntervalMs: 1
       }, {
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+        CASPER_RPC_URL: "https://rpc.bohr.life",
         CASPER_CLIENT_COMMAND: fixture.clientPath,
         CASPER_SECRET_KEY_PATH: fixture.secretKeyPath,
         CASPER_ACCOUNT_IDENTIFIER: owner,
@@ -209,7 +209,7 @@ describe("AgentPay registry deploy evidence capture", () => {
         maxAttempts: 3,
         pollIntervalMs: 1
       }, {
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+        CASPER_RPC_URL: "https://rpc.bohr.life",
         CASPER_CLIENT_COMMAND: fixture.clientPath,
         CASPER_SECRET_KEY_PATH: fixture.secretKeyPath,
         CASPER_ACCOUNT_IDENTIFIER: `account-hash-${"d".repeat(64)}`,

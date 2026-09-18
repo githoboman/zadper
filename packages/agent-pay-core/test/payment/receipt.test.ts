@@ -161,7 +161,7 @@ function validReceipt(): PurchaseReceipt {
     transactionHash: TRANSACTION_HASH,
     approved: authorization,
     rpcEnvelope: rpcFixture,
-    rpcEndpoint: "https://node.testnet.botchain.network/rpc",
+    rpcEndpoint: "https://rpc.bohr.life",
     observedAt: "2026-07-09T16:20:00.000Z"
   });
   if (settlement.verdict !== "match") throw new Error("Receipt fixture settlement did not match");

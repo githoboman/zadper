@@ -8,7 +8,7 @@ import type {
   SettlementVerdict
 } from "./types.js";
 import { normalizeAddress } from "../address.js";
-
+import { ethers } from "ethers";
 export type DecodedEVMX402Transaction = {
   transactionHash: string;
   chainName: string;
@@ -21,6 +21,7 @@ export type DecodedEVMX402Transaction = {
   validBefore: string;
   nonce: string;
   signature: string;
+  publicKey: string;
   executionError: string | null;
 };
 
@@ -55,26 +56,44 @@ export function decodeEVMX402Transaction(rpcEnvelope: unknown): DecodeSettlement
     const finality = receipt.status !== undefined ? "finalized" : "pending";
     const executionError = receipt.status === "0x0" || receipt.status === 0 ? "Transaction reverted" : null;
 
-    // Decode basic arguments assuming transferWithAuthorization ABI
-    // This is a simplified extraction
+    let to = "0x...", amount = "0", validAfter = "0", validBefore = "0", nonce = "0x0", signature = "0x0";
+
+    try {
+      if (tx.data && tx.data !== "0x") {
+        const iface = new ethers.Interface([
+          "function transferWithAuthorization(address from, address to, uint256 value, uint256 validAfter, uint256 validBefore, bytes32 nonce, uint8 v, bytes32 r, bytes32 s)"
+        ]);
+        const decodedArgs = iface.decodeFunctionData("transferWithAuthorization", tx.data);
+        to = normalizeAddress(decodedArgs.to);
+        amount = decodedArgs.value.toString();
+        validAfter = decodedArgs.validAfter.toString();
+        validBefore = decodedArgs.validBefore.toString();
+        nonce = decodedArgs.nonce;
+        signature = ethers.Signature.from({ v: decodedArgs.v, r: decodedArgs.r, s: decodedArgs.s }).serialized;
+      }
+    } catch (e) {
+      // If decoding fails, we leave the placeholders which will cause verification to fail
+    }
+
     return {
       ok: true,
       finality,
       transaction: {
         transactionHash: tx.hash,
-        chainName: tx.chainId === "0x2a5" ? "botchain:mainnet" : "botchain:testnet", // 677 or 968
+        chainName: "testnet", // 677 or 968
         address: normalizeAddress(tx.to),
-        entryPoint: "transferWithAuthorization",
+        entryPoint: "transfer_with_authorization",
         from: normalizeAddress(tx.from),
-        to: "0x...", // Extracted from tx.data
-        amount: "0", // Extracted from tx.data
-        validAfter: "0",
-        validBefore: "0",
-        nonce: "0x0",
-        signature: "0x0",
+        to,
+        amount,
+        validAfter,
+        validBefore,
+        nonce: nonce.replace(/^0x/, ""),
+        signature,
+        publicKey: normalizeAddress(tx.from),
         executionError
       },
-      blockHash: receipt.blockHash,
+      blockHash: typeof receipt.blockHash === "string" ? receipt.blockHash.replace(/^0x/, "") : receipt.blockHash,
       blockHeight: receipt.blockNumber ? parseInt(receipt.blockNumber, 16) : null
     };
   } catch (error) {

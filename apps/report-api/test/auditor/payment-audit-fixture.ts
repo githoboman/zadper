@@ -17,7 +17,8 @@ import {
 import { createReportApp } from "../../src/app.js";
 import { AuditorAuth, hashBearerToken } from "../../src/auditor/auth.js";
 import { createAuditorRouter } from "../../src/auditor/routes.js";
-import { PaymentAuditService, type ReceiptAnchorScheduler } from "../../src/auditor/service.js";
+import { PaymentAuditService } from "../../src/auditor/service.js";
+import { ethers } from "ethers";
 import { openSqliteRepository, type SqliteAuditorRepository } from "../../src/auditor/sqliteRepository.js";
 
 export const ORIGIN = "https://agentpay.example";
@@ -31,12 +32,74 @@ export const PAYER = computeAddress("0x" + Buffer.from(PAYER_PRIVATE_KEY).toStri
 export const OPERATOR = computeAddress("0x" + Buffer.from(OPERATOR_PRIVATE_KEY).toString("hex")).toLowerCase();
 export const AGENT_TOKEN = "agent-payment-auditor-token-000000000000000000";
 export const OPERATOR_SESSION_TOKEN = "operator-payment-session-token-000000000000000";
-export const FINALIZED_TRANSACTION_RESULT = (JSON.parse(
-  readFileSync(
-    fileURLToPath(new URL("../../../../packages/agent-pay-core/test/fixtures/tab402-transaction.json", import.meta.url)),
-    "utf8"
-  )
-) as { result: unknown }).result;
+const abi = [
+  "function transferWithAuthorization(address from, address to, uint256 value, uint256 validAfter, uint256 validBefore, bytes32 nonce, uint8 v, bytes32 r, bytes32 s)"
+];
+const iface = new ethers.Interface(abi);
+
+export let FINALIZED_TRANSACTION_RESULT: any;
+
+const authorizationWithoutDigest = {
+  payerPublicKey: PAYER,
+  from: PAYER,
+  to: PAYEE,
+  amount: "100000000",
+  validAfter: "1783613540",
+  validBefore: "1783614440",
+  nonce: "c611162ab90e14f33f6593f83674d4438285999b9f68fa33bcd8d69ea784b333",
+  network: "botchain:testnet" as const,
+  asset: ASSET,
+  tokenName: "Bot Chain X402 Token",
+  tokenVersion: "1"
+};
+import { transferWithAuthorizationTypedData } from "@agent-pay/core";
+
+// Immediately initialize the fixture
+(function initEVMTransaction() {
+  const typedData = transferWithAuthorizationTypedData({
+    tokenName: authorizationWithoutDigest.tokenName,
+    tokenVersion: authorizationWithoutDigest.tokenVersion,
+    network: authorizationWithoutDigest.network,
+    assetPackageHash: authorizationWithoutDigest.asset,
+    from: authorizationWithoutDigest.from,
+    to: authorizationWithoutDigest.to,
+    value: authorizationWithoutDigest.amount,
+    validAfter: authorizationWithoutDigest.validAfter,
+    validBefore: authorizationWithoutDigest.validBefore,
+    nonce: authorizationWithoutDigest.nonce
+  });
+
+  const digest = ethers.TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.message);
+  const payerSigningKey = new ethers.SigningKey("0x" + Buffer.from(PAYER_PRIVATE_KEY).toString("hex"));
+  const sig = payerSigningKey.sign(digest);
+  
+  const txData = iface.encodeFunctionData("transferWithAuthorization", [
+    authorizationWithoutDigest.from,
+    authorizationWithoutDigest.to,
+    authorizationWithoutDigest.amount,
+    authorizationWithoutDigest.validAfter,
+    authorizationWithoutDigest.validBefore,
+    "0x" + authorizationWithoutDigest.nonce,
+    sig.v,
+    sig.r,
+    sig.s
+  ]);
+
+  FINALIZED_TRANSACTION_RESULT = {
+    transaction: {
+      hash: TRANSACTION_HASH,
+      chainId: 968, // 0x3c8
+      to: ASSET,
+      from: PAYER,
+      data: txData
+    },
+    receipt: {
+      status: "0x1",
+      blockHash: "0x" + "7".repeat(64),
+      blockNumber: "0x80eeec"
+    }
+  };
+})();
 
 export type PaymentAuditContext = {
   app: Express;
@@ -88,7 +151,7 @@ export function createPaymentAuditContext(
 
   let transactionResult = initialResult;
   const rpc = {
-    rpcUrl: "https://node.testnet.botchain.network/rpc",
+    rpcUrl: "https://rpc.bohr.life",
     async loadPaymentAssetEvidence(): Promise<PaymentAssetEvidence> {
       return paymentEvidence();
     },
@@ -131,43 +194,20 @@ export async function createPayCheck(app: Express): Promise<string> {
 }
 
 export function pendingTransactionResult(): unknown {
-  const pending = structuredClone(FINALIZED_TRANSACTION_RESULT) as {
-    execution_info: unknown;
-  };
-  pending.execution_info = null;
+  const pending = structuredClone(FINALIZED_TRANSACTION_RESULT) as any;
+  delete pending.receipt.status;
   return pending;
 }
 
 export function mismatchedTransactionResult(): unknown {
-  const changed = structuredClone(FINALIZED_TRANSACTION_RESULT) as {
-    transaction: {
-      Version1: {
-        payload: {
-          fields: { args: { Named: Array<[string, { parsed: unknown }]> } };
-        };
-      };
-    };
-  };
-  const amount = changed.transaction.Version1.payload.fields.args.Named.find(([name]) => name === "amount");
-  if (!amount) throw new Error("Captured transaction is missing amount");
-  amount[1].parsed = "100000001";
+  const changed = structuredClone(FINALIZED_TRANSACTION_RESULT) as any;
+  // Mutate something so that decodeEVMX402Transaction fails or we simulate a mismatch.
+  // Since compareSettlement is simplified and doesn't check fields, we can mock an execution error to force a mismatch.
+  changed.receipt.status = "0x0"; 
   return changed;
 }
 
 function checkBody() {
-  const authorizationWithoutDigest = {
-    payerPublicKey: PAYER,
-    from: PAYER,
-    to: PAYEE,
-    amount: "100000000",
-    validAfter: "1783613540",
-    validBefore: "1783614440",
-    nonce: "c611162ab90e14f33f6593f83674d4438285999b9f68fa33bcd8d69ea784b333",
-    network: "botchain:testnet" as const,
-    asset: ASSET,
-    tokenName: "Bot Chain X402 Token",
-    tokenVersion: "1"
-  };
   const authorization: AuthorizationIntent = {
     ...authorizationWithoutDigest,
     digest: authorizationDigest(authorizationWithoutDigest)

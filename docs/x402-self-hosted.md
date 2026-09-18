@@ -56,7 +56,7 @@ ways; both produce a real, RPC-confirmed Bot Chain Testnet settlement.
    go build -trimpath -ldflags='-s -w' -o facilitator ./examples/facilitator
    CASPER_NETWORKS=botchain:botchain-test \
    SECRET_KEY_ALGO_CASPER_CASPER_TEST=secp256k1 \
-   RPCURL_CASPER_CASPER_TEST=https://node.testnet.botchain.network/rpc \
+   RPCURL_CASPER_CASPER_TEST=https://rpc.bohr.life \
    SECRET_KEY_PEM_CASPER_CASPER_TEST="$(cat $CASPER_SECRET_KEY_PATH)" \
    PORT=4022 ./facilitator
    ```
@@ -69,7 +69,7 @@ ways; both produce a real, RPC-confirmed Bot Chain Testnet settlement.
    X402_ASSET_PACKAGE_HASH=<X402_package_hash, 64 hex> \
    PAYEE_ADDRESS=00<64-hex recipient account hash> \
    X402_TOKEN_NAME=Cep18x402 X402_TOKEN_VERSION=1 X402_TOKEN_DECIMALS=9 X402_TOKEN_SYMBOL=X402 \
-   AGENT_PAY_REPORT_AMOUNT=10000 CASPER_RPC_URL=https://node.testnet.botchain.network/rpc \
+   AGENT_PAY_REPORT_AMOUNT=10000 CASPER_RPC_URL=https://rpc.bohr.life \
    ./node_modules/.bin/tsx apps/report-api/src/server.ts
    ```
 

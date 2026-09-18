@@ -13,7 +13,7 @@ describe("AgentPay Bot Chain funding status", () => {
       funded: false,
       faucetUrl: "https://testnet.cspr.live/tools/faucet",
       publicKeyPath: ".agentpay-testnet-key/public_key_hex",
-      rpcUrl: "https://node.testnet.botchain.network/rpc",
+      rpcUrl: "https://rpc.bohr.life",
       message: "Account is not funded on Bot Chain Testnet yet"
     };
 
@@ -26,7 +26,7 @@ describe("AgentPay Bot Chain funding status", () => {
   it("reports a missing configured public key file before calling Bot Chain", async () => {
     const status = await createBotChainFundingStatus({
       CASPER_PUBLIC_KEY_PATH: ".agentpay-testnet-key/missing_funded_public_key_hex",
-      CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+      CASPER_RPC_URL: "https://rpc.bohr.life",
       CASPER_CLIENT_COMMAND: "botchain-client"
     });
 
@@ -50,7 +50,7 @@ printf '%s' '{"result":{"balance":"155000000000"}}'
 
       const status = await createBotChainFundingStatus({
         CASPER_ACCOUNT_IDENTIFIER: `account-hash-${"b".repeat(64)}`,
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+        CASPER_RPC_URL: "https://rpc.bohr.life",
         CASPER_CLIENT_COMMAND: clientPath
       });
 

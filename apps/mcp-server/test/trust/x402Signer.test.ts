@@ -23,10 +23,10 @@ describe("MCP x402 signer spend policy", () => {
     mimeType: "application/json"
   };
 
-  it("signs when the quoted payment is within local policy", () => {
+  it("signs when the quoted payment is within local policy", async () => {
     const signer = mockSigner();
 
-    const built = buildX402PaymentSignature({
+    const built = await buildX402PaymentSignature({
       requirement,
       resource,
       signer,
@@ -41,13 +41,13 @@ describe("MCP x402 signer spend policy", () => {
     });
 
     expect(built.authorization.to).toBe(requirement.payTo);
-    expect(signer.sign).toHaveBeenCalledOnce();
+    expect(signer.signTypedData).toHaveBeenCalledOnce();
   });
 
-  it("rejects and does not sign when the payee address mismatches policy", () => {
+  it("rejects and does not sign when the payee address mismatches policy", async () => {
     const signer = mockSigner();
 
-    expect(() =>
+    await expect(
       buildX402PaymentSignature({
         requirement: { ...requirement, payTo: `00${"7".repeat(64)}` },
         resource,
@@ -56,14 +56,14 @@ describe("MCP x402 signer spend policy", () => {
           AGENT_PAY_EXPECTED_PAYEE_ADDRESS: requirement.payTo
         })
       })
-    ).toThrow(/payee address mismatch.*expected.*actual/i);
-    expect(signer.sign).not.toHaveBeenCalled();
+    ).rejects.toThrow(/payee address mismatch.*expected.*actual/i);
+    expect(signer.signTypedData).not.toHaveBeenCalled();
   });
 
-  it("rejects and does not sign when the x402 asset mismatches policy", () => {
+  it("rejects and does not sign when the x402 asset mismatches policy", async () => {
     const signer = mockSigner();
 
-    expect(() =>
+    await expect(
       buildX402PaymentSignature({
         requirement: { ...requirement, asset: "7".repeat(64) },
         resource,
@@ -72,14 +72,14 @@ describe("MCP x402 signer spend policy", () => {
           AGENT_PAY_EXPECTED_X402_ASSET: requirement.asset
         })
       })
-    ).toThrow(/asset mismatch.*expected.*actual/i);
-    expect(signer.sign).not.toHaveBeenCalled();
+    ).rejects.toThrow(/asset mismatch.*expected.*actual/i);
+    expect(signer.signTypedData).not.toHaveBeenCalled();
   });
 
-  it("rejects and does not sign when the network mismatches policy", () => {
+  it("rejects and does not sign when the network mismatches policy", async () => {
     const signer = mockSigner();
 
-    expect(() =>
+    await expect(
       buildX402PaymentSignature({
         requirement: { ...requirement, network: "botchain:botchain" },
         resource,
@@ -88,14 +88,14 @@ describe("MCP x402 signer spend policy", () => {
           AGENT_PAY_EXPECTED_NETWORK: requirement.network
         })
       })
-    ).toThrow(/network mismatch.*expected.*actual/i);
-    expect(signer.sign).not.toHaveBeenCalled();
+    ).rejects.toThrow(/network mismatch.*expected.*actual/i);
+    expect(signer.signTypedData).not.toHaveBeenCalled();
   });
 
-  it("rejects and does not sign when the quoted amount exceeds policy", () => {
+  it("rejects and does not sign when the quoted amount exceeds policy", async () => {
     const signer = mockSigner();
 
-    expect(() =>
+    await expect(
       buildX402PaymentSignature({
         requirement,
         resource,
@@ -104,8 +104,8 @@ describe("MCP x402 signer spend policy", () => {
           AGENT_PAY_MAX_REPORT_AMOUNT: "9999"
         })
       })
-    ).toThrow(/amount exceeds.*expected <= 9999.*actual 10000/i);
-    expect(signer.sign).not.toHaveBeenCalled();
+    ).rejects.toThrow(/amount exceeds.*expected <= 9999.*actual 10000/i);
+    expect(signer.signTypedData).not.toHaveBeenCalled();
   });
 
   it.each([
@@ -114,10 +114,10 @@ describe("MCP x402 signer spend policy", () => {
     ["negative", "-1", /positive integer in base units/i],
     ["non-integer", "1.5", /positive integer in base units/i],
     ["above U256", (1n << 256n).toString(), /exceeds the U256 transfer limit/i]
-  ] as const)("rejects a %s amount before signing", (_label, amount, message) => {
+  ] as const)("rejects a %s amount before signing", async (_label, amount, message) => {
     const signer = mockSigner();
 
-    expect(() =>
+    await expect(
       buildX402PaymentSignature({
         requirement: { ...requirement, amount },
         resource,
@@ -125,16 +125,16 @@ describe("MCP x402 signer spend policy", () => {
         now: 1_700_000_000,
         nonce: new Uint8Array(32).fill(3)
       })
-    ).toThrow(message);
-    expect(signer.sign).not.toHaveBeenCalled();
+    ).rejects.toThrow(message);
+    expect(signer.signTypedData).not.toHaveBeenCalled();
   });
 });
 
-function mockSigner(): X402Signer & { sign: ReturnType<typeof vi.fn> } {
+function mockSigner(): X402Signer & { signTypedData: ReturnType<typeof vi.fn> } {
   return {
     algo: "secp256k1",
     publicKeyHex: `02${"1".repeat(66)}`,
     accountAddress: `00${"6".repeat(64)}`,
-    sign: vi.fn(() => new Uint8Array(65).fill(2))
+    signTypedData: vi.fn(() => Promise.resolve("0x" + "2".repeat(130)))
   };
 }

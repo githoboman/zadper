@@ -632,7 +632,7 @@ function makeSettlement(checkId: string): SettlementProof {
     transactionHash: "d".repeat(64),
     verdict: "match",
     reasons: [],
-    rpcEndpoint: "https://node.testnet.botchain.network/rpc",
+    rpcEndpoint: "https://rpc.bohr.life",
     blockHash: "e".repeat(64),
     blockHeight: 7_654_321,
     observedAt: NOW,

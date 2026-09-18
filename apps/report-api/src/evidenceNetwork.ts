@@ -3,7 +3,7 @@ export const EVIDENCE_NETWORKS = ["botchain:mainnet", "botchain:testnet"] as con
 export type EvidenceNetwork = (typeof EVIDENCE_NETWORKS)[number];
 
 const DEFAULT_MAINNET_RPC_URL = "https://node.mainnet.botchain.network/rpc";
-const DEFAULT_TESTNET_RPC_URL = "https://node.testnet.botchain.network/rpc";
+const DEFAULT_TESTNET_RPC_URL = "https://rpc.bohr.life";
 
 export function parseEvidenceNetwork(value: unknown): EvidenceNetwork | null {
   return value === "botchain:mainnet" || value === "botchain:testnet" ? value : null;

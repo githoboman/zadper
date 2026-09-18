@@ -38,7 +38,7 @@ describe("AgentPay submission evidence writer", () => {
         "--env-file",
         envFile,
         "--botchain-rpc-url",
-        "https://node.testnet.botchain.network/rpc",
+        "https://rpc.bohr.life",
         "--botchain-secret-key-path",
         secretKeyPath,
         "--botchain-public-key-path",
@@ -74,7 +74,7 @@ describe("AgentPay submission evidence writer", () => {
       const env = parseEnvFile(await readFile(envFile, "utf8"));
 
       expect(result.updatedKeys).toContain("AGENT_PAY_DECISION_TX_HASH");
-      expect(env.CASPER_RPC_URL).toBe("https://node.testnet.botchain.network/rpc");
+      expect(env.CASPER_RPC_URL).toBe("https://rpc.bohr.life");
       expect(env.CASPER_SECRET_KEY_PATH).toBe(secretKeyPath);
       expect(env.CASPER_PUBLIC_KEY_PATH).toBe(publicKeyPath);
       expect(env.CASPER_ACCOUNT_IDENTIFIER).toBe(`account-hash-${"9".repeat(64)}`);

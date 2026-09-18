@@ -9,8 +9,10 @@ import type {
   ReasonCode
 } from "./types.js";
 
+const HEX_40 = /^[0-9a-f]{40}$/;
 const HEX_64 = /^[0-9a-f]{64}$/;
 const ACCOUNT_ADDRESS = /^00[0-9a-f]{64}$/;
+const EVM_ADDRESS = /^(?:0x)?[0-9a-f]{40}$/i;
 const DECIMAL_INTEGER = /^(0|[1-9][0-9]*)$/;
 const HTTP_METHOD = /^[A-Z][A-Z0-9!#$%&'*+.^_`|~-]*$/;
 
@@ -197,9 +199,9 @@ function parseRequirement(value: Record<string, unknown> | null):
   }
 
   const asset = normalizeHash(value.asset, "hash-");
-  if (!asset) return { ok: false, failure: invalid("asset must be a Bot Chain package hash", "accepts.asset", "64 hex characters", value.asset) };
+  if (!asset) return { ok: false, failure: invalid("asset must be a Bot Chain package hash or EVM address", "accepts.asset", "64 hex characters or EVM address", value.asset) };
   const payTo = normalizeAccountAddress(value.payTo);
-  if (!payTo) return { ok: false, failure: invalid("payTo must be a Bot Chain account address", "accepts.payTo", "00 + 64 hex characters", value.payTo) };
+  if (!payTo) return { ok: false, failure: invalid("payTo must be a Bot Chain account address or EVM address", "accepts.payTo", "Casper format or EVM address", value.payTo) };
 
   if (!Number.isInteger(value.maxTimeoutSeconds) || (value.maxTimeoutSeconds as number) < 1 || (value.maxTimeoutSeconds as number) > 900) {
     return { ok: false, failure: invalid("maxTimeoutSeconds is outside the supported range", "accepts.maxTimeoutSeconds", "1..900", value.maxTimeoutSeconds) };
@@ -264,14 +266,18 @@ function normalizeTimestamp(value: string, label: string): string {
 
 function normalizeHash(value: unknown, prefix: string): string | null {
   if (typeof value !== "string") return null;
-  const normalized = value.trim().toLowerCase().replace(new RegExp(`^${prefix}`), "");
+  let normalized = value.trim().toLowerCase().replace(new RegExp(`^${prefix}`), "");
+  if (normalized.startsWith("0x")) normalized = normalized.slice(2);
+  if (HEX_40.test(normalized)) return `0x${normalized}`;
   return HEX_64.test(normalized) ? normalized : null;
 }
 
 function normalizeAccountAddress(value: unknown): string | null {
   if (typeof value !== "string") return null;
-  const normalized = value.trim().toLowerCase().replace(/^account-hash-/, "00");
-  return ACCOUNT_ADDRESS.test(normalized) ? normalized : null;
+  const normalized = value.trim().toLowerCase();
+  if (EVM_ADDRESS.test(normalized)) return normalized.startsWith("0x") ? normalized : `0x${normalized}`;
+  const casperNormalized = normalized.replace(/^account-hash-/, "00");
+  return ACCOUNT_ADDRESS.test(casperNormalized) ? casperNormalized : null;
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {

@@ -26,7 +26,7 @@ describe("auditor runtime", () => {
       REPORT_API_PORT: "4100",
       AGENTPAY_DATABASE_PATH: "/tmp/agentpay-test.sqlite",
       AGENTPAY_PUBLIC_ORIGIN: "https://agentpay.example",
-      CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+      CASPER_RPC_URL: "https://rpc.bohr.life",
       CASPER_SECRET_KEY_PATH: "/must/not/be/read"
     });
 
@@ -34,7 +34,7 @@ describe("auditor runtime", () => {
       allowLoopbackProbeTargets: false,
       databasePath: resolve("/tmp/agentpay-test.sqlite"),
       publicOrigin: "https://agentpay.example",
-      rpcUrl: "https://node.testnet.botchain.network/rpc",
+      rpcUrl: "https://rpc.bohr.life",
       sessionCookiePath: "/v1"
     });
     expect(JSON.stringify(options)).not.toContain("CASPER_SECRET_KEY_PATH");

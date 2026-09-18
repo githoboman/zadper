@@ -33,7 +33,7 @@ describe("AgentPay submission readiness evaluator", () => {
         botchainClientAvailable: false
       },
       env: {
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc"
+        CASPER_RPC_URL: "https://rpc.bohr.life"
       }
     }));
 
@@ -93,7 +93,7 @@ describe("AgentPay submission readiness evaluator", () => {
   it("does not require a private indexer credential for public holder and age evidence", () => {
     const report = evaluateSubmissionReadiness(baseInput({
       env: {
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc"
+        CASPER_RPC_URL: "https://rpc.bohr.life"
       }
     }));
 
@@ -135,7 +135,7 @@ describe("AgentPay submission readiness evaluator", () => {
     })) as unknown as typeof fetch;
 
     await expect(confirmBotChainHashExecution(
-      "https://node.testnet.botchain.network/rpc",
+      "https://rpc.bohr.life",
       "a".repeat(64)
     )).resolves.toBe("failed");
   });
@@ -160,7 +160,7 @@ describe("AgentPay submission readiness evaluator", () => {
     })) as unknown as typeof fetch;
 
     await expect(confirmBotChainHashExecution(
-      "https://node.testnet.botchain.network/rpc",
+      "https://rpc.bohr.life",
       "a".repeat(64)
     )).resolves.toBe("failed");
   });
@@ -221,7 +221,7 @@ describe("AgentPay submission readiness evaluator", () => {
         botchainClientAvailable: true
       },
       env: {
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+        CASPER_RPC_URL: "https://rpc.bohr.life",
         CASPER_SECRET_KEY_PATH: "/home/user/.botchain/secret_key.pem",
         CASPER_PUBLIC_KEY_PATH: "/home/user/.botchain/public_key_hex",
         AGENT_PAY_REGISTRY_PACKAGE_HASH: `hash-${"a".repeat(64)}`,
@@ -275,7 +275,7 @@ describe("AgentPay submission readiness evaluator", () => {
         registryWasmExists: true
       },
       env: {
-        CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc"
+        CASPER_RPC_URL: "https://rpc.bohr.life"
       }
     }));
 
@@ -367,12 +367,12 @@ describe("AgentPay submission readiness evaluator", () => {
   it("parses local env files without accepting comments as values", () => {
     expect(parseEnvFile(`
       # local only
-      CASPER_RPC_URL=https://node.testnet.botchain.network/rpc
+      CASPER_RPC_URL=https://rpc.bohr.life
       export AGENT_PAY_REGISTRY_PACKAGE_HASH="hash-${"a".repeat(64)}"
       X402_TOKEN_SYMBOL='CSPR'
       PAYEE_ADDRESS=00${"b".repeat(64)} # account hash
     `)).toEqual({
-      CASPER_RPC_URL: "https://node.testnet.botchain.network/rpc",
+      CASPER_RPC_URL: "https://rpc.bohr.life",
       AGENT_PAY_REGISTRY_PACKAGE_HASH: `hash-${"a".repeat(64)}`,
       X402_TOKEN_SYMBOL: "CSPR",
       PAYEE_ADDRESS: `00${"b".repeat(64)}`

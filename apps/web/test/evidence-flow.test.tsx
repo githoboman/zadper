@@ -115,7 +115,7 @@ const paid: PaidReport = {
     status: "settled",
     transactionHash: "2".repeat(64),
     confirmation: {
-      rpcUrl: "https://node.testnet.botchain.network/rpc",
+      rpcUrl: "https://rpc.bohr.life",
       method: "info_get_transaction",
       apiVersion: "2.0.0",
       executionState: "executed",
@@ -338,7 +338,7 @@ describe("Zadper console", () => {
         ],
         registryPackageHash: `hash-${"a".repeat(64)}`,
         rpc: {
-          url: "https://node.testnet.botchain.network/rpc",
+          url: "https://rpc.bohr.life",
           apiVersion: "2.0.0",
           chainspecName: "botchain-test",
           latestBlockHeight: 8135000,
@@ -378,7 +378,7 @@ describe("Zadper console", () => {
           txHash: "4".repeat(64),
           hashKind: "transaction",
           confirmation: {
-            rpcUrl: "https://node.testnet.botchain.network/rpc",
+            rpcUrl: "https://rpc.bohr.life",
             method: "info_get_transaction",
             apiVersion: "2.0.0",
             executionState: "executed",

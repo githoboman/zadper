@@ -9,7 +9,7 @@ import { createReceiptAnchorPublisherFromEnv, type ReceiptAnchorPublisher } from
 import { PaymentAuditService } from "./service.js";
 import { openSqliteRepository, type SqliteAuditorRepository } from "./sqliteRepository.js";
 
-const DEFAULT_CASPER_RPC_URL = "https://node.testnet.botchain.network/rpc";
+const DEFAULT_CASPER_RPC_URL = "https://rpc.bohr.life";
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../..");
 const DEFAULT_DATABASE_PATH = resolve(REPO_ROOT, "data", "agentpay.sqlite");
 

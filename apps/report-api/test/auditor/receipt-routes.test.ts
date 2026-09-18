@@ -22,7 +22,8 @@ describe("response observations and receipt routes", () => {
     context = createPaymentAuditContext();
     const checkId = await settledCheck(context);
 
-    const observed = await observe(context, checkId).expect(201);
+    const observed = await observe(context, checkId);
+    if (observed.status !== 201) throw new Error(`Expected 201 Created but got ${observed.status}: ${JSON.stringify(observed.body) || observed.text}`);
 
     expect(observed.body.observation).toMatchObject({
       checkId,

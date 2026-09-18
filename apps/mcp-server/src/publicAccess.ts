@@ -212,8 +212,11 @@ function requireTestnetConfiguration(env: NodeJS.ProcessEnv): void {
   }
   const asset = normalizeAsset(requiredEnv(env, "X402_ASSET_PACKAGE_HASH"));
   const expectedAsset = normalizeAsset(requiredEnv(env, "AGENT_PAY_EXPECTED_X402_ASSET"));
-  if (!/^[0-9a-f]{64}$/.test(asset) || !/^[0-9a-f]{64}$/.test(expectedAsset)) {
-    throw new TypeError("Public assessment asset settings must be Bot Chain package hashes");
+  if (!/^0x[0-9a-f]{40}$/.test(asset) && !/^[0-9a-f]{64}$/.test(asset)) {
+    throw new TypeError("Public assessment asset settings must be Bot Chain package hashes or EVM addresses");
+  }
+  if (!/^0x[0-9a-f]{40}$/.test(expectedAsset) && !/^[0-9a-f]{64}$/.test(expectedAsset)) {
+    throw new TypeError("Public assessment asset settings must be Bot Chain package hashes or EVM addresses");
   }
   if (asset !== expectedAsset) {
     throw new TypeError(
@@ -245,7 +248,10 @@ function requiredEnv(env: NodeJS.ProcessEnv, name: string): string {
 }
 
 function normalizeAsset(value: string): string {
-  return normalizeAddress(value);
+  const trimmed = value.trim().toLowerCase();
+  if (trimmed.startsWith("0x")) return trimmed;
+  if (/^[0-9a-f]{64}$/.test(trimmed)) return trimmed;
+  return `0x${trimmed}`;
 }
 
 function positiveBaseUnits(value: string, name: string): bigint {

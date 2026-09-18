@@ -184,7 +184,7 @@ describe("receipt anchor publisher", () => {
     } as unknown as NodeRpcClient;
     const transport = new CommandReceiptAnchorTransport({
       rpc,
-      rpcUrl: "https://node.testnet.botchain.network/rpc",
+      rpcUrl: "https://rpc.bohr.life",
       contractHash: "6".repeat(64),
       script: "/unused",
       clientCommand: "/unused",
@@ -271,7 +271,7 @@ if (args[0] === "get-state-root-hash") {
     } as unknown as NodeRpcClient;
     const transport = new CommandReceiptAnchorTransport({
       rpc,
-      rpcUrl: "https://node.testnet.botchain.network/rpc",
+      rpcUrl: "https://rpc.bohr.life",
       contractHash,
       script: submitScript,
       clientCommand,
@@ -316,11 +316,11 @@ if (args[0] === "get-state-root-hash") {
         .split("\n")
         .map((line) => JSON.parse(line) as string[]);
       expect(clientCalls).toEqual([
-        ["get-state-root-hash", "--node-address", "https://node.testnet.botchain.network/rpc"],
+        ["get-state-root-hash", "--node-address", "https://rpc.bohr.life"],
         [
           "get-dictionary-item",
           "--node-address",
-          "https://node.testnet.botchain.network/rpc",
+          "https://rpc.bohr.life",
           "--state-root-hash",
           stateRootHash,
           "--contract-hash",
@@ -340,7 +340,7 @@ if (args[0] === "get-state-root-hash") {
     const repository = anchorRepository(receiptFixture());
     const publisher = createReceiptAnchorPublisherFromEnv({
       repository,
-      rpcUrl: "https://node.testnet.botchain.network/rpc",
+      rpcUrl: "https://rpc.bohr.life",
       env: {
         AGENT_PAY_REGISTRY_PACKAGE_HASH: `hash-${"1".repeat(64)}`,
         AGENT_PAY_REGISTRY_CONTRACT_HASH: `hash-${"2".repeat(64)}`,
@@ -358,7 +358,7 @@ if (args[0] === "get-state-root-hash") {
     try {
       const publisher = createReceiptAnchorPublisherFromEnv({
         repository: anchorRepository(receiptFixture()),
-        rpcUrl: "https://node.testnet.botchain.network/rpc",
+        rpcUrl: "https://rpc.bohr.life",
         env: {
           AGENT_PAY_REGISTRY_PACKAGE_HASH: `hash-${"1".repeat(64)}`,
           AGENT_PAY_REGISTRY_CONTRACT_HASH: `hash-${"2".repeat(64)}`,

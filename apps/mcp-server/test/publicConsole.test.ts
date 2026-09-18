@@ -75,7 +75,7 @@ function clearPaidReport(): PaidReportResult {
       assetDecimals: 9,
       network: "botchain:botchain-test",
       confirmation: {
-        rpcUrl: "https://node.testnet.botchain.network/rpc",
+        rpcUrl: "https://rpc.bohr.life",
         method: "info_get_transaction",
         apiVersion: "2.0.0",
         executionState: "executed",

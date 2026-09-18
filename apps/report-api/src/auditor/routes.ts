@@ -376,12 +376,12 @@ export function createAuditorRouter(dependencies: AuditorRouterDependencies): Ro
     const body = bodyRecord(request);
     response.json(verifyPurchaseReceipt(body.receipt));
   });
-
   router.use((error: unknown, _request: Request, response: Response, _next: NextFunction) => {
     if (error instanceof AuthError) {
       response.status(error.status).json(error.toBody());
       return;
     }
+    console.error("Unhandled error in route:", error);
     response.status(500).json({
       code: "internal_error",
       message: "AgentPay could not complete the request",

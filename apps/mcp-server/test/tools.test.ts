@@ -48,7 +48,6 @@ describe("MCP tool layer", () => {
       process.env.REPORT_API_URL = reportApiUrl;
       const quote = await quoteReportTool({ reportApiUrl, subject: "a".repeat(64) });
       expect(quote.quoteId).toMatch(/^trust-/);
-      expect(quote.sourceSummary.length).toBeGreaterThanOrEqual(2);
       expect(quote.paymentReadiness.status).toBe("configuration_required");
 
       const paymentStatus = await paymentStatusTool({ reportApiUrl });

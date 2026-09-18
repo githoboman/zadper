@@ -109,7 +109,24 @@ export function enforceX402SpendPolicy(
   requirement: PaymentRequirement,
   policy: X402SpendPolicy = x402SpendPolicyFromEnv()
 ): void {
-  // policy enforcement logic here
+  if (policy.expectedPayeeAddress && requirement.payTo !== policy.expectedPayeeAddress) {
+    throw new Error(`Payee address mismatch. Expected ${policy.expectedPayeeAddress}, actual ${requirement.payTo}`);
+  }
+  if (policy.expectedX402Asset && requirement.asset !== policy.expectedX402Asset) {
+    throw new Error(`Asset mismatch. Expected ${policy.expectedX402Asset}, actual ${requirement.asset}`);
+  }
+  if (policy.expectedNetwork && requirement.network !== policy.expectedNetwork) {
+    throw new Error(`Network mismatch. Expected ${policy.expectedNetwork}, actual ${requirement.network}`);
+  }
+  if (!/^[1-9][0-9]*$/.test(requirement.amount)) {
+    throw new Error("Amount must be a positive integer in base units");
+  }
+  if (BigInt(requirement.amount) > (1n << 256n) - 1n) {
+    throw new Error("Amount exceeds the U256 transfer limit");
+  }
+  if (policy.maxReportAmount && BigInt(requirement.amount) > BigInt(policy.maxReportAmount)) {
+    throw new Error(`Amount exceeds max report amount. Expected <= ${policy.maxReportAmount}, actual ${requirement.amount}`);
+  }
 }
 
 export async function buildX402PaymentSignature(input: {

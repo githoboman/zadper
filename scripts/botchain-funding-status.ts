@@ -10,7 +10,7 @@ const execFileAsync = promisify(execFile);
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(SCRIPT_DIR, "..");
 const DEFAULT_CASPER_CLIENT_COMMAND = "botchain-client";
-const DEFAULT_CASPER_RPC_URL = "https://node.testnet.botchain.network/rpc";
+const DEFAULT_CASPER_RPC_URL = "https://rpc.bohr.life";
 const TESTNET_FAUCET_URL = "https://testnet.cspr.live/tools/faucet";
 const MOTES_PER_CSPR = 1_000_000_000n;
 

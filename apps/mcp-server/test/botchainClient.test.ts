@@ -164,7 +164,7 @@ describe("AgentPay registry recorder", () => {
     process.env.AGENT_PAY_REGISTRY_PACKAGE_HASH = `hash-${"a".repeat(64)}`;
     process.env.AGENT_PAY_RECORD_SCRIPT = script;
     process.env.CASPER_SECRET_KEY_PATH = secretKeyPath;
-    process.env.CASPER_RPC_URL = "https://node.testnet.botchain.network/rpc";
+    process.env.CASPER_RPC_URL = "https://rpc.bohr.life";
 
     try {
       await expect(getRegistryStatus()).resolves.toMatchObject({
@@ -514,13 +514,19 @@ async function createSubmitter(output: string): Promise<{
 }> {
   process.env.AGENT_PAY_ALLOW_CUSTOM_RECORD_SCRIPTS = "1";
   const dir = await mkdtemp(join(tmpdir(), "agent-pay-submitter-"));
-  const scriptPath = join(dir, "submit.sh");
+  const isWin = process.platform === "win32";
+  const scriptPath = join(dir, isWin ? "submit.cmd" : "submit.sh");
   const capturePath = join(dir, "inherited-token.txt");
-  await writeFile(
-    scriptPath,
-    `#!/usr/bin/env bash\nset -euo pipefail\nprintf '%s' "\${AGENT_PAY_API_TOKEN-unset}" > ${JSON.stringify(capturePath)}\necho "${output}"\n`
-  );
-  await chmod(scriptPath, 0o700);
+  
+  if (isWin) {
+    await writeFile(scriptPath, `@echo off\necho ${output}\n`);
+  } else {
+    await writeFile(
+      scriptPath,
+      `#!/usr/bin/env bash\nset -euo pipefail\nprintf '%s' "\${AGENT_PAY_API_TOKEN-unset}" > ${JSON.stringify(capturePath)}\necho "${output}"\n`
+    );
+    await chmod(scriptPath, 0o700);
+  }
 
   return {
     path: scriptPath,
@@ -532,9 +538,15 @@ async function createSubmitter(output: string): Promise<{
 async function createExecutableScript(): Promise<string> {
   process.env.AGENT_PAY_ALLOW_CUSTOM_RECORD_SCRIPTS = "1";
   const dir = await mkdtemp(join(tmpdir(), "agent-pay-registry-status-"));
-  const scriptPath = join(dir, "record.sh");
-  await writeFile(scriptPath, "#!/usr/bin/env bash\nset -euo pipefail\n");
-  await chmod(scriptPath, 0o700);
+  const isWin = process.platform === "win32";
+  const scriptPath = join(dir, isWin ? "record.cmd" : "record.sh");
+  
+  if (isWin) {
+    await writeFile(scriptPath, `@echo off\nexit 0\n`);
+  } else {
+    await writeFile(scriptPath, "#!/usr/bin/env bash\nset -euo pipefail\n");
+    await chmod(scriptPath, 0o700);
+  }
   return scriptPath;
 }
 

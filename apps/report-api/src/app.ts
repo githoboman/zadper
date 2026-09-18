@@ -67,7 +67,7 @@ import {
 
 const DEFAULT_QUOTE_TTL_SECONDS = 300;
 const DEFAULT_X402_NETWORK = "botchain:testnet";
-const DEFAULT_PAYMENT_RPC_URL = "https://node.testnet.botchain.network/rpc";
+const DEFAULT_PAYMENT_RPC_URL = "https://rpc.bohr.life";
 const PAYMENT_ASSET_CACHE_TTL_MS = 5 * 60 * 1000;
 const PAYMENT_ASSET_FAILURE_CACHE_TTL_MS = 10_000;
 const PAYMENT_ASSET_RPC_TIMEOUT_MS = 15_000;
@@ -692,8 +692,7 @@ function quoteResponse(snapshot: QuoteSnapshot) {
     paymentRequirements: snapshot.paymentRequirement ? [snapshot.paymentRequirement] : [],
     paymentConfigurationRequired: !snapshot.paymentRequirement,
     paymentConfigurationReason: snapshot.paymentConfigurationReason,
-    paymentReadiness: publicPaymentReadiness(snapshot.paymentReadiness),
-    sourceSummary: snapshot.dataset.sourceSummary
+    paymentReadiness: publicPaymentReadiness(snapshot.paymentReadiness)
   };
 }
 

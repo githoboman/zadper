@@ -158,7 +158,7 @@ function compare(rpcEnvelope: unknown) {
     transactionHash: TRANSACTION_HASH,
     approved,
     rpcEnvelope,
-    rpcEndpoint: "https://node.testnet.botchain.network/rpc",
+    rpcEndpoint: "https://rpc.bohr.life",
     observedAt: "2026-07-15T21:10:00.000Z"
   });
 }

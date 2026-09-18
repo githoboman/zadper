@@ -29,13 +29,13 @@ import type {
 } from "./repository.js";
 
 const HEX_64 = /^[0-9a-f]{64}$/;
-const ADDRESS = /^(?:(?:00|01)[0-9a-f]{64}|02[0-9a-f]{66})$/;
+const ADDRESS = /^(?:(?:00|01)[0-9a-f]{64}|02[0-9a-f]{66}|(?:0x)?[0-9a-fA-F]{40})$/i;
 const DECIMAL = /^(0|[1-9][0-9]*)$/;
 const MAX_RECEIPT_SHARE_TTL_MS = 30 * 24 * 60 * 60 * 1_000;
 
 export type PaymentEvidenceLoader = {
   loadPaymentAssetEvidence(input: {
-    network: "botchain:testnet";
+    network: "botchain:testnet" | "botchain:mainnet";
     address: string;
     declaredMetadata: {
       name: string;
@@ -569,7 +569,7 @@ export function parseAuthorizationIntent(value: unknown): AuthorizationIntent | 
     validBefore,
     nonce: hash(input.nonce, "authorization.nonce"),
     network: network(input.network, "authorization.network"),
-    asset: hash(input.asset, "authorization.asset"),
+    asset: assetAddress(input.asset, "authorization.asset"),
     tokenName: boundedString(input.tokenName, "authorization.tokenName", 1, 128),
     tokenVersion: boundedString(input.tokenVersion, "authorization.tokenVersion", 1, 32),
     digest: hash(input.digest, "authorization.digest")
@@ -737,8 +737,19 @@ function safeTimestampInteger(value: unknown, field: string): string {
 }
 
 function hash(value: unknown, field: string): string {
-  if (typeof value !== "string" || !HEX_64.test(value)) throw invalidRequest(field, "64 lowercase hexadecimal characters", value);
-  return value;
+  if (typeof value !== "string") throw invalidRequest(field, "64 lowercase hexadecimal characters (with or without 0x)", value);
+  const normalized = value.trim().toLowerCase();
+  if (/^(?:0x)?[0-9a-f]{64}$/.test(normalized)) return normalized;
+  throw invalidRequest(field, "64 lowercase hexadecimal characters", value);
+}
+
+function assetAddress(value: unknown, field: string): string {
+  if (typeof value !== "string") throw invalidRequest(field, "64 lowercase hexadecimal characters or 40-char EVM address", value);
+  let stripped = value.trim().toLowerCase();
+  if (stripped.startsWith("0x")) stripped = stripped.slice(2);
+  if (/^[0-9a-f]{40}$/.test(stripped)) return `0x${stripped}`;
+  if (HEX_64.test(stripped)) return stripped;
+  throw invalidRequest(field, "64 lowercase hexadecimal characters or 40-char EVM address", value);
 }
 
 function parseHash(value: unknown, field: string): string {

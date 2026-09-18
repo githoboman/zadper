@@ -16,7 +16,7 @@ export const PAYMENT_SIGNATURE_HEADER = "PAYMENT-SIGNATURE";
 export const PAYMENT_RESPONSE_HEADER = "PAYMENT-RESPONSE";
 
 const DEFAULT_CASPER_FACILITATOR_URL = "https://x402-facilitator.cspr.cloud";
-const DEFAULT_CASPER_RPC_URL = "https://node.testnet.botchain.network/rpc";
+const DEFAULT_CASPER_RPC_URL = "https://rpc.bohr.life";
 const DEFAULT_PAYMENT_TIMEOUT_SECONDS = 300;
 const FACILITATOR_REQUEST_TIMEOUT_MS = 5_000;
 const FACILITATOR_SETTLEMENT_TIMEOUT_MS = 65_000;

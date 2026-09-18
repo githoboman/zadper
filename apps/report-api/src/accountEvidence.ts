@@ -6,7 +6,7 @@ import {
   type EvidenceRecord,
   type SubjectRef
 } from "@agent-pay/core";
-import type { LiveEvidenceDataset } from "./liveEvidence.js";
+import type { LiveEvidenceDataset } from "./subjectEvidence.js";
 import { fetchBoundedJson } from "./httpJson.js";
 import {
   defaultEvidenceNetwork,
