@@ -17,14 +17,14 @@ async function main() {
   console.log(`Wallet 3: ${w3.address}`);
 
   const target = "0x29284e93b68C84A40c89873e567B9e14B95247b7";
-  const amount = ethers.parseEther("0.0001");
+  const amount = ethers.parseEther("0.00001");
 
   console.log("Funding wallets...");
-  let tx = await deployer.sendTransaction({ to: w1.address, value: ethers.parseEther("0.001") });
+  let tx = await deployer.sendTransaction({ to: w1.address, value: ethers.parseEther("0.0001") });
   await tx.wait();
-  tx = await deployer.sendTransaction({ to: w2.address, value: ethers.parseEther("0.001") });
+  tx = await deployer.sendTransaction({ to: w2.address, value: ethers.parseEther("0.0001") });
   await tx.wait();
-  tx = await deployer.sendTransaction({ to: w3.address, value: ethers.parseEther("0.001") });
+  tx = await deployer.sendTransaction({ to: w3.address, value: ethers.parseEther("0.0001") });
   await tx.wait();
   console.log("Wallets funded!");
 
