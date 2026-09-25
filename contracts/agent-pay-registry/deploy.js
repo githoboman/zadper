@@ -3,7 +3,7 @@ const { ethers } = require('ethers');
 require('dotenv').config();
 
 async function main() {
-  const provider = new ethers.JsonRpcProvider("https://rpc.bohr.life");
+  const provider = new ethers.JsonRpcProvider("https://rpc.botchain.ai");
   const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
   
   console.log("Deploying from address:", wallet.address);

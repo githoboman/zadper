@@ -17,7 +17,7 @@ import {
 import { createReportApp } from "../../src/app.js";
 import { AuditorAuth, hashBearerToken } from "../../src/auditor/auth.js";
 import { createAuditorRouter } from "../../src/auditor/routes.js";
-import { PaymentAuditService } from "../../src/auditor/service.js";
+import { PaymentAuditService, type ReceiptAnchorScheduler } from "../../src/auditor/service.js";
 import { ethers } from "ethers";
 import { openSqliteRepository, type SqliteAuditorRepository } from "../../src/auditor/sqliteRepository.js";
 
