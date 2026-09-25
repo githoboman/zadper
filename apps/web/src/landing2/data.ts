@@ -1,4 +1,4 @@
-export const EXPLORER = "https://testnet.cspr.live";
+export const EXPLORER = "https://scan.botchain.ai";
 export const MCP_NPM_URL = "https://www.npmjs.com/package/@timidan/Zadper-mcp";
 export const CLI_NPM_URL = "https://www.npmjs.com/package/@timidan/Zadper-cli";
 

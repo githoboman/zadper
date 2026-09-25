@@ -116,13 +116,13 @@ export function SiteFooter({ current, navigate }: { current: SiteKey; navigate?:
             </a>
           ))}
           <a href={EXPLORER} target="_blank" rel="noreferrer">
-            Bot Chain Testnet explorer
+            BOT Chain Mainnet explorer
             <ArrowSquareOut size={12} weight="bold" aria-hidden="true" />
           </a>
         </nav>
       </div>
       <div className="site-footer-base">
-        <span>Bot Chain Testnet · non-custodial</span>
+        <span>BOT Chain Mainnet · non-custodial</span>
         <span>Approval is not payment. Signing stays in the wallet.</span>
       </div>
     </footer>

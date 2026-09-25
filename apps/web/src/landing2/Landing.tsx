@@ -760,9 +760,12 @@ export default function Landing2({
             </span>
             <p className="lp2-footer-line">The Arcane Eye of Agentic Payments. Sees every charge before your agent signs it.</p>
             <div className="lp2-footer-marks">
-              <img className="lp2-mark" src={botchainLogo} alt="Bot Chain" />
+              <a href="https://botchain.ai" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
+                <img className="lp2-mark" src={botchainLogo} alt="BOT Chain" />
+                <span style={{ fontWeight: 600, color: "var(--lp-ink-1)" }}>BOT Chain</span>
+              </a>
               <img className="lp2-mark" src={x402Logo} alt="x402" />
-              <span className="lp2-net" style={{ color: "var(--lp-ink-3)", fontSize: "0.8rem" }}>Bot Chain Testnet</span>
+              <span className="lp2-net" style={{ color: "var(--lp-ink-3)", fontSize: "0.8rem" }}>BOT Chain Mainnet</span>
             </div>
           </div>
 
@@ -784,13 +787,13 @@ export default function Landing2({
               target="_blank"
               rel="noreferrer"
             >
-              Bot Chain Testnet explorer
+              BOT Chain Mainnet explorer
               <ArrowSquareOut size={12} weight="bold" aria-hidden="true" />
             </a>
           </nav>
         </div>
         <div className="lp2-footer-base">
-          <span>Bot Chain Testnet · non-custodial</span>
+          <span>BOT Chain Mainnet · non-custodial</span>
           <span>Approval is not payment. Signing stays in the wallet.</span>
         </div>
       </footer>
